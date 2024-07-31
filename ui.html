@@ -3,52 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flip</title>
+    <title>Enhanced Coin Flip Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
             background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
         }
         h1 {
-            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        #game-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        #coin {
+            width: 100px;
+            height: 100px;
+            background-color: #f39c12;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            margin: 20px auto;
+            transition: transform 0.5s ease-in-out;
         }
         button {
-            font-size: 18px;
-            padding: 10px 20px;
             margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
-        #result {
-            font-size: 24px;
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        #result, #score, #streak, #tokens {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        #bet-amount {
+            width: 100px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        #leaderboard {
             margin-top: 20px;
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to Coin Flip!</h1>
-    <div>
-        <button onclick="flipCoin('heads')">Heads</button>
-        <button onclick="flipCoin('tails')">Tails</button>
+    <h1>Enhanced Coin Flip Game</h1>
+    <div id="game-container">
+        <div id="coin">?</div>
+        <div id="tokens">Tokens: 100</div>
+        <div id="score">Score: 0</div>
+        <div id="streak">Streak: 0</div>
+        <div>
+            <input type="number" id="bet-amount" min="1" value="1">
+            <button onclick="flipCoin('heads')">Bet Heads</button>
+            <button onclick="flipCoin('tails')">Bet Tails</button>
+        </div>
+        <div id="result"></div>
+        <div id="leaderboard">
+            <h3>Leaderboard</h3>
+            <ol id="leaderboard-list"></ol>
+        </div>
     </div>
-    <div id="result"></div>
 
     <script>
+        let tokens = 100;
+        let score = 0;
+        let streak = 0;
+        const resultElement = document.getElementById('result');
+        const coinElement = document.getElementById('coin');
+        const tokensElement = document.getElementById('tokens');
+        const scoreElement = document.getElementById('score');
+        const streakElement = document.getElementById('streak');
+        const betAmountElement = document.getElementById('bet-amount');
+        const leaderboardList = document.getElementById('leaderboard-list');
+
         function flipCoin(choice) {
-            const result = Math.random() < 0.5 ? 'heads' : 'tails';
-            const resultElement = document.getElementById('result');
-            
-            if (choice === result) {
-                resultElement.textContent = `You won! It was ${result}.`;
-            } else {
-                resultElement.textContent = `You lost. It was ${result}.`;
+            const betAmount = parseInt(betAmountElement.value);
+            if (betAmount > tokens) {
+                resultElement.textContent = "You don't have enough tokens!";
+                return;
             }
+
+            tokens -= betAmount;
+            const result = Math.random() < 0.5 ? 'heads' : 'tails';
+            
+            coinElement.style.transform = 'rotateY(720deg)';
+            setTimeout(() => {
+                coinElement.textContent = result === 'heads' ? 'H' : 'T';
+                coinElement.style.transform = 'rotateY(0deg)';
+            }, 500);
+
+            setTimeout(() => {
+                if (choice === result) {
+                    tokens += betAmount * 2;
+                    score += betAmount;
+                    streak++;
+                    resultElement.textContent = `You won ${betAmount} tokens!`;
+                } else {
+                    score -= betAmount;
+                    streak = 0;
+                    resultElement.textContent = `You lost ${betAmount} tokens.`;
+                }
+
+                updateDisplay();
+                updateLeaderboard();
+            }, 1000);
         }
+
+        function updateDisplay() {
+            tokensElement.textContent = `Tokens: ${tokens}`;
+            scoreElement.textContent = `Score: ${score}`;
+            streakElement.textContent = `Streak: ${streak}`;
+        }
+
+        function updateLeaderboard() {
+            const leaderboard = [
+                { name: "AI Player 1", score: 500 },
+                { name: "AI Player 2", score: 350 },
+                { name: "AI Player 3", score: 200 },
+                { name: "You", score: score }
+            ].sort((a, b) => b.score - a.score);
+
+            leaderboardList.innerHTML = leaderboard
+                .map(player => `<li>${player.name}: ${player.score}</li>`)
+                .join('');
+        }
+
+        updateLeaderboard();
     </script>
 </body>
 </html>
