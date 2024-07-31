@@ -29,7 +29,6 @@
             height: 150px;
             margin: 20px auto;
             transform-style: preserve-3d;
-											 
             position: relative;
         }
         #coin div {
@@ -148,11 +147,13 @@
 
             tokens -= betAmount;
             const result = Math.random() < 0.5 ? 'heads' : 'tails';
-            
-            coinElement.className = `animate-${result}`;
-            
+
+            // Toggle a dummy class to force reflow
+            coinElement.classList.remove('animate-heads', 'animate-tails');
+            void coinElement.offsetWidth;  // Trigger reflow
+            coinElement.classList.add(`animate-${result}`);
+
             setTimeout(() => {
-										   
                 if (choice === result) {
                     tokens += betAmount * 2;
                     score += betAmount;
@@ -166,14 +167,6 @@
 
                 updateDisplay();
                 updateLeaderboard();
-																  
-										 
-																					
-																					 
-						
-																					  
-																				   
-				 
             }, 1000);
         }
 
