@@ -30,6 +30,7 @@
             margin: 20px auto;
             transform-style: preserve-3d;
             transition: transform 1s ease-in;
+            position: relative;
         }
         #coin div {
             width: 100%;
@@ -151,6 +152,7 @@
             coinElement.className = `animate-${result}`;
             
             setTimeout(() => {
+                coinElement.className = '';
                 if (choice === result) {
                     tokens += betAmount * 2;
                     score += betAmount;
@@ -164,6 +166,14 @@
 
                 updateDisplay();
                 updateLeaderboard();
+                // Show the final side of the coin after animation
+                if (result === 'heads') {
+                    coinElement.firstElementChild.style.transform = 'rotateY(0deg)';
+                    coinElement.lastElementChild.style.transform = 'rotateY(180deg)';
+                } else {
+                    coinElement.firstElementChild.style.transform = 'rotateY(180deg)';
+                    coinElement.lastElementChild.style.transform = 'rotateY(0deg)';
+                }
             }, 1000);
         }
 
@@ -185,10 +195,6 @@
                 .map(player => `<li>${player.name}: ${player.score}</li>`)
                 .join('');
         }
-
-        coinElement.addEventListener('animationend', function() {
-            this.className = '';
-        });
 
         updateLeaderboard();
     </script>
