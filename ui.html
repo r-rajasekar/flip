@@ -127,6 +127,9 @@
     </div>
 
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const userName = urlParams.get('username') || 'You';
+
         let tokens = 100;
         let score = 0;
         let streak = 0;
@@ -178,10 +181,10 @@
 
         function updateLeaderboard() {
             const leaderboard = [
-                { name: "AI Player 1", score: 500 },
-                { name: "AI Player 2", score: 350 },
-                { name: "AI Player 3", score: 200 },
-                { name: "You", score: score }
+                { name: "Player 1", score: 500 },
+                { name: "Player 2", score: 350 },
+                { name: "Player 3", score: 200 },
+                { name: userName, score: score }
             ].sort((a, b) => b.score - a.score);
 
             leaderboardList.innerHTML = leaderboard
