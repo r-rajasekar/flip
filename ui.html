@@ -5,24 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coin Flip</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             background-color: #f2e3e2;
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
         }
         h1 {
             color: #2c3e50;
+            margin-bottom: 20px;
         }
         #game-container {
             background-color: #d2a79c;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
             text-align: center;
+            max-width: 600px;
+            width: 100%;
         }
         #coin {
             width: 150px;
@@ -30,6 +36,10 @@
             margin: 20px auto;
             transform-style: preserve-3d;
             position: relative;
+            transition: transform 0.1s;
+        }
+        #coin:hover {
+            transform: scale(1.05);
         }
         #coin div {
             width: 100%;
@@ -62,32 +72,42 @@
             animation: flip-to-tails 1s ease-out forwards;
         }
         button {
-            padding: 8px 15px;
+            padding: 10px 20px;
             font-size: 16px;
             background-color: #3498db;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.1s;
+            margin: 0 5px;
         }
         button:hover {
             background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(1px);
         }
         button:disabled {
             background-color: #bdc3c7;
             cursor: not-allowed;
         }
-        #result, #score, #streak, #tokens {
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .stat-item {
             font-size: 18px;
-            margin: 10px 0;
+            font-weight: 500;
         }
         .bet-controls {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 10px;
-            margin: 15px 0;
+            margin: 20px 0;
         }
         #bet-amount {
             width: 80px;
@@ -98,18 +118,32 @@
             background-color: #f8f9fa;
             text-align: center;
         }
+        #result-container {
+            height: 50px; /* Fixed height for result message */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        #result {
+            font-size: 18px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
         #leaderboard {
-            margin-top: 20px;
-            background-color: #fff;
+            margin-top: 30px;
+            background-color: #f2e3e2;
             border-radius: 10px;
-            padding: 15px;
+            padding: 20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 100%;
         }
         #leaderboard h3 {
             color: #2c3e50;
             margin-top: 0;
             border-bottom: 2px solid #3498db;
             padding-bottom: 10px;
+            text-align: center;
         }
         #leaderboard-list {
             list-style-type: none;
@@ -147,15 +181,19 @@
             <div class="heads"></div>
             <div class="tails"></div>
         </div>
-        <div id="tokens">Tokens: 100</div>
-        <div id="score">Score: 0</div>
-        <div id="streak">Streak: 0</div>
+        <div class="game-stats">
+            <div id="tokens" class="stat-item">Tokens: 100</div>
+            <div id="score" class="stat-item">Score: 0</div>
+            <div id="streak" class="stat-item">Streak: 0</div>
+        </div>
         <div class="bet-controls">
             <input type="number" id="bet-amount" min="1" value="1">
             <button onclick="flipCoin('heads')">Heads</button>
             <button onclick="flipCoin('tails')">Tails</button>
         </div>
-        <div id="result"></div>
+        <div id="result-container">
+            <div id="result"></div>
+        </div>
         <div id="leaderboard">
             <h3>Leaderboard</h3>
             <ol id="leaderboard-list"></ol>
@@ -187,7 +225,6 @@
             tokens -= betAmount;
             const result = Math.random() < 0.5 ? 'heads' : 'tails';
 
-            // Toggle a dummy class to force reflow
             coinElement.classList.remove('animate-heads', 'animate-tails');
             void coinElement.offsetWidth;  // Trigger reflow
             coinElement.classList.add(`animate-${result}`);
