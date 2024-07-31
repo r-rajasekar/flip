@@ -134,11 +134,11 @@
                     tokens += betAmount * 2;
                     score += betAmount;
                     streak++;
-                    resultElement.textContent = `You won ${betAmount} tokens!`;
+                    resultElement.textContent = `Yayy!, You won ${betAmount} tokens!`;
                 } else {
                     score -= betAmount;
                     streak = 0;
-                    resultElement.textContent = `You lost ${betAmount} tokens.`;
+                    resultElement.textContent = `OOPS!, You lost ${betAmount} tokens.`;
                 }
 
                 updateDisplay();
