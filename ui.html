@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Coin Flip Game</title>
+    <title>Coin Flip</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,7 +29,7 @@
             height: 150px;
             margin: 20px auto;
             transform-style: preserve-3d;
-            transition: transform 1s ease-in;
+            position: relative;
         }
         #coin div {
             width: 100%;
@@ -101,36 +101,11 @@
         #leaderboard {
             margin-top: 20px;
             text-align: left;
-            background-color: #ffffff;  /* Add a background color */
-            padding: 10px;  /* Add padding */
-            border-radius: 5px;  /* Add rounded corners */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  /* Add a subtle shadow */
-        }
-
-        #leaderboard h3 {
-            font-size: 20px;  /* Increase the font size */
-            margin-bottom: 10px;  /* Add some space below the header */
-            color: #2c3e50;  /* Add a color for the header */
-        }
-
-        #leaderboard-list {
-            list-style-type: none;  /* Remove default list styling */
-            padding: 0;  /* Remove default padding */
-        }
-
-        #leaderboard-list li {
-            font-size: 18px;  /* Increase the font size */
-            padding: 5px 0;  /* Add some padding to each list item */
-            border-bottom: 1px solid #ddd;  /* Add a border to separate items */
-        }
-
-        #leaderboard-list li:last-child {
-            border-bottom: none;  /* Remove the border from the last item */
         }
     </style>
 </head>
 <body>
-    <h1>Coin Flip Game</h1>
+    <h1>Coin Flip</h1>
     <div id="game-container">
         <div id="coin">
             <div class="heads"></div>
@@ -153,8 +128,7 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const userName = (urlParams.get('username') || 'You').toUpperCase();  // Convert to uppercase if not already
-        console.log("Username from URL:", userName);  // Log the username for debugging
+        const userName = urlParams.get('username') || 'You';
 
         let tokens = 100;
         let score = 0;
@@ -202,14 +176,14 @@
         function updateDisplay() {
             tokensElement.textContent = `Tokens: ${tokens}`;
             scoreElement.textContent = `Score: ${score}`;
-			streakElement.textContent = `Streak: ${streak}`;
+            streakElement.textContent = `Streak: ${streak}`;
         }
 
         function updateLeaderboard() {
             const leaderboard = [
-                { name: "AI Player 1", score: 500 },
-                { name: "AI Player 2", score: 350 },
-                { name: "AI Player 3", score: 200 },
+                { name: "Player 1", score: 500 },
+                { name: "Player 2", score: 350 },
+                { name: "Player 3", score: 200 },
                 { name: userName, score: score }
             ].sort((a, b) => b.score - a.score);
 
