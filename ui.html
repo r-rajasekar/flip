@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coin Flip</title>
+    <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,11 +40,11 @@
             backface-visibility: hidden;
         }
         .heads {
-            background: url('heads.png') no-repeat center center;
+            background: url('https://i.imgur.com/0Aw3aNX.png') no-repeat center center;
             background-size: cover;
         }
         .tails {
-            background: url('tails.png') no-repeat center center;
+            background: url('https://i.imgur.com/q4mEVzL.png') no-repeat center center;
             background-size: cover;
             transform: rotateY(180deg);
         }
@@ -70,7 +71,6 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            /* Add these lines to remove the focus and active state styles */
             outline: none;
             -webkit-tap-highlight-color: transparent;
         }
@@ -81,7 +81,6 @@
             background-color: #bdc3c7;
             cursor: not-allowed;
         }
-        /* Add these rules to override default focus and active states */
         button:focus {
             outline: none;
             box-shadow: none;
@@ -150,18 +149,7 @@
             color: #2c3e50;
         }
         #purchase-button {
-            background-color: #f2e3e2;
-            color: #2c3e50;
-            padding: 8px 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
             margin-top: 10px;
-        }
-        #purchase-button:hover {
-            background-color: #d2a79c;
         }
         #purchase-popup {
             display: none;
@@ -320,14 +308,83 @@
             document.getElementById('purchase-popup').style.display = 'none';
         }
 
-        function purchaseStars(amount) {
-            // This is where you'd integrate with a payment system
-            // For now, we'll just add the stars to the token count
-            tokens += amount;
-            updateDisplay();
-            alert(`You've purchased ${amount} stars!`);
-            closePurchasePopup();
+        const googlePayClient = new google.payments.api.PaymentsClient({
+            environment: 'TEST' // Change to 'PRODUCTION' when you're ready to go live
+        });
+
+        function getGooglePaymentDataRequest(price) {
+            return {
+                apiVersion: 2,
+                apiVersionMinor: 0,
+                allowedPaymentMethods: [{
+                    type: 'CARD',
+                    parameters: {
+                        allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                        allowedCardNetworks: ['MASTERCARD', 'VISA']
+                    },
+                    tokenizationSpecification: {
+                        type: 'PAYMENT_GATEWAY',
+                        parameters: {
+                            'gateway': 'example',
+                            'gatewayMerchantId': 'exampleGatewayMerchantId'
+                        }
+                    }
+                }],
+                merchantInfo: {
+                    merchantId: '12345678901234567890',
+                    merchantName: 'Your Merchant Name'
+                },
+                transactionInfo: {
+                    totalPriceStatus: 'FINAL',
+                    totalPrice: price.toString(),
+                    currencyCode: 'USD'
+                }
+            };
         }
+
+        async function purchaseStars(amount) {
+            const price = (amount === 50) ? 0.99 : (amount === 100) ? 1.99 : 4.99;
+            
+            try {
+                const paymentDataRequest = getGooglePaymentDataRequest(price);
+                const paymentData = await googlePayClient.loadPaymentData(paymentDataRequest);
+                
+                // Here you would typically send the paymentData to your server for processing
+                console.log('Success', paymentData);
+                
+                // If the payment was successful:
+                tokens += amount;
+                updateDisplay();
+                alert(`You've purchased ${amount} stars!`);
+                closePurchasePopup();
+            } catch (err) {
+                console.error('Error', err);
+                alert('There was an error processing your payment');
+            }
+        }
+
+        // Function to check if Google Pay is available
+        googlePayClient.isReadyToPay({
+            apiVersion: 2,
+            apiVersionMinor: 0,
+            allowedPaymentMethods: [{
+                type: 'CARD',
+                parameters: {
+                    allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                    allowedCardNetworks: ['MASTERCARD', 'VISA']
+                }
+            }]
+        }).then(function(response) {
+            if (response.result) {
+                // Google Pay is available on this browser
+                console.log('Google Pay is available');
+            } else {
+                console.log('Google Pay is not available');
+                // You might want to hide the Google Pay button or show an alternative payment method
+            }
+        }).catch(function(err) {
+            console.error('Error determining Google Pay availability', err);
+        });
 
         updateLeaderboard();
     </script>
