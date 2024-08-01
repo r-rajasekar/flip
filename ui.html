@@ -40,11 +40,11 @@
             backface-visibility: hidden;
         }
         .heads {
-            background: url('https://i.imgur.com/0Aw3aNX.png') no-repeat center center;
+            background: url('heads.png') no-repeat center center;
             background-size: cover;
         }
         .tails {
-            background: url('https://i.imgur.com/q4mEVzL.png') no-repeat center center;
+            background: url('tails.png') no-repeat center center;
             background-size: cover;
             transform: rotateY(180deg);
         }
@@ -308,9 +308,34 @@
             document.getElementById('purchase-popup').style.display = 'none';
         }
 
-        const googlePayClient = new google.payments.api.PaymentsClient({
-            environment: 'TEST' // Change to 'PRODUCTION' when you're ready to go live
-        });
+        let googlePayClient;
+
+        function initializeGooglePay() {
+            googlePayClient = new google.payments.api.PaymentsClient({
+                environment: 'TEST' // Change to 'PRODUCTION' when you're ready to go live
+            });
+
+            googlePayClient.isReadyToPay({
+                apiVersion: 2,
+                apiVersionMinor: 0,
+                allowedPaymentMethods: [{
+                    type: 'CARD',
+                    parameters: {
+                        allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                        allowedCardNetworks: ['MASTERCARD', 'VISA']
+                    }
+                }]
+            }).then(function(response) {
+                if (response.result) {
+                    console.log('Google Pay is available');
+                } else {
+                    console.log('Google Pay is not available');
+                    // You might want to hide the Google Pay button or show an alternative payment method
+                }
+            }).catch(function(err) {
+                console.error('Error determining Google Pay availability', err);
+            });
+        }
 
         function getGooglePaymentDataRequest(price) {
             return {
@@ -343,6 +368,11 @@
         }
 
         async function purchaseStars(amount) {
+            if (!googlePayClient) {
+                alert('Google Pay is not initialized yet. Please try again in a moment.');
+                return;
+            }
+
             const price = (amount === 50) ? 0.99 : (amount === 100) ? 1.99 : 4.99;
             
             try {
@@ -363,30 +393,11 @@
             }
         }
 
-        // Function to check if Google Pay is available
-        googlePayClient.isReadyToPay({
-            apiVersion: 2,
-            apiVersionMinor: 0,
-            allowedPaymentMethods: [{
-                type: 'CARD',
-                parameters: {
-                    allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
-                    allowedCardNetworks: ['MASTERCARD', 'VISA']
-                }
-            }]
-        }).then(function(response) {
-            if (response.result) {
-                // Google Pay is available on this browser
-                console.log('Google Pay is available');
-            } else {
-                console.log('Google Pay is not available');
-                // You might want to hide the Google Pay button or show an alternative payment method
-            }
-        }).catch(function(err) {
-            console.error('Error determining Google Pay availability', err);
+        // Wait for the page to load before initializing
+        window.addEventListener('load', function() {
+            updateLeaderboard();
+            initializeGooglePay();
         });
-
-        updateLeaderboard();
     </script>
 </body>
 </html>
