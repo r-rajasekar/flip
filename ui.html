@@ -222,9 +222,10 @@
     <div id="purchase-popup">
         <div class="popup-content">
             <h2>Purchase Stars</h2>
-            <button class="star-package" onclick="purchaseStars(50)">50 Stars - $0.99</button>
-            <button class="star-package" onclick="purchaseStars(100)">100 Stars - $1.99</button>
-            <button class="star-package" onclick="purchaseStars(500)">500 Stars - $4.99</button>
+            <button class="star-package" onclick="selectStars(50)">50 Stars - $0.99</button>
+            <button class="star-package" onclick="selectStars(100)">100 Stars - $1.99</button>
+            <button class="star-package" onclick="selectStars(500)">500 Stars - $4.99</button>
+            <div id="google-pay-button-container"></div>
             <button id="close-popup" onclick="closePurchasePopup()">Close</button>
         </div>
     </div>
@@ -263,15 +264,13 @@
                     tokens += betAmount * 2;
                     score += betAmount;
                     streak++;
-                    resultElement.textContent = `You won ${betAmount} tokens!`;
+                    resultElement.textContent = `It's ${result}! You win!`;
                 } else {
                     score -= betAmount;
                     streak = 0;
-                    resultElement.textContent = `You lost ${betAmount} tokens.`;
+                    resultElement.textContent = `It's ${result}! You lose!`;
                 }
-
                 updateDisplay();
-                updateLeaderboard();
             }, 1000);
         }
 
@@ -279,25 +278,26 @@
             tokensElement.textContent = `Tokens: ${tokens}`;
             scoreElement.textContent = `Score: ${score}`;
             streakElement.textContent = `Streak: ${streak}`;
+            updateLeaderboard();
         }
 
         function updateLeaderboard() {
             const leaderboard = [
-                { name: "Player 1", score: 500 },
-                { name: "Player 2", score: 350 },
-                { name: "Player 3", score: 200 },
-                { name: userName, score: score }
-            ].sort((a, b) => b.score - a.score);
+                { name: userName, score: score },
+                { name: 'Alice', score: 80 },
+                { name: 'Bob', score: 50 },
+                { name: 'Charlie', score: 30 },
+                { name: 'Dave', score: 10 }
+            ];
 
-            leaderboardList.innerHTML = leaderboard
-                .map((player, index) => `
-                    <li>
-                        <span class="rank">#${index + 1}</span>
-                        <span class="player-name">${player.name}</span>
-                        <span class="player-score">${player.score}</span>
-                    </li>
-                `)
-                .join('');
+            leaderboard.sort((a, b) => b.score - a.score);
+            leaderboardList.innerHTML = leaderboard.map((player, index) => `
+                <li>
+                    <span class="rank">${index + 1}</span>
+                    <span class="player-name">${player.name}</span>
+                    <span class="player-score">${player.score}</span>
+                </li>
+            `).join('');
         }
 
         function openPurchasePopup() {
@@ -308,6 +308,7 @@
             document.getElementById('purchase-popup').style.display = 'none';
         }
 
+        let selectedStarsAmount = 0;
         let googlePayClient;
 
         function initializeGooglePay() {
@@ -327,7 +328,7 @@
                 }]
             }).then(function(response) {
                 if (response.result) {
-                    console.log('Google Pay is available');
+                    createGooglePayButton();
                 } else {
                     console.log('Google Pay is not available');
                     // You might want to hide the Google Pay button or show an alternative payment method
@@ -335,6 +336,13 @@
             }).catch(function(err) {
                 console.error('Error determining Google Pay availability', err);
             });
+        }
+
+        function createGooglePayButton() {
+            const button = googlePayClient.createButton({
+                onClick: onGooglePayButtonClicked
+            });
+            document.getElementById('google-pay-button-container').appendChild(button);
         }
 
         function getGooglePaymentDataRequest(price) {
@@ -367,14 +375,12 @@
             };
         }
 
-        async function purchaseStars(amount) {
-            if (!googlePayClient) {
-                alert('Google Pay is not initialized yet. Please try again in a moment.');
-                return;
-            }
+        function selectStars(amount) {
+            selectedStarsAmount = amount;
+        }
 
-            const price = (amount === 50) ? 0.99 : (amount === 100) ? 1.99 : 4.99;
-            
+        async function onGooglePayButtonClicked() {
+            const price = (selectedStarsAmount === 50) ? 0.99 : (selectedStarsAmount === 100) ? 1.99 : 4.99;
             try {
                 const paymentDataRequest = getGooglePaymentDataRequest(price);
                 const paymentData = await googlePayClient.loadPaymentData(paymentDataRequest);
@@ -383,9 +389,9 @@
                 console.log('Success', paymentData);
                 
                 // If the payment was successful:
-                tokens += amount;
+                tokens += selectedStarsAmount;
                 updateDisplay();
-                alert(`You've purchased ${amount} stars!`);
+                alert(`You've purchased ${selectedStarsAmount} stars!`);
                 closePurchasePopup();
             } catch (err) {
                 console.error('Error', err);
