@@ -65,7 +65,7 @@
             padding: 8px 15px;
             font-size: 16px;
             background-color: #f2e3e2;
-            color: white;
+            color: #2c3e50;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -138,6 +138,63 @@
             font-weight: bold;
             color: #2c3e50;
         }
+        #purchase-button {
+            background-color: #f2e3e2;
+            color: #2c3e50;
+            padding: 8px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        #purchase-button:hover {
+            background-color: #d2a79c;
+        }
+        #purchase-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .popup-content {
+            background-color: #f2e3e2;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .star-package {
+            background-color: #d2a79c;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .star-package:hover {
+            background-color: #c09589;
+        }
+        #close-popup {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -156,9 +213,20 @@
             <button onclick="flipCoin('tails')">Tails</button>
         </div>
         <div id="result"></div>
+        <button id="purchase-button" onclick="openPurchasePopup()">Purchase Stars</button>
         <div id="leaderboard">
             <h3>Leaderboard</h3>
             <ol id="leaderboard-list"></ol>
+        </div>
+    </div>
+
+    <div id="purchase-popup">
+        <div class="popup-content">
+            <h2>Purchase Stars</h2>
+            <button class="star-package" onclick="purchaseStars(50)">50 Stars - $0.99</button>
+            <button class="star-package" onclick="purchaseStars(100)">100 Stars - $1.99</button>
+            <button class="star-package" onclick="purchaseStars(500)">500 Stars - $4.99</button>
+            <button id="close-popup" onclick="closePurchasePopup()">Close</button>
         </div>
     </div>
 
@@ -187,7 +255,6 @@
             tokens -= betAmount;
             const result = Math.random() < 0.5 ? 'heads' : 'tails';
 
-            // Toggle a dummy class to force reflow
             coinElement.classList.remove('animate-heads', 'animate-tails');
             void coinElement.offsetWidth;  // Trigger reflow
             coinElement.classList.add(`animate-${result}`);
@@ -232,6 +299,23 @@
                     </li>
                 `)
                 .join('');
+        }
+
+        function openPurchasePopup() {
+            document.getElementById('purchase-popup').style.display = 'block';
+        }
+
+        function closePurchasePopup() {
+            document.getElementById('purchase-popup').style.display = 'none';
+        }
+
+        function purchaseStars(amount) {
+            // This is where you'd integrate with a payment system
+            // For now, we'll just add the stars to the token count
+            tokens += amount;
+            updateDisplay();
+            alert(`You've purchased ${amount} stars!`);
+            closePurchasePopup();
         }
 
         updateLeaderboard();
