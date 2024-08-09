@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sic Bo Game</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refined Casino Sic Bo Game</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&family=Roboto+Mono&display=swap');
 
@@ -20,16 +19,20 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
             background: #1a0000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
             color: #e6ccb2;
         }
 
         .game-container {
             display: flex;
-            width: 100vw;
-            height: 100vh;
+            width: 98vw;
+            height: 98vh;
             background-color: #2b0000;
+            border-radius: 20px;
             padding: 10px;
             box-shadow: 0 8px 32px 0 rgba(230, 204, 178, 0.2);
             border: 2px solid #8b4513;
@@ -44,7 +47,8 @@
         }
 
         .table {
-            flex: 1;
+            width: 100%;
+            height: calc(100% - 120px);
             background: #800000;
             border: 3px solid #8b4513;
             border-radius: 15px;
@@ -56,11 +60,11 @@
         }
 
         .table-grid {
+            flex-grow: 1;
             display: grid;
             grid-template-columns: repeat(17, 1fr);
             grid-template-rows: repeat(7, 1fr);
             gap: 1px;
-            height: 100%;
         }
 
         .cell {
@@ -247,6 +251,7 @@
             font-size: 10px;
             border-top: 1px solid #8b4513;
             height: 20px;
+            margin-top: -17px;
         }
 
         .bottom-display span {
@@ -372,53 +377,9 @@
             50% { transform: scale(1.1); box-shadow: 0 0 10px rgba(255,215,0,0.7); }
             100% { transform: scale(1); }
         }
-
-        /* Landscape orientation styles */
-        @media (orientation: landscape) {
-            .game-container {
-                flex-direction: row;
-            }
-
-            .main-area {
-                flex: 3;
-            }
-
-            .history-container {
-                flex: 1;
-                max-width: 200px;
-            }
-        }
-
-        /* Portrait orientation message */
-        .orientation-message {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            font-size: 24px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        @media (orientation: portrait) {
-            .orientation-message {
-                display: flex;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="orientation-message">
-        Please rotate your device to landscape mode for the best experience.
-    </div>
-
     <div class="game-container">
         <div class="main-area">
             <div class="table" id="sicBoTable">
@@ -452,6 +413,9 @@
                 <!-- Roll history will be dynamically added here -->
             </div>
         </div>
+		
+		<div id="resultNotification" class="result-notification" style="display: none;"></div>
+
     </div>
 
     <div id="errorModal" class="modal">
@@ -459,23 +423,11 @@
             <span class="close">&times;</span>
             <p class="modal-message" id="modalMessage"></p>
         </div>
-    </div
-	
+    </div>
+
     <div id="resultNotification" class="result-notification" style="display: none;"></div>
 
     <script>
-        // Telegram WebApp initialization
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        // Get the username from URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const username = urlParams.get('username');
-
-        // Use the username in your game (e.g., display it)
-        // Assuming you have an element to display the player's name
-        // document.getElementById('playerName').textContent = username || 'Player';
-
         const tableGrid = document.getElementById('sicBoTableGrid');
         const balanceEl = document.getElementById('balance');
         const currentBetEl = document.getElementById('currentBet');
@@ -498,155 +450,155 @@
             return dice;
         }
 
-        function createCell(content, className = '', id = '') {
-            const cell = document.createElement('div');
-            cell.className = `cell ${className}`;
-            cell.id = id;
-            if (typeof content === 'string') {
-                cell.innerHTML = content;
-            } else if (Array.isArray(content)) {
-                content.forEach(item => {
-                    if (typeof item === 'number') {
-                        cell.appendChild(createDice(item));
-                    } else {
-                        cell.appendChild(item);
-                    }
-                });
-            } else {
-                cell.appendChild(content);
-            }
-            cell.addEventListener('click', () => placeBet(id));
-            return cell;
-        }
+		function createCell(content, className = '', id = '') {
+			const cell = document.createElement('div');
+			cell.className = `cell ${className}`;
+			cell.id = id;
+			if (typeof content === 'string') {
+				cell.innerHTML = content;
+			} else if (Array.isArray(content)) {
+				content.forEach(item => {
+					if (typeof item === 'number') {
+						cell.appendChild(createDice(item));
+					} else {
+						cell.appendChild(item);
+					}
+				});
+			} else {
+				cell.appendChild(content);
+			}
+			cell.addEventListener('click', () => placeBet(id));
+			return cell;
+		}
 
-        function createTable() {
-            tableGrid.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
-            
-            tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
-            for (let i = 1; i <= 3; i++) {
-                tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
-            }
-            tableGrid.appendChild(createCell('Each triple 1 wins 180', 'triple'));
-            tableGrid.appendChild(createCell([1, 1, 1], 'triple', 'tripleAny'));
-            tableGrid.appendChild(createCell('1 wins 30', 'single-win'));
-            tableGrid.appendChild(createCell('ANY TRIPLE', 'triple'));
-            for (let i = 4; i <= 6; i++) {
-                tableGrid.appendChild(createCell([i, i, i], 'triple', `triple${i}`));
-            }
-            tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
-            for (let i = 4; i <= 6; i++) {
-                tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
-            }
-            
-            tableGrid.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
+		function createTable() {
+			tableGrid.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
+			
+			tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
+			for (let i = 1; i <= 3; i++) {
+				tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
+			}
+			tableGrid.appendChild(createCell('Each triple 1 wins 180', 'triple'));
+			tableGrid.appendChild(createCell([1, 1, 1], 'triple', 'tripleAny'));
+			tableGrid.appendChild(createCell('1 wins 30', 'single-win'));
+			tableGrid.appendChild(createCell('ANY TRIPLE', 'triple'));
+			for (let i = 4; i <= 6; i++) {
+				tableGrid.appendChild(createCell([i, i, i], 'triple', `triple${i}`));
+			}
+			tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
+			for (let i = 4; i <= 6; i++) {
+				tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
+			}
+			
+			tableGrid.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
 
-            for (let i = 4; i <= 17; i++) {
-                let payout = i <= 10 ? [60, 30, 17, 12, 8, 6, 6][i - 4] : [6, 6, 6, 8, 12, 17, 30, 60][i - 11];
-                tableGrid.appendChild(createCell(`${i}<br>1<br>wins ${payout}`, 'single-number', `total${i}`));
-            }
+			for (let i = 4; i <= 17; i++) {
+				let payout = i <= 10 ? [60, 30, 17, 12, 8, 6, 6][i - 4] : [6, 6, 6, 8, 12, 17, 30, 60][i - 11];
+				tableGrid.appendChild(createCell(`${i}<br>1<br>wins ${payout}`, 'single-number', `total${i}`));
+			}
 
-            tableGrid.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice', 'twoDice'));
-            for (let i = 1; i <= 5; i++) {
-                for (let j = i + 1; j <= 6; j++) {
-                    tableGrid.appendChild(createCell([i, j], 'two-dice', `combo${i}${j}`));
-                }
-            }
+			tableGrid.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice', 'twoDice'));
+			for (let i = 1; i <= 5; i++) {
+				for (let j = i + 1; j <= 6; j++) {
+					tableGrid.appendChild(createCell([i, j], 'two-dice', `combo${i}${j}`));
+				}
+			}
 
-            const singleDiceContainer = document.createElement('div');
-            singleDiceContainer.className = 'single-dice-container';
-            ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'].forEach((text, index) => {
-                singleDiceContainer.appendChild(createCell(`${text}<br>${createDice(index + 1).outerHTML}`, 'single-dice', `single${index + 1}`));
-            });
-            tableGrid.appendChild(singleDiceContainer);
-        }
+			const singleDiceContainer = document.createElement('div');
+			singleDiceContainer.className = 'single-dice-container';
+			['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'].forEach((text, index) => {
+				singleDiceContainer.appendChild(createCell(`${text}<br>${createDice(index + 1).outerHTML}`, 'single-dice', `single${index + 1}`));
+			});
+			tableGrid.appendChild(singleDiceContainer);
+		}
 
-        function placeBet(betId) {
-            if (currentChipValue === null) {
-                showModal('Please select a chip value first!');
-                return;
-            }
-            if (selectedBets.has(betId)) {
-                selectedBets.delete(betId);
-                document.getElementById(betId).classList.remove('selected');
-                currentBet -= currentChipValue;
-            } else {
-                selectedBets.add(betId);
-                document.getElementById(betId).classList.add('selected');
-                currentBet += currentChipValue;
-            }
-            currentBetEl.textContent = currentBet;
-        }
+		function placeBet(betId) {
+			if (currentChipValue === null) {
+				showModal('Please select a chip value first!');
+				return;
+			}
+			if (selectedBets.has(betId)) {
+				selectedBets.delete(betId);
+				document.getElementById(betId).classList.remove('selected');
+				currentBet -= currentChipValue;
+			} else {
+				selectedBets.add(betId);
+				document.getElementById(betId).classList.add('selected');
+				currentBet += currentChipValue;
+			}
+			currentBetEl.textContent = currentBet;
+		}
 
-        function rollDice() {
-            return [
-                Math.floor(Math.random() * 6) + 1,
-                Math.floor(Math.random() * 6) + 1,
-                Math.floor(Math.random() * 6) + 1
-            ];
-        }
+		function rollDice() {
+			return [
+				Math.floor(Math.random() * 6) + 1,
+				Math.floor(Math.random() * 6) + 1,
+				Math.floor(Math.random() * 6) + 1
+			];
+		}
 
-        function evaluateBets(diceRoll) {
-            const sum = diceRoll.reduce((a, b) => a + b, 0);
-            let winnings = 0;
-            const isTriple = new Set(diceRoll).size === 1;
+		function evaluateBets(diceRoll) {
+			const sum = diceRoll.reduce((a, b) => a + b, 0);
+			let winnings = 0;
+			const isTriple = new Set(diceRoll).size === 1;
 
-            selectedBets.forEach(betId => {
-                if (betId === 'small' && sum >= 4 && sum <= 10 && !isTriple) winnings += currentChipValue * 2;
-                else if (betId === 'big' && sum >= 11 && sum <= 17 && !isTriple) winnings += currentChipValue * 2;
-                else if (betId.startsWith('double') && diceRoll.filter(d => d == betId.slice(-1)).length === 2) winnings += currentChipValue * 11;
-                else if (betId === 'tripleAny' && isTriple) winnings += currentChipValue * 31;
-                else if (betId.startsWith('triple') && isTriple && diceRoll[0] == betId.slice(-1)) winnings += currentChipValue * 181;
-                else if (betId.startsWith('total') && sum == betId.slice(5)) {
-                    const payout = [60, 30, 17, 12, 8, 6, 6, 6, 6, 6, 8, 12, 17, 30, 60][sum - 4];
-                    winnings += currentChipValue * (payout + 1);
-                }
-                else if (betId.startsWith('combo') && diceRoll.includes(Number(betId.slice(-2, -1))) && diceRoll.includes(Number(betId.slice(-1)))) winnings += currentChipValue * 6;
-                else if (betId.startsWith('single')) {
-                    const count = diceRoll.filter(d => d == betId.slice(-1)).length;
-                    winnings += currentChipValue * count * (count === 1 ? 2 : count === 2 ? 3 : 4);
-                }
-            });
+			selectedBets.forEach(betId => {
+				if (betId === 'small' && sum >= 4 && sum <= 10 && !isTriple) winnings += currentChipValue * 2;
+				else if (betId === 'big' && sum >= 11 && sum <= 17 && !isTriple) winnings += currentChipValue * 2;
+				else if (betId.startsWith('double') && diceRoll.filter(d => d == betId.slice(-1)).length === 2) winnings += currentChipValue * 11;
+				else if (betId === 'tripleAny' && isTriple) winnings += currentChipValue * 31;
+				else if (betId.startsWith('triple') && isTriple && diceRoll[0] == betId.slice(-1)) winnings += currentChipValue * 181;
+				else if (betId.startsWith('total') && sum == betId.slice(5)) {
+					const payout = [60, 30, 17, 12, 8, 6, 6, 6, 6, 6, 8, 12, 17, 30, 60][sum - 4];
+					winnings += currentChipValue * (payout + 1);
+				}
+				else if (betId.startsWith('combo') && diceRoll.includes(Number(betId.slice(-2, -1))) && diceRoll.includes(Number(betId.slice(-1)))) winnings += currentChipValue * 6;
+				else if (betId.startsWith('single')) {
+					const count = diceRoll.filter(d => d == betId.slice(-1)).length;
+					winnings += currentChipValue * count * (count === 1 ? 2 : count === 2 ? 3 : 4);
+				}
+			});
 
-            return winnings - currentBet;
-        }
+			return winnings - currentBet;
+		}
 
-        function updateRollHistory(diceRoll) {
-            const historyContainer = document.getElementById('rollHistory');
-            const historyItem = document.createElement('div');
-            historyItem.className = 'history-item';
-            const total = diceRoll.reduce((a, b) => a + b, 0);
-            const isBig = total > 10 && new Set(diceRoll).size > 1;
-            const isSmall = total < 11 && new Set(diceRoll).size > 1;
-            
-            historyItem.classList.add(isBig ? 'history-big' : isSmall ? 'history-small' : '');
-            
-            historyItem.textContent = diceRoll.join('') + ' ' + total.toString().padStart(2);
-            
-            historyContainer.insertBefore(historyItem, historyContainer.firstChild);
-            
-            while (historyContainer.children.length > 100) {
-                historyContainer.removeChild(historyContainer.lastChild);
-            }
-        }
+		function updateRollHistory(diceRoll) {
+			const historyContainer = document.getElementById('rollHistory');
+			const historyItem = document.createElement('div');
+			historyItem.className = 'history-item';
+			const total = diceRoll.reduce((a, b) => a + b, 0);
+			const isBig = total > 10 && new Set(diceRoll).size > 1;
+			const isSmall = total < 11 && new Set(diceRoll).size > 1;
+			
+			historyItem.classList.add(isBig ? 'history-big' : isSmall ? 'history-small' : '');
+			
+			historyItem.textContent = diceRoll.join('') + ' ' + total.toString().padStart(2);
+			
+			historyContainer.insertBefore(historyItem, historyContainer.firstChild);
+			
+			while (historyContainer.children.length > 100) {
+				historyContainer.removeChild(historyContainer.lastChild);
+			}
+		}
 
-        const modal = document.getElementById('errorModal');
-        const closeBtn = document.getElementsByClassName('close')[0];
-        const modalMessage = document.getElementById('modalMessage');
+		const modal = document.getElementById('errorModal');
+		const closeBtn = document.getElementsByClassName('close')[0];
+		const modalMessage = document.getElementById('modalMessage');
 
-        function showModal(message) {
-            modalMessage.textContent = message;
-            modal.style.display = 'block';
-        }
+		function showModal(message) {
+			modalMessage.textContent = message;
+			modal.style.display = 'block';
+		}
 
-        closeBtn.onclick = function() {
-            modal.style.display = 'none';
-        }
+		closeBtn.onclick = function() {
+			modal.style.display = 'none';
+		}
 
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = 'none';
+			}
+		}
 
         function showResultNotification(result) {
             const notification = document.getElementById('resultNotification');
@@ -679,60 +631,38 @@
             }, 3000);
         }
 
-        rollDiceBtn.addEventListener('click', () => {
-            if (currentBet === 0) {
-                showModal('Please place a bet first!');
-                return;
-            }
-            
-            const diceRoll = rollDice();
-            diceRollEl.textContent = diceRoll.join(', ');
-            
-            const result = evaluateBets(diceRoll);
-            balance += result;
-            balanceEl.textContent = balance;
-            
-            updateRollHistory(diceRoll);
-            
-            showResultNotification(result);
-            
-            currentBet = 0;
-            currentBetEl.textContent = currentBet;
-            selectedBets.clear();
-            document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
-        });
+		rollDiceBtn.addEventListener('click', () => {
+			if (currentBet === 0) {
+				showModal('Please place a bet first!');
+				return;
+			}
+			
+			const diceRoll = rollDice();
+			diceRollEl.textContent = diceRoll.join(', ');
+			
+			const result = evaluateBets(diceRoll);
+			balance += result;
+			balanceEl.textContent = balance;
+			
+			updateRollHistory(diceRoll);
+			
+			showResultNotification(result);
+			
+			currentBet = 0;
+			currentBetEl.textContent = currentBet;
+			selectedBets.clear();
+			document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+		});
 
-        document.querySelectorAll('.chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                currentChipValue = parseInt(chip.dataset.value);
-                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
-                chip.classList.add('active-chip');
-            });
-        });
+		document.querySelectorAll('.chip').forEach(chip => {
+			chip.addEventListener('click', () => {
+				currentChipValue = parseInt(chip.dataset.value);
+				document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
+				chip.classList.add('active-chip');
+			});
+		});
 
-        // Function to handle orientation changes
-        function handleOrientationChange() {
-            if (window.orientation === 90 || window.orientation === -90) {
-                document.querySelector('.orientation-message').style.display = 'none';
-            } else {
-                document.querySelector('.orientation-message').style.display = 'flex';
-            }
-        }
-
-        // Listen for orientation changes
-        window.addEventListener('orientationchange', handleOrientationChange);
-
-        // Initial check
-        handleOrientationChange();
-
-        createTable();
-
-        // When the game ends or when you want to close the WebApp:
-        function endGame() {
-            tg.close();
-        }
-
-        // You can also use tg.sendData(data) to send data back to the bot if needed
+		createTable();
     </script>
 </body>
 </html>
