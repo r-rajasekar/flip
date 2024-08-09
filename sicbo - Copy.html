@@ -397,7 +397,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.9);
             color: white;
             justify-content: center;
             align-items: center;
@@ -405,6 +405,13 @@
             font-size: 24px;
             text-align: center;
             padding: 20px;
+            flex-direction: column;
+        }
+
+        .orientation-message img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
         }
 
         @media (orientation: portrait) {
@@ -415,8 +422,9 @@
     </style>
 </head>
 <body>
-    <div class="orientation-message">
-        Please rotate your device to landscape mode for the best experience.
+    <div id="orientationMessage" class="orientation-message">
+        <img src="https://cdn-icons-png.flaticon.com/512/6302/6302688.png" alt="Rotate device">
+        <p>Please rotate your device to landscape mode for the best experience.</p>
     </div>
 
     <div class="game-container">
@@ -712,15 +720,20 @@
 
         // Function to handle orientation changes
         function handleOrientationChange() {
-            if (window.orientation === 90 || window.orientation === -90) {
-                document.querySelector('.orientation-message').style.display = 'none';
+            const orientationMessage = document.getElementById('orientationMessage');
+            if (window.innerWidth > window.innerHeight) {
+                // Landscape mode
+                orientationMessage.style.display = 'none';
+                document.body.style.visibility = 'visible';
             } else {
-                document.querySelector('.orientation-message').style.display = 'flex';
+                // Portrait mode
+                orientationMessage.style.display = 'flex';
+                document.body.style.visibility = 'hidden';
             }
         }
 
         // Listen for orientation changes
-        window.addEventListener('orientationchange', handleOrientationChange);
+        window.addEventListener('resize', handleOrientationChange);
 
         // Initial check
         handleOrientationChange();
