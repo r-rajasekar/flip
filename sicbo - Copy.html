@@ -62,8 +62,8 @@
         .table-grid {
             flex-grow: 1;
             display: grid;
-            grid-template-columns: repeat(17, 1fr);
-            grid-template-rows: repeat(7, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+            grid-auto-rows: minmax(30px, auto);
             gap: 1px;
         }
 
@@ -75,7 +75,7 @@
             justify-content: center;
             align-items: center;
             color: #e6ccb2;
-            font-size: 8px;
+            font-size: 1.5vmin;
             text-align: center;
             padding: 2px;
             cursor: pointer;
@@ -88,23 +88,76 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .small-big {
-            grid-column: span 4;
-            font-size: 10px;
-            font-weight: 700;
-        }
+		.small-big-container {
+			display: grid;
+			grid-template-columns: 1fr auto 1fr;
+			grid-column: 1 / -1;
+			gap: 1px;
+		}
+
+		.game-title {
+			background-color: #1a0000;
+			color: #e6ccb2;
+			font-family: 'Playfair Display', serif;
+			font-size: 1.8vmin;
+			font-weight: bold;
+			text-align: center;
+			text-transform: uppercase;
+			padding: 10px;
+			border: 2px solid #8b4513;
+			box-shadow: 0 0 15px rgba(139, 69, 19, 0.5);
+			text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			cursor: default;
+			transition: all 0.3s ease;
+		}
+
+		.game-title:hover {
+			background-color: #2b0000;
+			box-shadow: 0 0 20px rgba(139, 69, 19, 0.7);
+		}
+
+		.game-title span {
+			color: #d4af37;
+			font-size: 2.2vmin;
+			margin-bottom: 5px;
+		}
+
+		.small-big {
+			font-size: 1.8vmin;
+			font-weight: 700;
+		}
 
         .double, .triple { grid-column: span 2; }
         .single-number { grid-column: span 1; }
-        .two-dice { grid-column: span 1; }
+
+        .total-bets-container {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(14, 1fr);
+            gap: 1px;
+        }
+
+        .two-dice-container {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(16, 1fr);
+            gap: 1px;
+        }
+
+        .two-dice { 
+            grid-column: span 1;
+        }
         
         .single-dice-container {
-            grid-column: span 17;
-            display: flex;
-            justify-content: space-between;
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
         }
         .single-dice { 
-            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -218,23 +271,73 @@
         }
 
         .dice {
-            width: 16px;
-            height: 16px;
-            background-color: #e6ccb2;
-            border-radius: 3px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 1px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(145deg, #f0d0a0, #e0c090);
+            border-radius: 10%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            padding: 3px;
+            box-shadow: 
+                inset 0 5px 10px rgba(255, 255, 255, 0.3),
+                inset 0 -5px 10px rgba(0, 0, 0, 0.3),
+                2px 2px 5px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transform: rotate(-5deg);
+            transition: transform 0.3s ease;
+        }
+
+        .dice:hover {
+            transform: rotate(0deg) scale(1.1);
+        }
+
+        .dice::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 10%;
+            box-shadow: 
+                inset 0 0 5px rgba(0, 0, 0, 0.3),
+                inset 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
         }
 
         .dot {
-            width: 3px;
-            height: 3px;
-            background-color: #1a0000;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #500 30%, #300 70%, #200 100%);
             border-radius: 50%;
+            align-self: center;
+            justify-self: center;
+            box-shadow: 
+                inset 0 1px 1px rgba(255, 255, 255, 0.3),
+                inset 0 -1px 1px rgba(0, 0, 0, 0.3),
+                0 1px 2px rgba(0, 0, 0, 0.5);
         }
+
+        /* Specific dot placements */
+        .dice-1 .dot:nth-child(1) { grid-area: 2 / 2; }
+
+        .dice-2 .dot:nth-child(1) { grid-area: 1 / 1; }
+        .dice-2 .dot:nth-child(2) { grid-area: 3 / 3; }
+
+        .dice-3 .dot:nth-child(1) { grid-area: 1 / 1; }
+        .dice-3 .dot:nth-child(2) { grid-area: 2 / 2; }
+        .dice-3 .dot:nth-child(3) { grid-area: 3 / 3; }
+
+        .dice-4 .dot:nth-child(1), .dice-4 .dot:nth-child(2) { grid-area: 1 / 1; }
+        .dice-4 .dot:nth-child(3), .dice-4 .dot:nth-child(4) { grid-area: 3 / 3; }
+
+        .dice-5 .dot:nth-child(1), .dice-5 .dot:nth-child(2) { grid-area: 1 / 1; }
+        .dice-5 .dot:nth-child(3) { grid-area: 2 / 2; }
+        .dice-5 .dot:nth-child(4), .dice-5 .dot:nth-child(5) { grid-area: 3 / 3; }
+
+        .dice-6 .dot:nth-child(1), .dice-6 .dot:nth-child(2), .dice-6 .dot:nth-child(3) { grid-area: 1 / 1; }
+        .dice-6 .dot:nth-child(4), .dice-6 .dot:nth-child(5), .dice-6 .dot:nth-child(6) { grid-area: 3 / 3; }
 
         .selected {
             background-color: rgba(230, 204, 178, 0.3);
@@ -248,7 +351,7 @@
             padding: 5px;
             background-color: rgba(26, 0, 0, 0.7);
             color: #e6ccb2;
-            font-size: 10px;
+            font-size: 1.5vmin;
             border-top: 1px solid #8b4513;
             height: 20px;
             margin-top: -17px;
@@ -367,7 +470,7 @@
         .loss-overlay {
             background: radial-gradient(circle, rgba(220,20,60,0.2) 0%, rgba(220,20,60,0) 70%);
         }
-
+		
         .winning-cells-highlight {
             animation: cellPulse 1s ease-in-out 3;
         }
@@ -377,6 +480,123 @@
             50% { transform: scale(1.1); box-shadow: 0 0 10px rgba(255,215,0,0.7); }
             100% { transform: scale(1); }
         }
+
+        /* Media Queries for better responsiveness */
+        @media (max-width: 1200px) {
+            .game-container {
+                flex-direction: column;
+            }
+
+            .main-area {
+                width: 100%;
+                height: calc(100% - 150px);
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .history-container {
+                width: 100%;
+                height: 140px;
+                flex-direction: row;
+            }
+
+            .history-title {
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                transform: rotate(180deg);
+                margin-bottom: 0;
+                margin-right: 10px;
+            }
+
+            .history-data {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: row-reverse;
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+
+            .history-item {
+                margin-right: 10px;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .table-grid {
+                grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+            }
+
+            .cell {
+                font-size: 1.8vmin;
+            }
+
+            .controls {
+                flex-wrap: wrap;
+            }
+
+            .controls button, .controls div {
+                margin: 5px;
+            }
+
+            .chip {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+
+            .total-bets-container,
+            .two-dice-container {
+                grid-template-columns: repeat(7, 1fr);
+            }
+
+            .small-big {
+                font-size: 2vmin;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .table-grid {
+                grid-template-columns: repeat(auto-fit, minmax(15px, 1fr));
+            }
+
+            .cell {
+                font-size: 2vmin;
+            }
+
+            .small-big {
+                font-size: 2.2vmin;
+            }
+
+            .controls button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .chip {
+                width: 25px;
+                height: 25px;
+                font-size: 10px;
+                margin: 0 2px;
+            }
+
+            .history-container {
+                height: 100px;
+            }
+
+            .history-title {
+                font-size: 14px;
+            }
+
+            .history-item {
+                font-size: 12px;
+            }
+
+            .total-bets-container,
+            .two-dice-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
@@ -385,11 +605,6 @@
             <div class="table" id="sicBoTable">
                 <div class="table-grid" id="sicBoTableGrid">
                     <!-- Table grid will be dynamically generated by JavaScript -->
-                </div>
-                <div class="bottom-display">
-                    <span>1:1 ON ONE DICE</span>
-                    <span>2:1 ON TWO DICE</span>
-                    <span>3:1 ON THREE DICE</span>
                 </div>
                 <div id="tableOverlay" class="table-overlay"></div>
             </div>
@@ -413,9 +628,6 @@
                 <!-- Roll history will be dynamically added here -->
             </div>
         </div>
-		
-		<div id="resultNotification" class="result-notification" style="display: none;"></div>
-
     </div>
 
     <div id="errorModal" class="modal">
@@ -441,7 +653,7 @@
 
         function createDice(number) {
             const dice = document.createElement('div');
-            dice.className = 'dice';
+            dice.className = `dice dice-${number}`;
             for (let i = 0; i < number; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'dot';
@@ -450,155 +662,176 @@
             return dice;
         }
 
-		function createCell(content, className = '', id = '') {
-			const cell = document.createElement('div');
-			cell.className = `cell ${className}`;
-			cell.id = id;
-			if (typeof content === 'string') {
-				cell.innerHTML = content;
-			} else if (Array.isArray(content)) {
-				content.forEach(item => {
-					if (typeof item === 'number') {
-						cell.appendChild(createDice(item));
-					} else {
-						cell.appendChild(item);
-					}
-				});
-			} else {
-				cell.appendChild(content);
-			}
-			cell.addEventListener('click', () => placeBet(id));
-			return cell;
-		}
+        function createCell(content, className = '', id = '') {
+            const cell = document.createElement('div');
+            cell.className = `cell ${className}`;
+            cell.id = id;
+            if (typeof content === 'string') {
+                cell.innerHTML = content;
+            } else if (Array.isArray(content)) {
+                content.forEach(item => {
+                    if (typeof item === 'number') {
+                        cell.appendChild(createDice(item));
+                    } else {
+                        cell.appendChild(item);
+                    }
+                });
+            } else {
+                cell.appendChild(content);
+            }
+            cell.addEventListener('click', () => placeBet(id));
+            return cell;
+        }
 
 		function createTable() {
-			tableGrid.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
+			// Create the small-big container
+			const smallBigContainer = document.createElement('div');
+			smallBigContainer.className = 'small-big-container';
 			
-			tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
-			for (let i = 1; i <= 3; i++) {
-				tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
-			}
-			tableGrid.appendChild(createCell('Each triple 1 wins 180', 'triple'));
-			tableGrid.appendChild(createCell([1, 1, 1], 'triple', 'tripleAny'));
-			tableGrid.appendChild(createCell('1 wins 30', 'single-win'));
-			tableGrid.appendChild(createCell('ANY TRIPLE', 'triple'));
-			for (let i = 4; i <= 6; i++) {
-				tableGrid.appendChild(createCell([i, i, i], 'triple', `triple${i}`));
-			}
-			tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
-			for (let i = 4; i <= 6; i++) {
-				tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
-			}
+			smallBigContainer.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
 			
-			tableGrid.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
-
-			for (let i = 4; i <= 17; i++) {
-				let payout = i <= 10 ? [60, 30, 17, 12, 8, 6, 6][i - 4] : [6, 6, 6, 8, 12, 17, 30, 60][i - 11];
-				tableGrid.appendChild(createCell(`${i}<br>1<br>wins ${payout}`, 'single-number', `total${i}`));
-			}
-
-			tableGrid.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice', 'twoDice'));
-			for (let i = 1; i <= 5; i++) {
-				for (let j = i + 1; j <= 6; j++) {
-					tableGrid.appendChild(createCell([i, j], 'two-dice', `combo${i}${j}`));
-				}
-			}
-
-			const singleDiceContainer = document.createElement('div');
-			singleDiceContainer.className = 'single-dice-container';
-			['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'].forEach((text, index) => {
-				singleDiceContainer.appendChild(createCell(`${text}<br>${createDice(index + 1).outerHTML}`, 'single-dice', `single${index + 1}`));
-			});
-			tableGrid.appendChild(singleDiceContainer);
-		}
-
-		function placeBet(betId) {
-			if (currentChipValue === null) {
-				showModal('Please select a chip value first!');
-				return;
-			}
-			if (selectedBets.has(betId)) {
-				selectedBets.delete(betId);
-				document.getElementById(betId).classList.remove('selected');
-				currentBet -= currentChipValue;
-			} else {
-				selectedBets.add(betId);
-				document.getElementById(betId).classList.add('selected');
-				currentBet += currentChipValue;
-			}
-			currentBetEl.textContent = currentBet;
-		}
-
-		function rollDice() {
-			return [
-				Math.floor(Math.random() * 6) + 1,
-				Math.floor(Math.random() * 6) + 1,
-				Math.floor(Math.random() * 6) + 1
-			];
-		}
-
-		function evaluateBets(diceRoll) {
-			const sum = diceRoll.reduce((a, b) => a + b, 0);
-			let winnings = 0;
-			const isTriple = new Set(diceRoll).size === 1;
-
-			selectedBets.forEach(betId => {
-				if (betId === 'small' && sum >= 4 && sum <= 10 && !isTriple) winnings += currentChipValue * 2;
-				else if (betId === 'big' && sum >= 11 && sum <= 17 && !isTriple) winnings += currentChipValue * 2;
-				else if (betId.startsWith('double') && diceRoll.filter(d => d == betId.slice(-1)).length === 2) winnings += currentChipValue * 11;
-				else if (betId === 'tripleAny' && isTriple) winnings += currentChipValue * 31;
-				else if (betId.startsWith('triple') && isTriple && diceRoll[0] == betId.slice(-1)) winnings += currentChipValue * 181;
-				else if (betId.startsWith('total') && sum == betId.slice(5)) {
-					const payout = [60, 30, 17, 12, 8, 6, 6, 6, 6, 6, 8, 12, 17, 30, 60][sum - 4];
-					winnings += currentChipValue * (payout + 1);
-				}
-				else if (betId.startsWith('combo') && diceRoll.includes(Number(betId.slice(-2, -1))) && diceRoll.includes(Number(betId.slice(-1)))) winnings += currentChipValue * 6;
-				else if (betId.startsWith('single')) {
-					const count = diceRoll.filter(d => d == betId.slice(-1)).length;
-					winnings += currentChipValue * count * (count === 1 ? 2 : count === 2 ? 3 : 4);
-				}
-			});
-
-			return winnings - currentBet;
-		}
-
-		function updateRollHistory(diceRoll) {
-			const historyContainer = document.getElementById('rollHistory');
-			const historyItem = document.createElement('div');
-			historyItem.className = 'history-item';
-			const total = diceRoll.reduce((a, b) => a + b, 0);
-			const isBig = total > 10 && new Set(diceRoll).size > 1;
-			const isSmall = total < 11 && new Set(diceRoll).size > 1;
+			// Add the new title element (not a cell)
+			const titleElement = document.createElement('div');
+			titleElement.className = 'game-title';
+			titleElement.innerHTML = 'SIC BO<br>Fortune Awaits!<br>Place Your Bets';
+			smallBigContainer.appendChild(titleElement);
 			
-			historyItem.classList.add(isBig ? 'history-big' : isSmall ? 'history-small' : '');
+			smallBigContainer.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
 			
-			historyItem.textContent = diceRoll.join('') + ' ' + total.toString().padStart(2);
-			
-			historyContainer.insertBefore(historyItem, historyContainer.firstChild);
-			
-			while (historyContainer.children.length > 100) {
-				historyContainer.removeChild(historyContainer.lastChild);
-			}
-		}
+			tableGrid.appendChild(smallBigContainer);
+            
+            tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
+            for (let i = 1; i <= 3; i++) {
+                tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
+            }
+            tableGrid.appendChild(createCell('Each triple 1 wins 180', 'triple'));
+            tableGrid.appendChild(createCell([1, 1, 1], 'triple', 'tripleAny'));
+            tableGrid.appendChild(createCell('1 wins 30', 'single-win'));
+            tableGrid.appendChild(createCell('ANY TRIPLE', 'triple'));
+            for (let i = 4; i <= 6; i++) {
+                tableGrid.appendChild(createCell([i, i, i], 'triple', `triple${i}`));
+            }
+            tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
+            for (let i = 4; i <= 6; i++) {
+                tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
+            }
 
-		const modal = document.getElementById('errorModal');
-		const closeBtn = document.getElementsByClassName('close')[0];
-		const modalMessage = document.getElementById('modalMessage');
+            // Create the total bets container
+            const totalBetsContainer = document.createElement('div');
+            totalBetsContainer.className = 'total-bets-container';
+            for (let i = 4; i <= 17; i++) {
+                let payout = i <= 10 ? [60, 30, 17, 12, 8, 6, 6][i - 4] : [6, 6, 6, 8, 12, 17, 30, 60][i - 11];
+                totalBetsContainer.appendChild(createCell(`${i}<br>1<br>wins ${payout}`, 'single-number', `total${i}`));
+            }
+            tableGrid.appendChild(totalBetsContainer);
 
-		function showModal(message) {
-			modalMessage.textContent = message;
-			modal.style.display = 'block';
-		}
+            // Create the two dice container
+            const twoDiceContainer = document.createElement('div');
+            twoDiceContainer.className = 'two-dice-container';
+            twoDiceContainer.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice', 'twoDice'));
+            for (let i = 1; i <= 5; i++) {
+                for (let j = i + 1; j <= 6; j++) {
+                    twoDiceContainer.appendChild(createCell([i, j], 'two-dice', `combo${i}${j}`));
+                }
+            }
+            tableGrid.appendChild(twoDiceContainer);
 
-		closeBtn.onclick = function() {
-			modal.style.display = 'none';
-		}
+            // Create the single dice container
+            const singleDiceContainer = document.createElement('div');
+            singleDiceContainer.className = 'single-dice-container';
+            ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'].forEach((text, index) => {
+                singleDiceContainer.appendChild(createCell(`${text}<br>${createDice(index + 1).outerHTML}`, 'single-dice', `single${index + 1}`));
+            });
+            tableGrid.appendChild(singleDiceContainer);
+        }
 
-		window.onclick = function(event) {
-			if (event.target == modal) {
-				modal.style.display = 'none';
-			}
-		}
+        function placeBet(betId) {
+            if (currentChipValue === null) {
+                showModal('Please select a chip value first!');
+                return;
+            }
+            if (selectedBets.has(betId)) {
+                selectedBets.delete(betId);
+                document.getElementById(betId).classList.remove('selected');
+                currentBet -= currentChipValue;
+            } else {
+                selectedBets.add(betId);
+                document.getElementById(betId).classList.add('selected');
+                currentBet += currentChipValue;
+            }
+            currentBetEl.textContent = currentBet;
+        }
+
+        function rollDice() {
+            return [
+                Math.floor(Math.random() * 6) + 1,
+                Math.floor(Math.random() * 6) + 1,
+                Math.floor(Math.random() * 6) + 1
+            ];
+        }
+
+        function evaluateBets(diceRoll) {
+            const sum = diceRoll.reduce((a, b) => a + b, 0);
+            let winnings = 0;
+            const isTriple = new Set(diceRoll).size === 1;
+
+            selectedBets.forEach(betId => {
+                if (betId === 'small' && sum >= 4 && sum <= 10 && !isTriple) winnings += currentChipValue * 2;
+                else if (betId === 'big' && sum >= 11 && sum <= 17 && !isTriple) winnings += currentChipValue * 2;
+                else if (betId.startsWith('double') && diceRoll.filter(d => d == betId.slice(-1)).length === 2) winnings += currentChipValue * 11;
+                else if (betId === 'tripleAny' && isTriple) winnings += currentChipValue * 31;
+                else if (betId.startsWith('triple') && isTriple && diceRoll[0] == betId.slice(-1)) winnings += currentChipValue * 181;
+                else if (betId.startsWith('total') && sum == betId.slice(5)) {
+                    const payout = [60, 30, 17, 12, 8, 6, 6, 6, 6, 6, 8, 12, 17, 30, 60][sum - 4];
+                    winnings += currentChipValue * (payout + 1);
+                }
+                else if (betId.startsWith('combo') && diceRoll.includes(Number(betId.slice(-2, -1))) && diceRoll.includes(Number(betId.slice(-1)))) winnings += currentChipValue * 6;
+                else if (betId.startsWith('single')) {
+                    const count = diceRoll.filter(d => d == betId.slice(-1)).length;
+                    winnings += currentChipValue * count * (count === 1 ? 2 : count === 2 ? 3 : 4);
+                }
+            });
+
+            return winnings - currentBet;
+        }
+
+        function updateRollHistory(diceRoll) {
+            const historyContainer = document.getElementById('rollHistory');
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            const total = diceRoll.reduce((a, b) => a + b, 0);
+            const isBig = total > 10 && new Set(diceRoll).size > 1;
+            const isSmall = total < 11 && new Set(diceRoll).size > 1;
+            
+            historyItem.classList.add(isBig ? 'history-big' : isSmall ? 'history-small' : '');
+            
+            historyItem.textContent = diceRoll.join('') + ' ' + total.toString().padStart(2);
+            
+            historyContainer.insertBefore(historyItem, historyContainer.firstChild);
+            
+            while (historyContainer.children.length > 100) {
+                historyContainer.removeChild(historyContainer.lastChild);
+            }
+        }
+
+        const modal = document.getElementById('errorModal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+        const modalMessage = document.getElementById('modalMessage');
+
+        function showModal(message) {
+            modalMessage.textContent = message;
+            modal.style.display = 'block';
+        }
+
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
 
         function showResultNotification(result) {
             const notification = document.getElementById('resultNotification');
@@ -631,38 +864,39 @@
             }, 3000);
         }
 
-		rollDiceBtn.addEventListener('click', () => {
-			if (currentBet === 0) {
-				showModal('Please place a bet first!');
-				return;
-			}
-			
-			const diceRoll = rollDice();
-			diceRollEl.textContent = diceRoll.join(', ');
-			
-			const result = evaluateBets(diceRoll);
-			balance += result;
-			balanceEl.textContent = balance;
-			
-			updateRollHistory(diceRoll);
-			
-			showResultNotification(result);
-			
-			currentBet = 0;
-			currentBetEl.textContent = currentBet;
-			selectedBets.clear();
-			document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
-		});
+        rollDiceBtn.addEventListener('click', () => {
+            if (currentBet === 0) {
+                showModal('Please place a bet first!');
+                return;
+            }
+            
+            const diceRoll = rollDice();
+            diceRollEl.textContent = diceRoll.join(', ');
+            
+            const result = evaluateBets(diceRoll);
+            balance += result;
+            balanceEl.textContent = balance;
+            
+            updateRollHistory(diceRoll);
+            
+            showResultNotification(result);
+            
+            currentBet = 0;
+            currentBetEl.textContent = currentBet;
+            selectedBets.clear();
+            document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+        });
 
-		document.querySelectorAll('.chip').forEach(chip => {
-			chip.addEventListener('click', () => {
-				currentChipValue = parseInt(chip.dataset.value);
-				document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
-				chip.classList.add('active-chip');
-			});
-		});
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                currentChipValue = parseInt(chip.dataset.value);
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
+                chip.classList.add('active-chip');
+            });
+        });
 
-		createTable();
+        // Initialize the game
+        createTable();
     </script>
 </body>
 </html>
