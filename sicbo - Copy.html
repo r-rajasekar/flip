@@ -96,6 +96,10 @@
             grid-template-columns: 1fr auto 1fr;
             grid-column: 1 / -1;
             gap: 1px;
+            border: 2px solid #8b4513;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
 
         .game-title {
@@ -144,26 +148,32 @@
             gap: 1px;
         }
 
-		.two-dice-container {
-			grid-column: 1 / -1;
-			display: grid;
-			grid-template-columns: repeat(8, 1fr);
-			grid-template-rows: repeat(2, auto);
-			gap: 1px;
-		}
+        .two-dice-container {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(2, auto);
+            gap: 1px;
+            border: 2px solid #8b4513;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
 
-		.two-dice {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-		}
+        .two-dice { 
+            grid-column: span 1;
+        }
         
         .single-dice-container {
             grid-column: 1 / -1;
             display: grid;
             grid-template-columns: repeat(6, 1fr);
+            border: 2px solid #8b4513;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
+
         .single-dice { 
             display: flex;
             flex-direction: column;
@@ -435,11 +445,11 @@
         .dice-3 .dot:nth-child(1) { grid-area: 1 / 1; }
         .dice-3 .dot:nth-child(2) { grid-area: 2 / 2; }
         .dice-3 .dot:nth-child(3) { grid-area: 3 / 3; }
-        .dice-4 .dot:nth-child(1), .dice-4 .dot:nth-child(2) { grid-area: 1 / 1; }
+		.dice-4 .dot:nth-child(1), .dice-4 .dot:nth-child(2) { grid-area: 1 / 1; }
         .dice-4 .dot:nth-child(3), .dice-4 .dot:nth-child(4) { grid-area: 3 / 3; }
         .dice-5 .dot:nth-child(1), .dice-5 .dot:nth-child(2) { grid-area: 1 / 1; }
         .dice-5 .dot:nth-child(3) { grid-area: 2 / 2; }
-		.dice-5 .dot:nth-child(4), .dice-5 .dot:nth-child(5) { grid-area: 3 / 3; }
+        .dice-5 .dot:nth-child(4), .dice-5 .dot:nth-child(5) { grid-area: 3 / 3; }
         .dice-6 .dot:nth-child(1), .dice-6 .dot:nth-child(2), .dice-6 .dot:nth-child(3) { grid-area: 1 / 1; }
         .dice-6 .dot:nth-child(4), .dice-6 .dot:nth-child(5), .dice-6 .dot:nth-child(6) { grid-area: 3 / 3; }
 
@@ -891,195 +901,195 @@
 			tableGrid.appendChild(singleDiceContainer);
 		}
 
-        function placeBet(betId) {
-            if (currentChipValue === null) {
-                showModal('Please select a chip value first!');
-                return;
-            }
-            if (selectedBets.has(betId)) {
-                selectedBets.delete(betId);
-                document.getElementById(betId).classList.remove('selected');
-                currentBet -= currentChipValue;
-            } else {
-                selectedBets.add(betId);
-                document.getElementById(betId).classList.add('selected');
-                currentBet += currentChipValue;
-            }
-            currentBetEl.textContent = currentBet;
-            
-            // Add this bet to the history
-            betHistory.push({betId, chipValue: currentChipValue});
-        }
+		function placeBet(betId) {
+			if (currentChipValue === null) {
+				showModal('Please select a chip value first!');
+				return;
+			}
+			if (selectedBets.has(betId)) {
+				selectedBets.delete(betId);
+				document.getElementById(betId).classList.remove('selected');
+				currentBet -= currentChipValue;
+			} else {
+				selectedBets.add(betId);
+				document.getElementById(betId).classList.add('selected');
+				currentBet += currentChipValue;
+			}
+			currentBetEl.textContent = currentBet;
+			
+			// Add this bet to the history
+			betHistory.push({betId, chipValue: currentChipValue});
+		}
 
-        function rollDice() {
-            return [
-                Math.floor(Math.random() * 6) + 1,
-                Math.floor(Math.random() * 6) + 1,
-                Math.floor(Math.random() * 6) + 1
-            ];
-        }
+		function rollDice() {
+			return [
+				Math.floor(Math.random() * 6) + 1,
+				Math.floor(Math.random() * 6) + 1,
+				Math.floor(Math.random() * 6) + 1
+			];
+		}
 
-        function evaluateBets(diceRoll) {
-            const sum = diceRoll.reduce((a, b) => a + b, 0);
-            let winnings = 0;
-            const isTriple = new Set(diceRoll).size === 1;
+		function evaluateBets(diceRoll) {
+			const sum = diceRoll.reduce((a, b) => a + b, 0);
+			let winnings = 0;
+			const isTriple = new Set(diceRoll).size === 1;
 
-            selectedBets.forEach(betId => {
-                if (betId === 'small' && sum >= 4 && sum <= 10 && !isTriple) winnings += currentChipValue * 2;
-                else if (betId === 'big' && sum >= 11 && sum <= 17 && !isTriple) winnings += currentChipValue * 2;
-                else if (betId.startsWith('double') && diceRoll.filter(d => d == betId.slice(-1)).length === 2) winnings += currentChipValue * 11;
-                else if (betId === 'tripleAny' && isTriple) winnings += currentChipValue * 31;
-                else if (betId.startsWith('triple') && isTriple && diceRoll[0] == betId.slice(-1)) winnings += currentChipValue * 181;
-                else if (betId.startsWith('total') && sum == betId.slice(5)) {
-                    const payout = [60, 30, 17, 12, 8, 6, 6, 6, 6, 6, 8, 12, 17, 30, 60][sum - 4];
-                    winnings += currentChipValue * (payout + 1);
-                }
-                else if (betId.startsWith('combo') && diceRoll.includes(Number(betId.slice(-2, -1))) && diceRoll.includes(Number(betId.slice(-1)))) winnings += currentChipValue * 6;
-                else if (betId.startsWith('single')) {
-                    const count = diceRoll.filter(d => d == betId.slice(-1)).length;
-                    winnings += currentChipValue * count * (count === 1 ? 2 : count === 2 ? 3 : 4);
-                }
-            });
+			selectedBets.forEach(betId => {
+				if (betId === 'small' && sum >= 4 && sum <= 10 && !isTriple) winnings += currentChipValue * 2;
+				else if (betId === 'big' && sum >= 11 && sum <= 17 && !isTriple) winnings += currentChipValue * 2;
+				else if (betId.startsWith('double') && diceRoll.filter(d => d == betId.slice(-1)).length === 2) winnings += currentChipValue * 11;
+				else if (betId === 'tripleAny' && isTriple) winnings += currentChipValue * 31;
+				else if (betId.startsWith('triple') && isTriple && diceRoll[0] == betId.slice(-1)) winnings += currentChipValue * 181;
+				else if (betId.startsWith('total') && sum == betId.slice(5)) {
+					const payout = [60, 30, 17, 12, 8, 6, 6, 6, 6, 6, 8, 12, 17, 30, 60][sum - 4];
+					winnings += currentChipValue * (payout + 1);
+				}
+				else if (betId.startsWith('combo') && diceRoll.includes(Number(betId.slice(-2, -1))) && diceRoll.includes(Number(betId.slice(-1)))) winnings += currentChipValue * 6;
+				else if (betId.startsWith('single')) {
+					const count = diceRoll.filter(d => d == betId.slice(-1)).length;
+					winnings += currentChipValue * count * (count === 1 ? 2 : count === 2 ? 3 : 4);
+				}
+			});
 
-            return winnings - currentBet;
-        }
+			return winnings - currentBet;
+		}
 
-        function updateRollHistory(diceRoll) {
-            const historyContainer = document.getElementById('rollHistory');
-            const historyItem = document.createElement('div');
-            historyItem.className = 'history-item';
-            const total = diceRoll.reduce((a, b) => a + b, 0);
-            const isBig = total > 10 && new Set(diceRoll).size > 1;
-            const isSmall = total < 11 && new Set(diceRoll).size > 1;
-            
-            historyItem.classList.add(isBig ? 'history-big' : isSmall ? 'history-small' : '');
-            
-            historyItem.innerHTML = `
-                <span>${diceRoll.join('')}</span>
-                <span>${total.toString().padStart(2, '0')}</span>
-            `;
-            
-            historyContainer.insertBefore(historyItem, historyContainer.firstChild);
-            
-            while (historyContainer.children.length > 100) {
-                historyContainer.removeChild(historyContainer.lastChild);
-            }
-        }
+		function updateRollHistory(diceRoll) {
+			const historyContainer = document.getElementById('rollHistory');
+			const historyItem = document.createElement('div');
+			historyItem.className = 'history-item';
+			const total = diceRoll.reduce((a, b) => a + b, 0);
+			const isBig = total > 10 && new Set(diceRoll).size > 1;
+			const isSmall = total < 11 && new Set(diceRoll).size > 1;
+			
+			historyItem.classList.add(isBig ? 'history-big' : isSmall ? 'history-small' : '');
+			
+			historyItem.innerHTML = `
+				<span>${diceRoll.join('')}</span>
+				<span>${total.toString().padStart(2, '0')}</span>
+			`;
+			
+			historyContainer.insertBefore(historyItem, historyContainer.firstChild);
+			
+			while (historyContainer.children.length > 100) {
+				historyContainer.removeChild(historyContainer.lastChild);
+			}
+		}
 
-        const modal = document.getElementById('errorModal');
-        const closeBtn = document.getElementsByClassName('close')[0];
-        const modalMessage = document.getElementById('modalMessage');
+		const modal = document.getElementById('errorModal');
+		const closeBtn = document.getElementsByClassName('close')[0];
+		const modalMessage = document.getElementById('modalMessage');
 
-        function showModal(message) {
-            modalMessage.textContent = message;
-            modal.style.display = 'block';
-        }
+		function showModal(message) {
+			modalMessage.textContent = message;
+			modal.style.display = 'block';
+		}
 
-        closeBtn.onclick = function() {
-            modal.style.display = 'none';
-        }
+		closeBtn.onclick = function() {
+			modal.style.display = 'none';
+		}
 
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = 'none';
+			}
+		}
 
-        function showResultNotification(result) {
-            const notification = document.getElementById('resultNotification');
-            const tableOverlay = document.getElementById('tableOverlay');
-            
-            if (result > 0) {
-                notification.innerHTML = `You Won<span>$${result}</span>`;
-                notification.className = 'result-notification win-notification';
-                tableOverlay.className = 'table-overlay win-overlay';
-                
-                selectedBets.forEach(betId => {
-                    const cell = document.getElementById(betId);
-                    cell.classList.add('winning-cells-highlight');
-                    setTimeout(() => {
-                        cell.classList.remove('winning-cells-highlight');
-                    }, 3000);
-                });
-            } else {
-                notification.innerHTML = `You Lost<span>$${-result}</span>`;
-                notification.className = 'result-notification loss-notification';
-                tableOverlay.className = 'table-overlay loss-overlay';
-            }
-            
-            notification.style.display = 'block';
-            tableOverlay.style.opacity = '1';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-                tableOverlay.style.opacity = '0';
-            }, 3000);
-        }
+		function showResultNotification(result) {
+			const notification = document.getElementById('resultNotification');
+			const tableOverlay = document.getElementById('tableOverlay');
+			
+			if (result > 0) {
+				notification.innerHTML = `You Won<span>$${result}</span>`;
+				notification.className = 'result-notification win-notification';
+				tableOverlay.className = 'table-overlay win-overlay';
+				
+				selectedBets.forEach(betId => {
+					const cell = document.getElementById(betId);
+					cell.classList.add('winning-cells-highlight');
+					setTimeout(() => {
+						cell.classList.remove('winning-cells-highlight');
+					}, 3000);
+				});
+			} else {
+				notification.innerHTML = `You Lost<span>$${-result}</span>`;
+				notification.className = 'result-notification loss-notification';
+				tableOverlay.className = 'table-overlay loss-overlay';
+			}
+			
+			notification.style.display = 'block';
+			tableOverlay.style.opacity = '1';
+			
+			setTimeout(() => {
+				notification.style.display = 'none';
+				tableOverlay.style.opacity = '0';
+			}, 3000);
+		}
 
-        function undoLastBet() {
-            if (betHistory.length === 0) {
-                showModal('No bets to undo!');
-                return;
-            }
-            
-            const lastBet = betHistory.pop();
-            const betId = lastBet.betId;
-            const chipValue = lastBet.chipValue;
-            
-            if (selectedBets.has(betId)) {
-                selectedBets.delete(betId);
-                document.getElementById(betId).classList.remove('selected');
-                currentBet -= chipValue;
-                currentBetEl.textContent = currentBet;
-            }
-        }
+		function undoLastBet() {
+			if (betHistory.length === 0) {
+				showModal('No bets to undo!');
+				return;
+			}
+			
+			const lastBet = betHistory.pop();
+			const betId = lastBet.betId;
+			const chipValue = lastBet.chipValue;
+			
+			if (selectedBets.has(betId)) {
+				selectedBets.delete(betId);
+				document.getElementById(betId).classList.remove('selected');
+				currentBet -= chipValue;
+				currentBetEl.textContent = currentBet;
+			}
+		}
 
-        function resetAllBets() {
-            selectedBets.forEach(betId => {
-                document.getElementById(betId).classList.remove('selected');
-            });
-            selectedBets.clear();
-            betHistory = [];
-            currentBet = 0;
-            currentBetEl.textContent = currentBet;
-        }
+		function resetAllBets() {
+			selectedBets.forEach(betId => {
+				document.getElementById(betId).classList.remove('selected');
+			});
+			selectedBets.clear();
+			betHistory = [];
+			currentBet = 0;
+			currentBetEl.textContent = currentBet;
+		}
 
-        rollDiceBtn.addEventListener('click', () => {
-            if (currentBet === 0) {
-                showModal('Please place a bet first!');
-                return;
-            }
-            
-            const diceRoll = rollDice();
-            diceRollEl.textContent = diceRoll.join(', ');
-            
-            const result = evaluateBets(diceRoll);
-            balance += result;
-            balanceEl.textContent = balance;
-            
-            updateRollHistory(diceRoll);
-            
-            showResultNotification(result);
-            
-            currentBet = 0;
-            currentBetEl.textContent = currentBet;
-            selectedBets.clear();
-            document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
-        });
+		rollDiceBtn.addEventListener('click', () => {
+			if (currentBet === 0) {
+				showModal('Please place a bet first!');
+				return;
+			}
+			
+			const diceRoll = rollDice();
+			diceRollEl.textContent = diceRoll.join(', ');
+			
+			const result = evaluateBets(diceRoll);
+			balance += result;
+			balanceEl.textContent = balance;
+			
+			updateRollHistory(diceRoll);
+			
+			showResultNotification(result);
+			
+			currentBet = 0;
+			currentBetEl.textContent = currentBet;
+			selectedBets.clear();
+			document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+		});
 
-        document.querySelectorAll('.chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                currentChipValue = parseInt(chip.dataset.value.slice(1));
-                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
-                chip.classList.add('active-chip');
-            });
-        });
+		document.querySelectorAll('.chip').forEach(chip => {
+			chip.addEventListener('click', () => {
+				currentChipValue = parseInt(chip.dataset.value.slice(1));
+				document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
+				chip.classList.add('active-chip');
+			});
+		});
 
-        document.getElementById('undoButton').addEventListener('click', undoLastBet);
-        document.getElementById('resetButton').addEventListener('click', resetAllBets);
+		document.getElementById('undoButton').addEventListener('click', undoLastBet);
+		document.getElementById('resetButton').addEventListener('click', resetAllBets);
 
-        // Initialize the game
-        createTable();
+		// Initialize the game
+		createTable();
     </script>
 </body>
 </html>
