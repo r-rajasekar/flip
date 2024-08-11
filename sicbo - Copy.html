@@ -200,13 +200,13 @@
             display: flex;
             justify-content: center;
             margin-top: 10px;
+            gap: 15px; /* Increased gap between chips */
         }
 
         .chip {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            margin: 0 5px;
             cursor: pointer;
             display: flex;
             justify-content: center;
@@ -239,12 +239,11 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 14px;
+            font-size: 12px; /* Reduced font size for chip value */
             font-weight: bold;
         }
 
-		
-		@keyframes rotate {
+        @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
@@ -287,7 +286,7 @@
             margin-bottom: 5px;
             text-align: center;
             color: #e6ccb2;
-	    line-height: 0.8;
+            line-height: 0.8;
         }
 
         .history-data-container {
@@ -415,7 +414,7 @@
             text-align: center;
         }
 
-        .modal {
+		.modal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -470,7 +469,7 @@
             transform: translateY(-5px);
         }
 
-		@keyframes fadeInOut {
+        @keyframes fadeInOut {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
             10% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
             90% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -555,10 +554,17 @@
                 margin: 5px;
             }
 
+            .chip-container {
+                gap: 10px; /* Slightly reduced gap for smaller screens */
+            }
+
             .chip {
-                width: 30px;
-                height: 30px;
-                font-size: 12px;
+                width: 40px;
+                height: 40px;
+            }
+
+            .chip::after {
+                font-size: 10px; /* Further reduced font size for smaller screens */
             }
 
             .total-bets-container,
@@ -579,8 +585,8 @@
             .main-area {
                 height: calc(100% - 80px);
             }
-			
-			.history-title {
+            
+            .history-title {
                 font-size: 14px;
             }
 
@@ -602,11 +608,17 @@
                 font-size: 12px;
             }
 
+            .chip-container {
+                gap: 8px; /* Further reduced gap for very small screens */
+            }
+
             .chip {
-                width: 25px;
-                height: 25px;
-                font-size: 10px;
-                margin: 0 2px;
+                width: 35px;
+                height: 35px;
+            }
+
+            .chip::after {
+                font-size: 9px; /* Even smaller font size for very small screens */
             }
 
             .history-title {
@@ -640,13 +652,13 @@
                 <div>Current Bet: $<span id="currentBet">0</span></div>
                 <div>Dice Roll: <span id="diceRoll"></span></div>
             </div>
-			<div class="chip-container">
-				<div class="chip chip-1" data-value="$1"></div>
-				<div class="chip chip-5" data-value="$5"></div>
-				<div class="chip chip-10" data-value="$10"></div>
-				<div class="chip chip-25" data-value="$25"></div>
-				<div class="chip chip-100" data-value="$100"></div>
-			</div>
+            <div class="chip-container">
+                <div class="chip chip-1" data-value="$1"></div>
+                <div class="chip chip-5" data-value="$5"></div>
+                <div class="chip chip-10" data-value="$10"></div>
+                <div class="chip chip-25" data-value="$25"></div>
+                <div class="chip chip-100" data-value="$100"></div>
+            </div>
         </div>
 
         <div class="history-container">
@@ -799,7 +811,7 @@
             ];
         }
 
-        function evaluateBets(diceRoll) {
+		function evaluateBets(diceRoll) {
             const sum = diceRoll.reduce((a, b) => a + b, 0);
             let winnings = 0;
             const isTriple = new Set(diceRoll).size === 1;
