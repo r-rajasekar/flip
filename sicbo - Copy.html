@@ -43,7 +43,7 @@
             display: flex;
             flex-direction: column;
             width: 100%;
-            height: calc(100% - 140px);
+            height: calc(100% - 100px);
             margin-bottom: 10px;
         }
 
@@ -138,14 +138,14 @@
         .total-bets-container {
             grid-column: 1 / -1;
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(14, 1fr);
             gap: 1px;
         }
 
         .two-dice-container {
             grid-column: 1 / -1;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(16, 1fr);
             gap: 1px;
         }
 
@@ -156,7 +156,7 @@
         .single-dice-container {
             grid-column: 1 / -1;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(6, 1fr);
         }
         .single-dice { 
             display: flex;
@@ -224,39 +224,42 @@
 
         .history-container {
             width: 100%;
-            height: 140px;
+            height: 90px;
             background-color: #1a0000;
             padding: 10px;
             border-radius: 10px;
             border: 1px solid #8b4513;
             display: flex;
             flex-direction: column;
+            overflow-x: auto;
+            overflow-y: hidden;
         }
 
         .history-title {
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             text-align: center;
             color: #e6ccb2;
         }
 
         .history-data {
-            flex-grow: 1;
-            overflow-y: auto;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: row;
             justify-content: flex-start;
+            align-items: flex-start;
+            height: 100%;
+            padding-bottom: 5px;
         }
 
         .history-item {
-            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             margin-right: 10px;
-            margin-bottom: 5px;
-            padding: 2px 5px;
+            font-size: 12px;
+            min-width: 30px;
             font-family: 'Roboto Mono', monospace;
-            background-color: rgba(230, 204, 178, 0.1);
-            border-radius: 3px;
         }
 
         .history-big {
@@ -265,19 +268,6 @@
 
         .history-small {
             color: #4ecdc4;
-        }
-
-        .history-data::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .history-data::-webkit-scrollbar-track {
-            background: #1a0000;
-        }
-
-        .history-data::-webkit-scrollbar-thumb {
-            background: #8b4513;
-            border-radius: 5px;
         }
 
         .dice {
@@ -331,16 +321,21 @@
 
         /* Specific dot placements */
         .dice-1 .dot:nth-child(1) { grid-area: 2 / 2; }
+
         .dice-2 .dot:nth-child(1) { grid-area: 1 / 1; }
         .dice-2 .dot:nth-child(2) { grid-area: 3 / 3; }
+
         .dice-3 .dot:nth-child(1) { grid-area: 1 / 1; }
         .dice-3 .dot:nth-child(2) { grid-area: 2 / 2; }
         .dice-3 .dot:nth-child(3) { grid-area: 3 / 3; }
+
         .dice-4 .dot:nth-child(1), .dice-4 .dot:nth-child(2) { grid-area: 1 / 1; }
         .dice-4 .dot:nth-child(3), .dice-4 .dot:nth-child(4) { grid-area: 3 / 3; }
+
         .dice-5 .dot:nth-child(1), .dice-5 .dot:nth-child(2) { grid-area: 1 / 1; }
         .dice-5 .dot:nth-child(3) { grid-area: 2 / 2; }
         .dice-5 .dot:nth-child(4), .dice-5 .dot:nth-child(5) { grid-area: 3 / 3; }
+
         .dice-6 .dot:nth-child(1), .dice-6 .dot:nth-child(2), .dice-6 .dot:nth-child(3) { grid-area: 1 / 1; }
         .dice-6 .dot:nth-child(4), .dice-6 .dot:nth-child(5), .dice-6 .dot:nth-child(6) { grid-area: 3 / 3; }
 
@@ -349,8 +344,22 @@
             border: 1px solid #e6ccb2;
         }
 
-        .active-chip {
-            box-shadow: 0 0 10px 5px gold;
+        .bottom-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            background-color: rgba(26, 0, 0, 0.7);
+            color: #e6ccb2;
+            font-size: 1.5vmin;
+            border-top: 1px solid #8b4513;
+            height: 20px;
+            margin-top: -17px;
+        }
+
+        .bottom-display span {
+            flex: 1;
+            text-align: center;
         }
 
         .modal {
@@ -401,80 +410,138 @@
             line-height: 1.4;
         }
 
-		@media (max-width: 768px) {
-            .game-container {
-                height: auto;
-                min-height: 100vh;
-                padding: 5px;
+        .active-chip {
+            box-shadow: 0 0 10px 5px gold;
+        }
+
+		@keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            10% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            90% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+        }
+
+        .result-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 30px;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 1000;
+            animation: fadeInOut 3s ease-in-out forwards;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .win-notification {
+            background-color: rgba(0, 128, 0, 0.9);
+        }
+
+        .loss-notification {
+            background-color: rgba(220, 20, 60, 0.9);
+        }
+
+        .result-notification span {
+            color: #ffd700;
+            display: block;
+            font-size: 48px;
+            margin-top: 10px;
+        }
+
+        .table-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .win-overlay {
+            background: radial-gradient(circle, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0) 70%);
+        }
+
+        .loss-overlay {
+            background: radial-gradient(circle, rgba(220,20,60,0.2) 0%, rgba(220,20,60,0) 70%);
+        }
+        
+        .winning-cells-highlight {
+            animation: cellPulse 1s ease-in-out 3;
+        }
+
+        @keyframes cellPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 10px rgba(255,215,0,0.7); }
+            100% { transform: scale(1); }
+        }
+
+        /* Media Queries for better responsiveness */
+        @media (max-width: 768px) {
+            .history-container {
+                height: 80px;
             }
 
             .main-area {
-                height: auto;
-            }
-
-            .table {
-                height: auto;
-                min-height: 60vh;
-            }
-
-            .table-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 5px;
-            }
-
-            .cell {
-                font-size: 2.5vmin;
-                padding: 5px;
-            }
-
-            .small-big-container {
-                grid-template-columns: 1fr 1fr;
-                grid-row: 1;
-            }
-
-            .game-title {
-                grid-column: 1 / -1;
-                grid-row: 2;
-                font-size: 3vmin;
-                padding: 10px;
-            }
-
-            .total-bets-container {
-                grid-template-columns: repeat(4, 1fr);
-            }
-
-            .two-dice-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .single-dice-container {
-                grid-template-columns: repeat(3, 1fr);
+                height: calc(100% - 90px);
             }
 
             .controls {
-                flex-direction: column;
-                align-items: center;
+                flex-wrap: wrap;
             }
 
-            .controls button,
-            .controls div {
-                width: 100%;
-                margin: 5px 0;
-                text-align: center;
-            }
-
-            .chip-container {
-                justify-content: space-around;
+            .controls button, .controls div {
+                margin: 5px;
             }
 
             .chip {
-                width: 40px;
-                height: 40px;
-                font-size: 14px;
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
             }
 
+            .total-bets-container,
+            .two-dice-container {
+                grid-template-columns: repeat(7, 1fr);
+            }
+
+            .small-big {
+                font-size: 2vmin;
+            }
+        }
+
+        @media (max-width: 480px) {
             .history-container {
-                height: 100px;
+                height: 70px;
+            }
+
+            .main-area {
+                height: calc(100% - 80px);
+            }
+
+            .cell {
+                font-size: 2vmin;
+            }
+
+            .small-big {
+                font-size: 2.2vmin;
+            }
+
+            .controls button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .chip {
+                width: 25px;
+                height: 25px;
+                font-size: 10px;
+                margin: 0 2px;
             }
 
             .history-title {
@@ -482,71 +549,13 @@
             }
 
             .history-item {
-                font-size: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .table-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .cell {
-                font-size: 3vmin;
-            }
-
-            .small-big-container {
-                grid-template-columns: 1fr;
-            }
-
-            .game-title {
-                font-size: 3.5vmin;
+                font-size: 10px;
+                min-width: 25px;
             }
 
             .total-bets-container,
-            .two-dice-container,
-            .single-dice-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .chip {
-                width: 35px;
-                height: 35px;
-                font-size: 12px;
-            }
-
-            .controls button {
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .table-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .cell {
-                font-size: 3.5vmin;
-            }
-
-            .game-title {
-                font-size: 4vmin;
-            }
-
-            .chip {
-                width: 30px;
-                height: 30px;
-                font-size: 10px;
-            }
-
-            .controls button {
-                font-size: 10px;
-                padding: 4px 8px;
-            }
-
-            .history-item {
-                font-size: 10px;
+            .two-dice-container {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
     </style>
@@ -558,6 +567,7 @@
                 <div class="table-grid" id="sicBoTableGrid">
                     <!-- Table grid will be dynamically generated by JavaScript -->
                 </div>
+                <div id="tableOverlay" class="table-overlay"></div>
             </div>
             <div class="controls">
                 <button id="rollDice">Roll Dice</button>
@@ -587,6 +597,8 @@
             <p class="modal-message" id="modalMessage"></p>
         </div>
     </div>
+
+    <div id="resultNotification" class="result-notification" style="display: none;"></div>
 
     <script>
         const tableGrid = document.getElementById('sicBoTableGrid');
@@ -744,7 +756,7 @@
             return winnings - currentBet;
         }
 
-        function updateRollHistory(diceRoll) {
+		function updateRollHistory(diceRoll) {
             const historyContainer = document.getElementById('rollHistory');
             const historyItem = document.createElement('div');
             historyItem.className = 'history-item';
@@ -754,7 +766,10 @@
             
             historyItem.classList.add(isBig ? 'history-big' : isSmall ? 'history-small' : '');
             
-            historyItem.textContent = diceRoll.join('') + ' ' + total.toString().padStart(2);
+            historyItem.innerHTML = `
+                <span>${diceRoll.join('')}</span>
+                <span>${total.toString().padStart(2, '0')}</span>
+            `;
             
             historyContainer.insertBefore(historyItem, historyContainer.firstChild);
             
@@ -782,7 +797,38 @@
             }
         }
 
-		rollDiceBtn.addEventListener('click', () => {
+        function showResultNotification(result) {
+            const notification = document.getElementById('resultNotification');
+            const tableOverlay = document.getElementById('tableOverlay');
+            
+            if (result > 0) {
+                notification.innerHTML = `You Won<span>$${result}</span>`;
+                notification.className = 'result-notification win-notification';
+                tableOverlay.className = 'table-overlay win-overlay';
+                
+                selectedBets.forEach(betId => {
+                    const cell = document.getElementById(betId);
+                    cell.classList.add('winning-cells-highlight');
+                    setTimeout(() => {
+                        cell.classList.remove('winning-cells-highlight');
+                    }, 3000);
+                });
+            } else {
+                notification.innerHTML = `You Lost<span>$${-result}</span>`;
+                notification.className = 'result-notification loss-notification';
+                tableOverlay.className = 'table-overlay loss-overlay';
+            }
+            
+            notification.style.display = 'block';
+            tableOverlay.style.opacity = '1';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+                tableOverlay.style.opacity = '0';
+            }, 3000);
+        }
+
+        rollDiceBtn.addEventListener('click', () => {
             if (currentBet === 0) {
                 showModal('Please place a bet first!');
                 return;
@@ -813,32 +859,8 @@
             });
         });
 
-        function showResultNotification(result) {
-            const notification = document.createElement('div');
-            notification.className = `result-notification ${result > 0 ? 'win-notification' : 'loss-notification'}`;
-            notification.innerHTML = `You ${result > 0 ? 'Won' : 'Lost'}<span>$${Math.abs(result)}</span>`;
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 3000);
-
-            if (result > 0) {
-                selectedBets.forEach(betId => {
-                    const cell = document.getElementById(betId);
-                    cell.classList.add('winning-cells-highlight');
-                    setTimeout(() => {
-                        cell.classList.remove('winning-cells-highlight');
-                    }, 3000);
-                });
-            }
-        }
-
         // Initialize the game
         createTable();
-
-        // Ensure the modal is hidden on page load
-        modal.style.display = 'none';
     </script>
 </body>
 </html>
