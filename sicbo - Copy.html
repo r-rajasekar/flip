@@ -896,7 +896,22 @@
 
 
         function createTable() {
-            // ... (previous code remains the same) ...
+            const tableGrid = document.getElementById('sicBoTableGrid');
+
+            // Small-Big container (unchanged)
+            const smallBigContainer = document.createElement('div');
+            smallBigContainer.className = 'small-big-container';
+            
+            smallBigContainer.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
+            
+            const titleElement = document.createElement('div');
+            titleElement.className = 'game-title';
+            titleElement.innerHTML = '<span>SIC BO</span>Fortune Awaits!<br>Place Your Bets';
+            smallBigContainer.appendChild(titleElement);
+            
+            smallBigContainer.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
+            
+            tableGrid.appendChild(smallBigContainer);
 
             // Special bets container (two rows)
             const specialBetsContainer = document.createElement('div');
