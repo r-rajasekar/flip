@@ -5,852 +5,852 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Refined Casino Sic Bo Game</title>
 
-	<style>
-		@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&family=Roboto+Mono&display=swap');
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&family=Roboto+Mono&display=swap');
 
-		* {
-			box-sizing: border-box;
-			margin: 0;
-			padding: 0;
-		}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-		body, html {
-			height: 100%;
-			overflow: hidden;
-		}
+        body, html {
+            height: 100%;
+            overflow: hidden;
+        }
 
-		body {
-			background: #1a0000;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			font-family: 'Roboto', sans-serif;
-			color: #e6ccb2;
-		}
+        body {
+            background: #1a0000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+            color: #e6ccb2;
+        }
 
-		.game-container {
-			display: flex;
-			flex-direction: column;
-			width: 98vw;
-			height: 98vh;
-			background-color: #2b0000;
-			border-radius: 20px;
-			padding: 10px;
-			box-shadow: 0 8px 32px 0 rgba(230, 204, 178, 0.2);
-			border: 2px solid #8b4513;
-			overflow: hidden;
-		}
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            width: 98vw;
+            height: 98vh;
+            background-color: #2b0000;
+            border-radius: 20px;
+            padding: 10px;
+            box-shadow: 0 8px 32px 0 rgba(230, 204, 178, 0.2);
+            border: 2px solid #8b4513;
+            overflow: hidden;
+        }
 
-		.main-area {
-			display: flex;
-			flex-direction: column;
-			width: 100%;
-			flex-grow: 1;
-			overflow: hidden;
-		}
+        .main-area {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            flex-grow: 1;
+            overflow: hidden;
+        }
 
-		.table {
-			width: 100%;
-			height: calc(100% - 160px);
-			background: #800000;
-			border: 3px solid #8b4513;
-			border-radius: 15px;
-			display: flex;
-			flex-direction: column;
-			padding: 10px;
-			overflow-y: auto;
-			position: relative;
-			margin-bottom: 10px;
-		}
+        .table {
+            width: 100%;
+            height: calc(100% - 160px);
+            background: #800000;
+            border: 3px solid #8b4513;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            overflow-y: auto;
+            position: relative;
+            margin-bottom: 10px;
+        }
 
-		.table-grid {
-			flex-grow: 1;
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
-			grid-auto-rows: minmax(30px, auto);
-			gap: 1px;
-			min-height: min-content;
-		}
+        .table-grid {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+            grid-auto-rows: minmax(30px, auto);
+            gap: 1px;
+            min-height: min-content;
+        }
 
-		.cell {
-			background-color: rgba(26, 0, 0, 0.7);
-			border: 1px solid #8b4513;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			color: #e6ccb2;
-			font-size: 1.5vmin;
-			text-align: center;
-			padding: 2px;
-			cursor: pointer;
-			transition: all 0.3s ease;
-		}
+        .cell {
+            background-color: rgba(26, 0, 0, 0.7);
+            border: 1px solid #8b4513;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #e6ccb2;
+            font-size: 1.5vmin;
+            text-align: center;
+            padding: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-		.cell:hover {
-			background-color: rgba(230, 204, 178, 0.2);
-			transform: translateY(-2px);
-			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-		}
+        .cell:hover {
+            background-color: rgba(230, 204, 178, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
 
-		.small-big-container {
-			display: grid;
-			grid-template-columns: 1fr auto 1fr;
-			grid-column: 1 / -1;
-			gap: 1px;
-			border: 2px solid #8b4513;
-			padding: 5px;
-			border-radius: 10px;
-			margin-bottom: 10px;
-		}
+        .small-big-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            grid-column: 1 / -1;
+            gap: 1px;
+            border: 2px solid #8b4513;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
 
-		.game-title {
-			background-color: #1a0000;
-			color: #e6ccb2;
-			font-family: 'Playfair Display', serif;
-			font-size: 1.8vmin;
-			font-weight: bold;
-			text-align: center;
-			text-transform: uppercase;
-			padding: 10px;
-			border: 2px solid #8b4513;
-			box-shadow: 0 0 15px rgba(139, 69, 19, 0.5);
-			text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			cursor: default;
-			transition: all 0.3s ease;
-		}
+        .game-title {
+            background-color: #1a0000;
+            color: #e6ccb2;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8vmin;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            padding: 10px;
+            border: 2px solid #8b4513;
+            box-shadow: 0 0 15px rgba(139, 69, 19, 0.5);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: default;
+            transition: all 0.3s ease;
+        }
 
-		.game-title:hover {
-			background-color: #2b0000;
-			box-shadow: 0 0 20px rgba(139, 69, 19, 0.7);
-		}
+        .game-title:hover {
+            background-color: #2b0000;
+            box-shadow: 0 0 20px rgba(139, 69, 19, 0.7);
+        }
 
-		.game-title span {
-			color: #d4af37;
-			font-size: 2.2vmin;
-			margin-bottom: 5px;
-		}
+        .game-title span {
+            color: #d4af37;
+            font-size: 2.2vmin;
+            margin-bottom: 5px;
+        }
 
-		.small-big {
-			font-size: 1.8vmin;
-			font-weight: 700;
-		}
-		
-		.special-bets-container {
-			grid-column: 1 / -1;
-			display: flex;
-			flex-direction: column;
-			border: 2px solid #8b4513;
-			padding: 5px;
-			border-radius: 10px;
-			margin-bottom: 10px;
-		}
+        .small-big {
+            font-size: 1.8vmin;
+            font-weight: 700;
+        }
+        
+        .special-bets-container {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #8b4513;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
 
-		.special-bets-row {
-			display: flex;
-			justify-content: space-between;
-			flex-wrap: wrap;
-		}
+        .special-bets-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
 
-		.special-bets-row .cell {
-			flex: 1 0 calc(20% - 4px);
-			margin: 2px;
-			min-width: 60px;
-		}
+        .special-bets-row .cell {
+            flex: 1 0 calc(20% - 4px);
+            margin: 2px;
+            min-width: 60px;
+        }
 
-		.double-label, .triple-label, .any-triple {
-			font-weight: bold;
-			text-align: center;
-		}
+        .double-label, .triple-label, .any-triple {
+            font-weight: bold;
+            text-align: center;
+        }
 
-		.double-container,
-		.triple-container,
-		.any-triple-container {
-			display: flex;
-			justify-content: space-around;
-			width: 100%;
-			padding: 5px;
-		}
+        .double-container,
+        .triple-container,
+        .any-triple-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 5px;
+        }
 
-		.any-triple-container {
-			flex-direction: column;
-		}
+        .any-triple-container {
+            flex-direction: column;
+        }
 
-		.any-triple-row {
-			display: flex;
-			justify-content: space-around;
-			width: 100%;
-			margin: 2px 0;
-		}
+        .any-triple-row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin: 2px 0;
+        }
 
-		.horizontal-dice {
-			display: inline-flex;
-			flex-direction: row;
-			justify-content: center;
-			align-items: center;
-			margin: 0 2px;
-		}
+        .horizontal-dice {
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin: 0 2px;
+        }
 
-		.horizontal-dice .dice {
-			margin: 0 1px;
-			transform: scale(0.7);
-		}
+        .horizontal-dice .dice {
+            margin: 0 1px;
+            transform: scale(0.7);
+        }
 
-		.any-triple-container .horizontal-dice {
-			flex: 1 0 calc(50% - 4px);
-			margin: 2px;
-		}
+        .any-triple-container .horizontal-dice {
+            flex: 1 0 calc(50% - 4px);
+            margin: 2px;
+        }
 
-		.total-bets-container {
-			grid-column: 1 / -1;
-			display: grid;
-			grid-template-columns: repeat(14, 1fr);
-			gap: 1px;
-			border: 2px solid #8b4513;
-			padding: 5px;
-			border-radius: 10px;
-			margin-bottom: 10px;
-		}
+        .total-bets-container {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(14, 1fr);
+            gap: 1px;
+            border: 2px solid #8b4513;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
 
-		.two-dice-container {
-			grid-column: 1 / -1;
-			display: grid;
-			grid-template-columns: repeat(8, 1fr);
-			gap: 4px;
-			border: 2px solid #8b4513;
-			padding: 5px;
-			border-radius: 10px;
-			margin-bottom: 10px;
-		}
-		
-		.two-dice-label {
-			grid-column: span 1;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			text-align: center;
-			font-weight: bold;
-		}
+        .two-dice-container {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+            border: 2px solid #8b4513;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .two-dice-label {
+            grid-column: span 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+        }
 
-		.two-dice.horizontal-dice {
-			display: flex;
-			flex-direction: row;
-			justify-content: center;
-			align-items: center;
-		}
+        .two-dice.horizontal-dice {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
 
-		.two-dice.horizontal-dice .dice {
-			margin: 0 1px;
-			transform: scale(0.7);
-		}
+        .two-dice.horizontal-dice .dice {
+            margin: 0 1px;
+            transform: scale(0.7);
+        }
 
-		.two-dice { 
-			grid-column: span 1;
-		}
-		
-		.single-dice-container {
-			grid-column: 1 / -1;
-			display: grid;
-			grid-template-columns: repeat(6, 1fr);
-			border: 2px solid #8b4513;
-			padding: 5px;
-			border-radius: 10px;
-			margin-bottom: 10px;
-		}
+        .two-dice { 
+            grid-column: span 1;
+        }
+        
+        .single-dice-container {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            border: 2px solid #8b4513;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
 
-		.single-dice { 
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-		}
+        .single-dice { 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-		.controls {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			width: 100%;
-			background-color: #1a0000;
-			padding: 10px;
-			border-radius: 10px;
-			border: 1px solid #8b4513;
-			flex-wrap: nowrap;
-			margin-bottom: 10px;
-		}
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background-color: #1a0000;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #8b4513;
+            flex-wrap: nowrap;
+            margin-bottom: 10px;
+        }
 
-		.controls button {
-			padding: 8px 16px;
-			font-size: 14px;
-			font-weight: 600;
-			color: #1a0000;
-			background-color: #e6ccb2;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-			transition: all 0.3s ease;
-			font-family: 'Playfair Display', serif;
-			white-space: nowrap;
-		}
+        .controls button {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a0000;
+            background-color: #e6ccb2;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Playfair Display', serif;
+            white-space: nowrap;
+        }
 
-		.controls button:hover {
-			background-color: #f0e0d0;
-			transform: translateY(-2px);
-			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-		}
+        .controls button:hover {
+            background-color: #f0e0d0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
 
-		.controls div {
-			white-space: nowrap;
-			margin: 0 5px;
-		}
+        .controls div {
+            white-space: nowrap;
+            margin: 0 5px;
+        }
 
-		.chip-and-action-container {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			flex-wrap: wrap;
-			gap: 10px;
-			margin-bottom: 10px;
-		}
+        .chip-and-action-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
 
-		.chip-container {
-			display: flex;
-			justify-content: center;
-			gap: 10px;
-		}
+        .chip-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
 
-		.chip {
-			width: 50px;
-			height: 50px;
-			border-radius: 50%;
-			cursor: pointer;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			font-weight: bold;
-			color: #1a0000;
-			transition: all 0.3s ease;
-			position: relative;
-			box-shadow: 
-				inset 0 0 5px rgba(0,0,0,0.5),
-				0 2px 3px rgba(0,0,0,0.3);
-			border: 3px dashed rgba(255,255,255,0.5);
-		}
+        .chip {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #1a0000;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 
+                inset 0 0 5px rgba(0,0,0,0.5),
+                0 2px 3px rgba(0,0,0,0.3);
+            border: 3px dashed rgba(255,255,255,0.5);
+        }
 
-		.chip::before {
-			content: '';
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			width: 80%;
-			height: 80%;
-			border-radius: 50%;
-			border: 2px solid rgba(255,255,255,0.7);
-		}
+        .chip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.7);
+        }
 
-		.chip::after {
-			content: attr(data-value);
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			font-size: 12px;
-			font-weight: bold;
-		}
+        .chip::after {
+            content: attr(data-value);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-		.chip-1 { 
-			background: linear-gradient(145deg, #fff, #f0f0f0);
-			color: #000; 
-		}
-		.chip-5 { 
-			background: linear-gradient(145deg, #ff6b6b, #e60000);
-			color: #fff; 
-		}
-		.chip-10 { 
-			background: linear-gradient(145deg, #4ecdc4, #45b7aa);
-			color: #fff; 
-		}
-		.chip-25 { 
-			background: linear-gradient(145deg, #45aaf2, #2d98da);
-			color: #fff; 
-		}
-		.chip-100 { 
-			background: linear-gradient(145deg, #4b4b4b, #3a3a3a);
-			color: #ffd700; 
-		}
+        .chip-1 { 
+            background: linear-gradient(145deg, #fff, #f0f0f0);
+            color: #000; 
+        }
+        .chip-5 { 
+            background: linear-gradient(145deg, #ff6b6b, #e60000);
+            color: #fff; 
+        }
+        .chip-10 { 
+            background: linear-gradient(145deg, #4ecdc4, #45b7aa);
+            color: #fff; 
+        }
+        .chip-25 { 
+            background: linear-gradient(145deg, #45aaf2, #2d98da);
+            color: #fff; 
+        }
+        .chip-100 { 
+            background: linear-gradient(145deg, #4b4b4b, #3a3a3a);
+            color: #ffd700; 
+        }
 
-		.action-buttons {
-			display: flex;
-			gap: 15px;
-		}
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
 
-		.icon-button {
-			background: none;
-			border: none;
-			cursor: pointer;
-			transition: all 0.3s ease;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			color: #e6ccb2;
-		}
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #e6ccb2;
+        }
 
-		.icon-button svg {
-			width: 24px;
-			height: 24px;
-			fill: none;
-			stroke: currentColor;
-			stroke-width: 2;
-			stroke-linecap: round;
-			stroke-linejoin: round;
-			margin-bottom: 5px;
-		}
+        .icon-button svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            margin-bottom: 5px;
+        }
 
-		.icon-button span {
-			font-size: 12px;
-			font-weight: bold;
-		}
+        .icon-button span {
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-		.icon-button:hover {
-			color: #f0e0d0;
-		}
+        .icon-button:hover {
+            color: #f0e0d0;
+        }
 
-		.icon-button:hover svg {
-			transform: scale(1.1);
-		}
+        .icon-button:hover svg {
+            transform: scale(1.1);
+        }
 
-		.icon-button:active svg {
-			transform: scale(0.9);
-		}
+        .icon-button:active svg {
+            transform: scale(0.9);
+        }
 
-		.history-container {
-			width: 100%;
-			height: 90px;
-			background-color: #1a0000;
-			padding: 10px;
-			border-radius: 10px;
-			border: 1px solid #8b4513;
-			display: flex;
-			flex-direction: column;
-		}
+        .history-container {
+            width: 100%;
+            height: 90px;
+            background-color: #1a0000;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #8b4513;
+            display: flex;
+            flex-direction: column;
+        }
 
-		.history-title {
-			font-size: 18px;
-			font-weight: bold;
-			margin-bottom: 5px;
-			text-align: center;
-			color: #e6ccb2;
-			line-height: 1;
-		}
+        .history-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: center;
+            color: #e6ccb2;
+            line-height: 1;
+        }
 
-		.history-data-container {
-			flex-grow: 1;
-			overflow-x: auto;
-			overflow-y: hidden;
-		}
+        .history-data-container {
+            flex-grow: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
 
-		.history-data {
-			display: inline-flex;
-			flex-direction: row;
-			justify-content: flex-start;
-			align-items: center;
-			height: 100%;
-			padding-bottom: 5px;
-		}
+        .history-data {
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100%;
+            padding-bottom: 5px;
+        }
 
-		.history-item {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			margin-right: 10px;
-			font-size: 14px;
-			min-width: 40px;
-			height: 100%;
-			font-family: 'Roboto Mono', monospace;
-		}
+        .history-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 14px;
+            min-width: 40px;
+            height: 100%;
+            font-family: 'Roboto Mono', monospace;
+        }
 
-		.history-big {
-			color: #ff6b6b;
-		}
+        .history-big {
+            color: #ff6b6b;
+        }
 
-		.history-small {
-			color: #4ecdc4;
-		}
+        .history-small {
+            color: #4ecdc4;
+        }
 
 		.dice {
-			width: 30px;
-			height: 30px;
-			background: linear-gradient(145deg, #f0d0a0, #e0c090);
-			border-radius: 10%;
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			grid-template-rows: repeat(3, 1fr);
-			padding: 3px;
-			box-shadow: 
-				inset 0 5px 10px rgba(255, 255, 255, 0.3),
-				inset 0 -5px 10px rgba(0, 0, 0, 0.3),
-				2px 2px 5px rgba(0, 0, 0, 0.3);
-			position: relative;
-			transform: rotate(-5deg);
-			transition: transform 0.3s ease;
-		}
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(145deg, #f0d0a0, #e0c090);
+            border-radius: 10%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            padding: 3px;
+            box-shadow: 
+                inset 0 5px 10px rgba(255, 255, 255, 0.3),
+                inset 0 -5px 10px rgba(0, 0, 0, 0.3),
+                2px 2px 5px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transform: rotate(-5deg);
+            transition: transform 0.3s ease;
+        }
 
-		.dice:hover {
-			transform: rotate(0deg) scale(1.1);
-		}
+        .dice:hover {
+            transform: rotate(0deg) scale(1.1);
+        }
 
-		.dice:hover {
-				transform: rotate(0deg) scale(1.1);
-    }
+        .dice::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 10%;
+            box-shadow: 
+                inset 0 0 5px rgba(0, 0, 0, 0.3),
+                inset 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
 
-		.dice::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			border-radius: 10%;
-			box-shadow: 
-				inset 0 0 5px rgba(0, 0, 0, 0.3),
-				inset 0 0 10px rgba(0, 0, 0, 0.1);
-			z-index: 1;
-		}
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #500 30%, #300 70%, #200 100%);
+            border-radius: 50%;
+            align-self: center;
+            justify-self: center;
+            box-shadow: 
+                inset 0 1px 1px rgba(255, 255, 255, 0.3),
+                inset 0 -1px 1px rgba(0, 0, 0, 0.3),
+                0 1px 2px rgba(0, 0, 0, 0.5);
+        }
 
-		.dot {
-			width: 6px;
-			height: 6px;
-			background: radial-gradient(circle, #500 30%, #300 70%, #200 100%);
-			border-radius: 50%;
-			align-self: center;
-			justify-self: center;
-			box-shadow: 
-				inset 0 1px 1px rgba(255, 255, 255, 0.3),
-				inset 0 -1px 1px rgba(0, 0, 0, 0.3),
-				0 1px 2px rgba(0, 0, 0, 0.5);
-		}
+        .dice-1 .dot:nth-child(1) { grid-area: 2 / 2; }
+        .dice-2 .dot:nth-child(1) { grid-area: 1 / 1; }
+        .dice-2 .dot:nth-child(2) { grid-area: 3 / 3; }
+        .dice-3 .dot:nth-child(1) { grid-area: 1 / 1; }
+        .dice-3 .dot:nth-child(2) { grid-area: 2 / 2; }
+        .dice-3 .dot:nth-child(3) { grid-area: 3 / 3; }
+        .dice-4 .dot:nth-child(1), .dice-4 .dot:nth-child(2) { grid-area: 1 / 1; }
+        .dice-4 .dot:nth-child(3), .dice-4 .dot:nth-child(4) { grid-area: 3 / 3; }
+        .dice-5 .dot:nth-child(1), .dice-5 .dot:nth-child(2) { grid-area: 1 / 1; }
+        .dice-5 .dot:nth-child(3) { grid-area: 2 / 2; }
+        .dice-5 .dot:nth-child(4), .dice-5 .dot:nth-child(5) { grid-area: 3 / 3; }
+        .dice-6 .dot:nth-child(1), .dice-6 .dot:nth-child(2), .dice-6 .dot:nth-child(3) { grid-area: 1 / 1; }
+        .dice-6 .dot:nth-child(4), .dice-6 .dot:nth-child(5), .dice-6 .dot:nth-child(6) { grid-area: 3 / 3; }
 
-		.dice-1 .dot:nth-child(1) { grid-area: 2 / 2; }
-		.dice-2 .dot:nth-child(1) { grid-area: 1 / 1; }
-		.dice-2 .dot:nth-child(2) { grid-area: 3 / 3; }
-		.dice-3 .dot:nth-child(1) { grid-area: 1 / 1; }
-		.dice-3 .dot:nth-child(2) { grid-area: 2 / 2; }
-		.dice-3 .dot:nth-child(3) { grid-area: 3 / 3; }
-		.dice-4 .dot:nth-child(1), .dice-4 .dot:nth-child(2) { grid-area: 1 / 1; }
-		.dice-4 .dot:nth-child(3), .dice-4 .dot:nth-child(4) { grid-area: 3 / 3; }
-		.dice-5 .dot:nth-child(1), .dice-5 .dot:nth-child(2) { grid-area: 1 / 1; }
-		.dice-5 .dot:nth-child(3) { grid-area: 2 / 2; }
-		.dice-5 .dot:nth-child(4), .dice-5 .dot:nth-child(5) { grid-area: 3 / 3; }
-		.dice-6 .dot:nth-child(1), .dice-6 .dot:nth-child(2), .dice-6 .dot:nth-child(3) { grid-area: 1 / 1; }
-		.dice-6 .dot:nth-child(4), .dice-6 .dot:nth-child(5), .dice-6 .dot:nth-child(6) { grid-area: 3 / 3; }
+        .selected {
+            background-color: rgba(230, 204, 178, 0.3);
+            border: 1px solid #e6ccb2;
+        }
 
-		.selected {
-			background-color: rgba(230, 204, 178, 0.3);
-			border: 1px solid #e6ccb2;
-		}
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
 
-		.modal {
-			display: none;
-			position: fixed;
-			z-index: 1000;
-			left: 0;
-			top: 0;
-			width: 100%;
-			height: 100%;
-			background-color: rgba(0,0,0,0.5);
-		}
+        .modal-content {
+            background-color: #3b0000;
+            margin: 15% auto;
+            padding: 10px 15px;
+            border: 1px solid #8b4513;
+            width: 240px;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-		.modal-content {
-			background-color: #3b0000;
-			margin: 15% auto;
-			padding: 10px 15px;
-			border: 1px solid #8b4513;
-			width: 240px;
-			border-radius: 10px;
-			position: relative;
-			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-		}
+        .close {
+            color: #e6ccb2;
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
 
-		.close {
-			color: #e6ccb2;
-			position: absolute;
-			top: 2px;
-			right: 8px;
-			font-size: 22px;
-			font-weight: bold;
-			cursor: pointer;
-			line-height: 1;
-		}
+        .close:hover,
+        .close:focus {
+            color: #f0e0d0;
+        }
 
-		.close:hover,
-		.close:focus {
-			color: #f0e0d0;
-		}
+        .modal-message {
+            margin: 0;
+            padding: 5px 0;
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            color: #e6ccb2;
+            line-height: 1.4;
+        }
 
-		.modal-message {
-			margin: 0;
-			padding: 5px 0;
-			text-align: center;
-			font-family: 'Playfair Display', serif;
-			font-size: 16px;
-			color: #e6ccb2;
-			line-height: 1.4;
-		}
+        .active-chip {
+            box-shadow: 
+                inset 0 0 10px rgba(255,255,255,0.8),
+                0 0 15px rgba(255,215,0,0.8);
+            transform: translateY(-5px);
+        }
 
-		.active-chip {
-			box-shadow: 
-				inset 0 0 10px rgba(255,255,255,0.8),
-				0 0 15px rgba(255,215,0,0.8);
-			transform: translateY(-5px);
-		}
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            10% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            90% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+        }
 
-		@keyframes fadeInOut {
-			0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-			10% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-			90% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-			100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-		}
+        .result-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 30px;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 1000;
+            animation: fadeInOut 3s ease-in-out forwards;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
 
-		.result-notification {
-			position: fixed;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			color: #fff;
-			padding: 20px 40px;
-			border-radius: 30px;
-			font-size: 32px;
-			font-weight: bold;
-			text-align: center;
-			z-index: 1000;
-			animation: fadeInOut 3s ease-in-out forwards;
-			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-		}
+        .win-notification {
+            background-color: rgba(0, 128, 0, 0.9);
+        }
 
-		.win-notification {
-			background-color: rgba(0, 128, 0, 0.9);
-		}
+        .loss-notification {
+            background-color: rgba(220, 20, 60, 0.9);
+        }
 
-		.loss-notification {
-			background-color: rgba(220, 20, 60, 0.9);
-		}
+        .result-notification span {
+            color: #ffd700;
+            display: block;
+            font-size: 48px;
+            margin-top: 10px;
+        }
 
-		.result-notification span {
-			color: #ffd700;
-			display: block;
-			font-size: 48px;
-			margin-top: 10px;
-		}
+        .table-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
 
-		.table-overlay {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			pointer-events: none;
-			opacity: 0;
-			transition: opacity 0.5s ease;
-		}
+        .win-overlay {
+            background: radial-gradient(circle, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0) 70%);
+        }
 
-		.win-overlay {
-			background: radial-gradient(circle, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0) 70%);
-		}
+        .loss-overlay {
+            background: radial-gradient(circle, rgba(220,20,60,0.2) 0%, rgba(220,20,60,0) 70%);
+        }
+        
+        .winning-cells-highlight {
+            animation: cellPulse 1s ease-in-out 3;
+        }
 
-		.loss-overlay {
-			background: radial-gradient(circle, rgba(220,20,60,0.2) 0%, rgba(220,20,60,0) 70%);
-		}
-		
-		.winning-cells-highlight {
-			animation: cellPulse 1s ease-in-out 3;
-		}
+        @keyframes cellPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 10px rgba(255,215,0,0.7); }
+            100% { transform: scale(1); }
+        }
 
-		@keyframes cellPulse {
-			0% { transform: scale(1); }
-			50% { transform: scale(1.1); box-shadow: 0 0 10px rgba(255,215,0,0.7); }
-			100% { transform: scale(1); }
-		}
+        /* Media queries for responsive design */
+        @media (max-width: 768px) {
+            .chip-and-action-container {
+                flex-wrap: wrap;
+            }
 
-		/* Media queries for responsive design */
-		@media (max-width: 768px) {
-			.chip-and-action-container {
-				flex-wrap: wrap;
-			}
+            .chip-container {
+                gap: 10px;
+            }
 
-			.chip-container {
-				gap: 10px;
-			}
+            .action-buttons {
+                gap: 10px;
+            }
 
-			.action-buttons {
-				gap: 10px;
-			}
+            .chip {
+                width: 35px;
+                height: 35px;
+            }
 
-			.chip {
-				width: 35px;
-				height: 35px;
-			}
+            .chip::after {
+                font-size: 10px;
+            }
 
-			.chip::after {
-				font-size: 10px;
-			}
+            .icon-button svg {
+                width: 20px;
+                height: 20px;
+            }
 
-			.icon-button svg {
-				width: 20px;
-				height: 20px;
-			}
+            .icon-button span {
+                font-size: 10px;
+            }
+        }
 
-			.icon-button span {
-				font-size: 10px;
-			}
-		}
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 5px;
+            }
 
-		@media (max-width: 480px) {
-		        .table {
-				height: calc(100% - 140px); /* Adjusted for smaller screens */
-			}
-			.game-container {
-				padding: 5px;
-			}
+            .main-area {
+                justify-content: space-between;
+            }
 
-			.main-area {
-				justify-content: space-between;
-			}
+            .table {
+                height: calc(100% - 110px); /* Increased height */
+                margin-bottom: 5px;
+            }
 
-			.cell {
-				font-size: 1.5vmin;
-			}
+            .chip-and-action-container {
+                margin-bottom: 0; /* Remove bottom margin */
+                position: absolute;
+                bottom: 50px; /* Position above the controls */
+                left: 0;
+                right: 0;
+                background-color: rgba(26, 0, 0, 0.8);
+                padding: 5px;
+                z-index: 10;
+            }
 
-			.game-title {
-				font-size: 1.2vmin;
-			}
+            .controls {
+                margin-top: 0; /* Remove top margin */
+            }
 
-			.game-title span {
-				font-size: 1.5vmin;
-			}
+            .history-container {
+                height: 60px; /* Reduce height */
+            }
 
-			.small-big {
-				font-size: 1.5vmin;
-			}
+            .cell {
+                font-size: 1.5vmin;
+            }
 
-			.controls {
-				font-size: 10px;
-				margin-bottom: 5px;
-			}
+            .game-title {
+                font-size: 1.2vmin;
+            }
 
-			.controls button {
-				padding: 4px 8px;
-				font-size: 10px;
-			}
+            .game-title span {
+                font-size: 1.5vmin;
+            }
 
-			.chip-and-action-container {
-				margin-bottom: 5px;
-			}
+            .small-big {
+                font-size: 1.5vmin;
+            }
 
-			.chip-container {
-				gap: 5px;
-			}
+            .controls {
+                font-size: 10px;
+                margin-bottom: 5px;
+            }
 
-			.chip {
-				width: 25px;
-				height: 25px;
-			}
+            .controls button {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
 
-			.chip::after {
-				font-size: 8px;
-			}
+            .chip {
+                width: 25px;
+                height: 25px;
+            }
 
-			.chip::before {
-				border-width: 1px;
-			}
+            .chip::after {
+                font-size: 8px;
+            }
 
-			.chip {
-				border-width: 2px;
-			}
+            .chip::before {
+                border-width: 1px;
+            }
 
-			.action-buttons {
-				gap: 5px;
-			}
+            .chip {
+                border-width: 2px;
+            }
 
-			.icon-button svg {
-				width: 16px;
-				height: 16px;
-			}
+            .icon-button svg {
+                width: 16px;
+                height: 16px;
+            }
 
-			.icon-button span {
-				font-size: 8px;
-			}
+            .icon-button span {
+                font-size: 8px;
+            }
 
-			.history-container {
-				height: 70px;
-			}
+            .history-title {
+                font-size: 14px;
+            }
 
-			.history-title {
-				font-size: 14px;
-			}
-
-			.history-item {
-				font-size: 10px;
-				min-width: 30px;
-			}
-		}
-</style>
+            .history-item {
+                font-size: 10px;
+                min-width: 30px;
+            }
+        }
     </style>
 </head>
 <body>
-	<div class="game-container">
-		<div class="main-area">
-			<div class="table" id="sicBoTable">
-				<div class="table-grid" id="sicBoTableGrid">
-					<!-- Table grid will be dynamically generated by JavaScript -->
-				</div>
-				<div id="tableOverlay" class="table-overlay"></div>
-			</div>
-			<div class="chip-and-action-container">
-				<div class="chip-container">
-					<div class="chip chip-1" data-value="$1"></div>
-					<div class="chip chip-5" data-value="$5"></div>
-					<div class="chip chip-10" data-value="$10"></div>
-					<div class="chip chip-25" data-value="$25"></div>
-					<div class="chip chip-100" data-value="$100"></div>
-				</div>
-				<div class="action-buttons">
-					<button id="undoButton" class="icon-button" title="Undo last bet">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M3 7v6h6"></path>
-							<path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
-						</svg>
-						<span>Undo</span>
-					</button>
-					<button id="resetButton" class="icon-button" title="Reset all bets">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M23 4v6h-6"></path>
-							<path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-						</svg>
-						<span>Reset</span>
-					</button>
-				</div>
-			</div>
-			<div class="controls">
-				<button id="rollDice">Roll Dice</button>
-				<div>Balance: $<span id="balance">1000</span></div>
-				<div>Bet: $<span id="currentBet">0</span></div>
-				<div>Roll: <span id="diceRoll"></span></div>
-			</div>
-		</div>
-		<div class="history-container">
-			<div class="history-title">Roll History</div>
-			<div class="history-data-container">
-				<div class="history-data" id="rollHistory">
-					<!-- Roll history will be dynamically added here -->
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="game-container">
+        <div class="main-area">
+            <div class="table" id="sicBoTable">
+                <div class="table-grid" id="sicBoTableGrid">
+                    <!-- Table grid will be dynamically generated by JavaScript -->
+                </div>
+                <div id="tableOverlay" class="table-overlay"></div>
+            </div>
+            <div class="chip-and-action-container">
+                <div class="chip-container">
+                    <div class="chip chip-1" data-value="$1"></div>
+                    <div class="chip chip-5" data-value="$5"></div>
+                    <div class="chip chip-10" data-value="$10"></div>
+                    <div class="chip chip-25" data-value="$25"></div>
+                    <div class="chip chip-100" data-value="$100"></div>
+                </div>
+                <div class="action-buttons">
+                    <button id="undoButton" class="icon-button" title="Undo last bet">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 7v6h6"></path>
+                            <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
+                        </svg>
+                        <span>Undo</span>
+                    </button>
+                    <button id="resetButton" class="icon-button" title="Reset all bets">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 4v6h-6"></path>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="rollDice">Roll Dice</button>
+                <div>Balance: $<span id="balance">1000</span></div>
+                <div>Bet: $<span id="currentBet">0</span></div>
+                <div>Roll: <span id="diceRoll"></span></div>
+            </div>
+        </div>
+        <div class="history-container">
+            <div class="history-title">Roll History</div>
+            <div class="history-data-container">
+                <div class="history-data" id="rollHistory">
+                    <!-- Roll history will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="errorModal" class="modal">
         <div class="modal-content">
@@ -874,7 +874,7 @@
         let currentChipValue = null;
         let betHistory = [];
 
-        function createDice(number) {
+		function createDice(number) {
             const dice = document.createElement('div');
             dice.className = `dice dice-${number}`;
             for (let i = 0; i < number; i++) {
@@ -906,314 +906,314 @@
             return cell;
         }
 
-		function createTable() {
-			const tableGrid = document.getElementById('sicBoTableGrid');
+        function createTable() {
+            const tableGrid = document.getElementById('sicBoTableGrid');
 
-			// Small-Big container
-			const smallBigContainer = document.createElement('div');
-			smallBigContainer.className = 'small-big-container';
-			
-			smallBigContainer.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
-			
-			const titleElement = document.createElement('div');
-			titleElement.className = 'game-title';
-			titleElement.innerHTML = '<span>SIC BO</span>Fortune Awaits!<br>Place Your Bets';
-			smallBigContainer.appendChild(titleElement);
-			
-			smallBigContainer.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
-			
-			tableGrid.appendChild(smallBigContainer);
+            // Small-Big container
+            const smallBigContainer = document.createElement('div');
+            smallBigContainer.className = 'small-big-container';
+            
+            smallBigContainer.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
+            
+            const titleElement = document.createElement('div');
+            titleElement.className = 'game-title';
+            titleElement.innerHTML = '<span>SIC BO</span>Fortune Awaits!<br>Place Your Bets';
+            smallBigContainer.appendChild(titleElement);
+            
+            smallBigContainer.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
+            
+            tableGrid.appendChild(smallBigContainer);
 
-			// Special bets container (two rows)
-			const specialBetsContainer = document.createElement('div');
-			specialBetsContainer.className = 'special-bets-container';
-			
-			// First row
-			const firstRow = document.createElement('div');
-			firstRow.className = 'special-bets-row';
-			firstRow.appendChild(createCell('Each double<br>1 wins 10', 'double-label'));
-			firstRow.appendChild(createCell('Each triple<br>1 wins 180', 'triple-label'));
-			firstRow.appendChild(createCell('ANY TRIPLE<br>1 wins 30', 'any-triple'));
-			firstRow.appendChild(createCell('Each triple<br>1 wins 180', 'triple-label'));
-			firstRow.appendChild(createCell('Each double<br>1 wins 10', 'double-label'));
-			specialBetsContainer.appendChild(firstRow);
+            // Special bets container (two rows)
+            const specialBetsContainer = document.createElement('div');
+            specialBetsContainer.className = 'special-bets-container';
+            
+            // First row
+            const firstRow = document.createElement('div');
+            firstRow.className = 'special-bets-row';
+            firstRow.appendChild(createCell('Each double<br>1 wins 10', 'double-label'));
+            firstRow.appendChild(createCell('Each triple<br>1 wins 180', 'triple-label'));
+            firstRow.appendChild(createCell('ANY TRIPLE<br>1 wins 30', 'any-triple'));
+            firstRow.appendChild(createCell('Each triple<br>1 wins 180', 'triple-label'));
+            firstRow.appendChild(createCell('Each double<br>1 wins 10', 'double-label'));
+            specialBetsContainer.appendChild(firstRow);
 
-			// Second row
-			const secondRow = document.createElement('div');
-			secondRow.className = 'special-bets-row';
-			
-			// Container 1: Three double dice (horizontally)
-			const doubleContainer1 = createCell('', 'double-container');
-			for (let i = 1; i <= 3; i++) {
-				doubleContainer1.appendChild(createCell([i, i], 'double horizontal-dice', `double${i}`));
-			}
-			secondRow.appendChild(doubleContainer1);
+            // Second row
+            const secondRow = document.createElement('div');
+            secondRow.className = 'special-bets-row';
+            
+            // Container 1: Three double dice (horizontally)
+            const doubleContainer1 = createCell('', 'double-container');
+            for (let i = 1; i <= 3; i++) {
+                doubleContainer1.appendChild(createCell([i, i], 'double horizontal-dice', `double${i}`));
+            }
+            secondRow.appendChild(doubleContainer1);
 
-			// Container 2: Three triple dice (horizontally)
-			const tripleContainer1 = createCell('', 'triple-container');
-			for (let i = 1; i <= 3; i++) {
-				tripleContainer1.appendChild(createCell([i, i, i], 'triple horizontal-dice', `triple${i}`));
-			}
-			secondRow.appendChild(tripleContainer1);
+            // Container 2: Three triple dice (horizontally)
+            const tripleContainer1 = createCell('', 'triple-container');
+            for (let i = 1; i <= 3; i++) {
+                tripleContainer1.appendChild(createCell([i, i, i], 'triple horizontal-dice', `triple${i}`));
+            }
+            secondRow.appendChild(tripleContainer1);
 
-			// Container 3: Any Triple (6 three dice in 3x2 shape)
-			const anyTripleContainer = createCell('', 'any-triple-container');
-			for (let i = 1; i <= 3; i++) {
-				const row = document.createElement('div');
-				row.className = 'any-triple-row';
-				for (let j = 0; j < 2; j++) {
-					const diceValue = i + j * 3;
-					row.appendChild(createCell([diceValue, diceValue, diceValue], 'triple horizontal-dice', `tripleAny${diceValue}`));
-				}
-				anyTripleContainer.appendChild(row);
-			}
-			secondRow.appendChild(anyTripleContainer);
+            // Container 3: Any Triple (6 three dice in 3x2 shape)
+            const anyTripleContainer = createCell('', 'any-triple-container');
+            for (let i = 1; i <= 3; i++) {
+                const row = document.createElement('div');
+                row.className = 'any-triple-row';
+                for (let j = 0; j < 2; j++) {
+                    const diceValue = i + j * 3;
+                    row.appendChild(createCell([diceValue, diceValue, diceValue], 'triple horizontal-dice', `tripleAny${diceValue}`));
+                }
+                anyTripleContainer.appendChild(row);
+            }
+            secondRow.appendChild(anyTripleContainer);
 
-			// Container 4: Three triple dice (horizontally)
-			const tripleContainer2 = createCell('', 'triple-container');
-			for (let i = 4; i <= 6; i++) {
-				tripleContainer2.appendChild(createCell([i, i, i], 'triple horizontal-dice', `triple${i}`));
-			}
-			secondRow.appendChild(tripleContainer2);
+            // Container 4: Three triple dice (horizontally)
+            const tripleContainer2 = createCell('', 'triple-container');
+            for (let i = 4; i <= 6; i++) {
+                tripleContainer2.appendChild(createCell([i, i, i], 'triple horizontal-dice', `triple${i}`));
+            }
+            secondRow.appendChild(tripleContainer2);
 
-			// Container 5: Three double dice (horizontally)
-			const doubleContainer2 = createCell('', 'double-container');
-			for (let i = 4; i <= 6; i++) {
-				doubleContainer2.appendChild(createCell([i, i], 'double horizontal-dice', `double${i}`));
-			}
-			secondRow.appendChild(doubleContainer2);
+            // Container 5: Three double dice (horizontally)
+            const doubleContainer2 = createCell('', 'double-container');
+            for (let i = 4; i <= 6; i++) {
+                doubleContainer2.appendChild(createCell([i, i], 'double horizontal-dice', `double${i}`));
+            }
+            secondRow.appendChild(doubleContainer2);
 
-			specialBetsContainer.appendChild(secondRow);
-			tableGrid.appendChild(specialBetsContainer);
+            specialBetsContainer.appendChild(secondRow);
+            tableGrid.appendChild(specialBetsContainer);
 
-			// Total Bets
-			const totalBetsContainer = document.createElement('div');
-			totalBetsContainer.className = 'total-bets-container';
-			for (let i = 4; i <= 17; i++) {
-				let payout = i <= 10 ? [60, 30, 17, 12, 8, 6, 6][i - 4] : [6, 6, 6, 8, 12, 17, 30, 60][i - 11];
-				totalBetsContainer.appendChild(createCell(`${i}<br>1<br>wins ${payout}`, 'single-number', `total${i}`));
-			}
-			tableGrid.appendChild(totalBetsContainer);
+            // Total Bets
+            const totalBetsContainer = document.createElement('div');
+            totalBetsContainer.className = 'total-bets-container';
+            for (let i = 4; i <= 17; i++) {
+                let payout = i <= 10 ? [60, 30, 17, 12, 8, 6, 6][i - 4] : [6, 6, 6, 8, 12, 17, 30, 60][i - 11];
+                totalBetsContainer.appendChild(createCell(`${i}<br>1<br>wins ${payout}`, 'single-number', `total${i}`));
+            }
+            tableGrid.appendChild(totalBetsContainer);
 
-			// Two Dice Combinations
-			const twoDiceContainer = document.createElement('div');
-			twoDiceContainer.className = 'two-dice-container';
-			
-			// First row
-			twoDiceContainer.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice-label', 'twoDice'));
-			const firstRowCombos = ['12', '13', '14', '15', '16', '23', '24'];
-			firstRowCombos.forEach(combo => {
-				const [i, j] = combo.split('').map(Number);
-				twoDiceContainer.appendChild(createCell([i, j], 'two-dice horizontal-dice', `combo${combo}`));
-			});
+            // Two Dice Combinations
+            const twoDiceContainer = document.createElement('div');
+            twoDiceContainer.className = 'two-dice-container';
+            
+            // First row
+            twoDiceContainer.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice-label', 'twoDice'));
+            const firstRowCombos = ['12', '13', '14', '15', '16', '23', '24'];
+            firstRowCombos.forEach(combo => {
+                const [i, j] = combo.split('').map(Number);
+                twoDiceContainer.appendChild(createCell([i, j], 'two-dice horizontal-dice', `combo${combo}`));
+            });
 
-			// Second row
-			const secondRowCombos = ['25', '26', '34', '35', '36', '45', '46', '56'];
-			secondRowCombos.forEach(combo => {
-				const [i, j] = combo.split('').map(Number);
-				twoDiceContainer.appendChild(createCell([i, j], 'two-dice horizontal-dice', `combo${combo}`));
-			});
-			
-			tableGrid.appendChild(twoDiceContainer);
+            // Second row
+            const secondRowCombos = ['25', '26', '34', '35', '36', '45', '46', '56'];
+            secondRowCombos.forEach(combo => {
+                const [i, j] = combo.split('').map(Number);
+                twoDiceContainer.appendChild(createCell([i, j], 'two-dice horizontal-dice', `combo${combo}`));
+            });
+            
+            tableGrid.appendChild(twoDiceContainer);
 
-			// Single Dice Bets
-			const singleDiceContainer = document.createElement('div');
-			singleDiceContainer.className = 'single-dice-container';
-			['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'].forEach((text, index) => {
-				singleDiceContainer.appendChild(createCell(`${text}<br>${createDice(index + 1).outerHTML}`, 'single-dice', `single${index + 1}`));
-			});
-			tableGrid.appendChild(singleDiceContainer);
-		}
+            // Single Dice Bets
+            const singleDiceContainer = document.createElement('div');
+            singleDiceContainer.className = 'single-dice-container';
+            ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'].forEach((text, index) => {
+                singleDiceContainer.appendChild(createCell(`${text}<br>${createDice(index + 1).outerHTML}`, 'single-dice', `single${index + 1}`));
+            });
+            tableGrid.appendChild(singleDiceContainer);
+        }
 
-		function placeBet(betId) {
-			if (currentChipValue === null) {
-				showModal('Please select a chip value first!');
-				return;
-			}
-			if (selectedBets.has(betId)) {
-				selectedBets.delete(betId);
-				document.getElementById(betId).classList.remove('selected');
-				currentBet -= currentChipValue;
-			} else {
-				selectedBets.add(betId);
-				document.getElementById(betId).classList.add('selected');
-				currentBet += currentChipValue;
-			}
-			currentBetEl.textContent = currentBet;
-			
-			// Add this bet to the history
-			betHistory.push({betId, chipValue: currentChipValue});
-		}
+        function placeBet(betId) {
+            if (currentChipValue === null) {
+                showModal('Please select a chip value first!');
+                return;
+            }
+            if (selectedBets.has(betId)) {
+                selectedBets.delete(betId);
+                document.getElementById(betId).classList.remove('selected');
+                currentBet -= currentChipValue;
+            } else {
+                selectedBets.add(betId);
+                document.getElementById(betId).classList.add('selected');
+                currentBet += currentChipValue;
+            }
+            currentBetEl.textContent = currentBet;
+            
+            // Add this bet to the history
+            betHistory.push({betId, chipValue: currentChipValue});
+        }
 
-		function rollDice() {
-			return [
-				Math.floor(Math.random() * 6) + 1,
-				Math.floor(Math.random() * 6) + 1,
-				Math.floor(Math.random() * 6) + 1
-			];
-		}
+        function rollDice() {
+            return [
+                Math.floor(Math.random() * 6) + 1,
+                Math.floor(Math.random() * 6) + 1,
+                Math.floor(Math.random() * 6) + 1
+            ];
+        }
 
-		function evaluateBets(diceRoll) {
-			const sum = diceRoll.reduce((a, b) => a + b, 0);
-			let winnings = 0;
-			const isTriple = new Set(diceRoll).size === 1;
+        function evaluateBets(diceRoll) {
+            const sum = diceRoll.reduce((a, b) => a + b, 0);
+            let winnings = 0;
+            const isTriple = new Set(diceRoll).size === 1;
 
-			selectedBets.forEach(betId => {
-				if (betId === 'small' && sum >= 4 && sum <= 10 && !isTriple) winnings += currentChipValue * 2;
-				else if (betId === 'big' && sum >= 11 && sum <= 17 && !isTriple) winnings += currentChipValue * 2;
-				else if (betId.startsWith('double') && diceRoll.filter(d => d == betId.slice(-1)).length === 2) winnings += currentChipValue * 11;
-				else if (betId === 'tripleAny' && isTriple) winnings += currentChipValue * 31;
-				else if (betId.startsWith('triple') && isTriple && diceRoll[0] == betId.slice(-1)) winnings += currentChipValue * 181;
-				else if (betId.startsWith('total') && sum == betId.slice(5)) {
-					const payout = [60, 30, 17, 12, 8, 6, 6, 6, 6, 6, 8, 12, 17, 30, 60][sum - 4];
-					winnings += currentChipValue * (payout + 1);
-				}
-				else if (betId.startsWith('combo') && diceRoll.includes(Number(betId.slice(-2, -1))) && diceRoll.includes(Number(betId.slice(-1)))) winnings += currentChipValue * 6;
-				else if (betId.startsWith('single')) {
-					const count = diceRoll.filter(d => d == betId.slice(-1)).length;
-					winnings += currentChipValue * count * (count === 1 ? 2 : count === 2 ? 3 : 4);
-				}
-			});
+            selectedBets.forEach(betId => {
+                if (betId === 'small' && sum >= 4 && sum <= 10 && !isTriple) winnings += currentChipValue * 2;
+                else if (betId === 'big' && sum >= 11 && sum <= 17 && !isTriple) winnings += currentChipValue * 2;
+                else if (betId.startsWith('double') && diceRoll.filter(d => d == betId.slice(-1)).length === 2) winnings += currentChipValue * 11;
+                else if (betId === 'tripleAny' && isTriple) winnings += currentChipValue * 31;
+                else if (betId.startsWith('triple') && isTriple && diceRoll[0] == betId.slice(-1)) winnings += currentChipValue * 181;
+                else if (betId.startsWith('total') && sum == betId.slice(5)) {
+                    const payout = [60, 30, 17, 12, 8, 6, 6, 6, 6, 6, 8, 12, 17, 30, 60][sum - 4];
+                    winnings += currentChipValue * (payout + 1);
+                }
+                else if (betId.startsWith('combo') && diceRoll.includes(Number(betId.slice(-2, -1))) && diceRoll.includes(Number(betId.slice(-1)))) winnings += currentChipValue * 6;
+                else if (betId.startsWith('single')) {
+                    const count = diceRoll.filter(d => d == betId.slice(-1)).length;
+                    winnings += currentChipValue * count * (count === 1 ? 2 : count === 2 ? 3 : 4);
+                }
+            });
 
-			return winnings - currentBet;
-		}
+            return winnings - currentBet;
+        }
 
-		function updateRollHistory(diceRoll) {
-			const historyContainer = document.getElementById('rollHistory');
-			const historyItem = document.createElement('div');
-			historyItem.className = 'history-item';
-			const total = diceRoll.reduce((a, b) => a + b, 0);
-			const isBig = total > 10 && new Set(diceRoll).size > 1;
-			const isSmall = total < 11 && new Set(diceRoll).size > 1;
-			
-			historyItem.classList.add(isBig ? 'history-big' : isSmall ? 'history-small' : '');
-			
-			historyItem.innerHTML = `
-				<span>${diceRoll.join('')}</span>
-				<span>${total.toString().padStart(2, '0')}</span>
-			`;
-			
-			historyContainer.insertBefore(historyItem, historyContainer.firstChild);
-			
-			while (historyContainer.children.length > 100) {
-				historyContainer.removeChild(historyContainer.lastChild);
-			}
-		}
+        function updateRollHistory(diceRoll) {
+            const historyContainer = document.getElementById('rollHistory');
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            const total = diceRoll.reduce((a, b) => a + b, 0);
+            const isBig = total > 10 && new Set(diceRoll).size > 1;
+            const isSmall = total < 11 && new Set(diceRoll).size > 1;
+            
+            historyItem.classList.add(isBig ? 'history-big' : isSmall ? 'history-small' : '');
+            
+            historyItem.innerHTML = `
+                <span>${diceRoll.join('')}</span>
+                <span>${total.toString().padStart(2, '0')}</span>
+            `;
+            
+            historyContainer.insertBefore(historyItem, historyContainer.firstChild);
+            
+            while (historyContainer.children.length > 100) {
+                historyContainer.removeChild(historyContainer.lastChild);
+            }
+        }
 
-		const modal = document.getElementById('errorModal');
-		const closeBtn = document.getElementsByClassName('close')[0];
-		const modalMessage = document.getElementById('modalMessage');
+        const modal = document.getElementById('errorModal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+        const modalMessage = document.getElementById('modalMessage');
 
-		function showModal(message) {
-			modalMessage.textContent = message;
-			modal.style.display = 'block';
-		}
+        function showModal(message) {
+            modalMessage.textContent = message;
+            modal.style.display = 'block';
+        }
 
-		closeBtn.onclick = function() {
-			modal.style.display = 'none';
-		}
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
 
-		window.onclick = function(event) {
-			if (event.target == modal) {
-				modal.style.display = 'none';
-			}
-		}
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
 
-		function showResultNotification(result) {
-			const notification = document.getElementById('resultNotification');
-			const tableOverlay = document.getElementById('tableOverlay');
-			
-			if (result > 0) {
-				notification.innerHTML = `You Won<span>$${result}</span>`;
-				notification.className = 'result-notification win-notification';
-				tableOverlay.className = 'table-overlay win-overlay';
-				
-				selectedBets.forEach(betId => {
-					const cell = document.getElementById(betId);
-					cell.classList.add('winning-cells-highlight');
-					setTimeout(() => {
-						cell.classList.remove('winning-cells-highlight');
-					}, 3000);
-				});
-			} else {
-				notification.innerHTML = `You Lost<span>$${-result}</span>`;
-				notification.className = 'result-notification loss-notification';
-				tableOverlay.className = 'table-overlay loss-overlay';
-			}
-			
-			notification.style.display = 'block';
-			tableOverlay.style.opacity = '1';
-			
-			setTimeout(() => {
-				notification.style.display = 'none';
-				tableOverlay.style.opacity = '0';
-			}, 3000);
-		}
+        function showResultNotification(result) {
+            const notification = document.getElementById('resultNotification');
+            const tableOverlay = document.getElementById('tableOverlay');
+            
+            if (result > 0) {
+                notification.innerHTML = `You Won<span>$${result}</span>`;
+                notification.className = 'result-notification win-notification';
+                tableOverlay.className = 'table-overlay win-overlay';
+                
+                selectedBets.forEach(betId => {
+                    const cell = document.getElementById(betId);
+                    cell.classList.add('winning-cells-highlight');
+                    setTimeout(() => {
+                        cell.classList.remove('winning-cells-highlight');
+                    }, 3000);
+                });
+            } else {
+                notification.innerHTML = `You Lost<span>$${-result}</span>`;
+                notification.className = 'result-notification loss-notification';
+                tableOverlay.className = 'table-overlay loss-overlay';
+            }
+            
+            notification.style.display = 'block';
+            tableOverlay.style.opacity = '1';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+                tableOverlay.style.opacity = '0';
+            }, 3000);
+        }
 
-		function undoLastBet() {
-			if (betHistory.length === 0) {
-				showModal('No bets to undo!');
-				return;
-			}
-			
-			const lastBet = betHistory.pop();
-			const betId = lastBet.betId;
-			const chipValue = lastBet.chipValue;
-			
-			if (selectedBets.has(betId)) {
-				selectedBets.delete(betId);
-				document.getElementById(betId).classList.remove('selected');
-				currentBet -= chipValue;
-				currentBetEl.textContent = currentBet;
-			}
-		}
+        function undoLastBet() {
+            if (betHistory.length === 0) {
+                showModal('No bets to undo!');
+                return;
+            }
+            
+            const lastBet = betHistory.pop();
+            const betId = lastBet.betId;
+            const chipValue = lastBet.chipValue;
+            
+            if (selectedBets.has(betId)) {
+                selectedBets.delete(betId);
+                document.getElementById(betId).classList.remove('selected');
+                currentBet -= chipValue;
+                currentBetEl.textContent = currentBet;
+            }
+        }
 
-		function resetAllBets() {
-			selectedBets.forEach(betId => {
-				document.getElementById(betId).classList.remove('selected');
-			});
-			selectedBets.clear();
-			betHistory = [];
-			currentBet = 0;
-			currentBetEl.textContent = currentBet;
-		}
+        function resetAllBets() {
+            selectedBets.forEach(betId => {
+                document.getElementById(betId).classList.remove('selected');
+            });
+            selectedBets.clear();
+            betHistory = [];
+            currentBet = 0;
+            currentBetEl.textContent = currentBet;
+        }
 
-		rollDiceBtn.addEventListener('click', () => {
-			if (currentBet === 0) {
-				showModal('Please place a bet first!');
-				return;
-			}
-			
-			const diceRoll = rollDice();
-			diceRollEl.textContent = diceRoll.join(', ');
-			
-			const result = evaluateBets(diceRoll);
-			balance += result;
-			balanceEl.textContent = balance;
-			
-			updateRollHistory(diceRoll);
-			
-			showResultNotification(result);
-			
-			currentBet = 0;
-			currentBetEl.textContent = currentBet;
-			selectedBets.clear();
-			document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
-		});
+        rollDiceBtn.addEventListener('click', () => {
+            if (currentBet === 0) {
+                showModal('Please place a bet first!');
+                return;
+            }
+            
+            const diceRoll = rollDice();
+            diceRollEl.textContent = diceRoll.join(', ');
+            
+            const result = evaluateBets(diceRoll);
+            balance += result;
+            balanceEl.textContent = balance;
+            
+            updateRollHistory(diceRoll);
+            
+            showResultNotification(result);
+            
+            currentBet = 0;
+            currentBetEl.textContent = currentBet;
+            selectedBets.clear();
+            document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+        });
 
 		document.querySelectorAll('.chip').forEach(chip => {
-			chip.addEventListener('click', () => {
-				currentChipValue = parseInt(chip.dataset.value.slice(1));
-				document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
-				chip.classList.add('active-chip');
-			});
-		});
+            chip.addEventListener('click', () => {
+                currentChipValue = parseInt(chip.dataset.value.slice(1));
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
+                chip.classList.add('active-chip');
+            });
+        });
 
-		document.getElementById('undoButton').addEventListener('click', undoLastBet);
-		document.getElementById('resetButton').addEventListener('click', resetAllBets);
+        document.getElementById('undoButton').addEventListener('click', undoLastBet);
+        document.getElementById('resetButton').addEventListener('click', resetAllBets);
 
-		// Initialize the game
-		createTable();
+        // Initialize the game
+        createTable();
     </script>
 </body>
 </html>
