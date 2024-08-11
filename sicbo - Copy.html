@@ -203,17 +203,22 @@
         }
 
         .chip {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            margin: 0 10px;
+            margin: 0 5px;
             cursor: pointer;
-            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #1a0000;
             transition: all 0.3s ease;
+            position: relative;
             box-shadow: 
-                0 4px 8px rgba(0,0,0,0.3),
-                0 0 0 4px rgba(255,255,255,0.2) inset,
-                0 0 0 8px rgba(0,0,0,0.5) inset;
+                inset 0 0 5px rgba(0,0,0,0.5),
+                0 2px 3px rgba(0,0,0,0.3);
+            border: 3px dashed rgba(255,255,255,0.5);
         }
 
         .chip::before {
@@ -222,14 +227,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 90%;
-            height: 90%;
+            width: 80%;
+            height: 80%;
             border-radius: 50%;
-            background: repeating-conic-gradient(
-                from 0deg,
-                rgba(255,255,255,0.1) 0deg 10deg,
-                transparent 10deg 20deg
-            );
+            border: 2px solid rgba(255,255,255,0.7);
         }
 
         .chip::after {
@@ -238,36 +239,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            color: rgba(255,255,255,0.9);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
-        .chip-edge {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            overflow: hidden;
-        }
-
-        .chip-edge::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            right: -50%;
-            bottom: -50%;
-            background: repeating-conic-gradient(
-                from 0deg,
-                rgba(255,255,255,0.1) 0deg 20deg,
-                transparent 20deg 40deg
-            );
-            animation: rotate 10s linear infinite;
-        }
 		
 		@keyframes rotate {
             from { transform: rotate(0deg); }
@@ -275,24 +250,24 @@
         }
 
         .chip-1 { 
-            background: linear-gradient(145deg, #f0f0f0, #d4d4d4);
+            background: linear-gradient(145deg, #fff, #f0f0f0);
             color: #000; 
         }
         .chip-5 { 
-            background: linear-gradient(145deg, #ff4d4d, #cc0000);
+            background: linear-gradient(145deg, #ff6b6b, #e60000);
             color: #fff; 
         }
         .chip-10 { 
-            background: linear-gradient(145deg, #4db8ff, #0080ff);
+            background: linear-gradient(145deg, #4ecdc4, #45b7aa);
             color: #fff; 
         }
         .chip-25 { 
-            background: linear-gradient(145deg, #66ff66, #00cc00);
+            background: linear-gradient(145deg, #45aaf2, #2d98da);
             color: #fff; 
         }
         .chip-100 { 
-            background: linear-gradient(145deg, #ffcc00, #ff9900);
-            color: #000; 
+            background: linear-gradient(145deg, #4b4b4b, #3a3a3a);
+            color: #ffd700; 
         }
 
         .history-container {
@@ -490,10 +465,9 @@
 
         .active-chip {
             box-shadow: 
-                0 0 20px rgba(255,215,0,0.8),
-                0 0 0 4px rgba(255,255,255,0.4) inset,
-                0 0 0 8px rgba(0,0,0,0.6) inset;
-            transform: translateY(-5px) scale(1.1);
+                inset 0 0 10px rgba(255,255,255,0.8),
+                0 0 15px rgba(255,215,0,0.8);
+            transform: translateY(-5px);
         }
 
 		@keyframes fadeInOut {
@@ -667,11 +641,11 @@
                 <div>Dice Roll: <span id="diceRoll"></span></div>
             </div>
 			<div class="chip-container">
-				<div class="chip chip-1" data-value="$1"><div class="chip-edge"></div></div>
-				<div class="chip chip-5" data-value="$5"><div class="chip-edge"></div></div>
-				<div class="chip chip-10" data-value="$10"><div class="chip-edge"></div></div>
-				<div class="chip chip-25" data-value="$25"><div class="chip-edge"></div></div>
-				<div class="chip chip-100" data-value="$100"><div class="chip-edge"></div></div>
+				<div class="chip chip-1" data-value="$1"></div>
+				<div class="chip chip-5" data-value="$5"></div>
+				<div class="chip chip-10" data-value="$10"></div>
+				<div class="chip chip-25" data-value="$25"></div>
+				<div class="chip chip-100" data-value="$100"></div>
 			</div>
         </div>
 
@@ -947,7 +921,7 @@
 
         document.querySelectorAll('.chip').forEach(chip => {
             chip.addEventListener('click', () => {
-                currentChipValue = parseInt(chip.dataset.value);
+                currentChipValue = parseInt(chip.dataset.value.slice(1));
                 document.querySelectorAll('.chip').forEach(c => c.classList.remove('active-chip'));
                 chip.classList.add('active-chip');
             });
