@@ -215,17 +215,37 @@
         }
 		
 
-        .two-dice-container {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            grid-template-rows: repeat(2, auto);
-            gap: 1px;
-            border: 2px solid #8b4513;
-            padding: 5px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
+		.two-dice-container {
+			grid-column: 1 / -1;
+			display: grid;
+			grid-template-columns: repeat(8, 1fr);
+			gap: 4px;
+			border: 2px solid #8b4513;
+			padding: 5px;
+			border-radius: 10px;
+			margin-bottom: 10px;
+		}
+		
+		.two-dice-label {
+			grid-column: span 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			font-weight: bold;
+		}
+
+		.two-dice.horizontal-dice {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.two-dice.horizontal-dice .dice {
+			margin: 0 1px;
+			transform: scale(0.7); /* Make dice slightly smaller to fit better */
+		}
 
         .two-dice { 
             grid-column: span 1;
@@ -989,18 +1009,18 @@
             twoDiceContainer.className = 'two-dice-container';
             
             // First row
-            twoDiceContainer.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice', 'twoDice'));
+            twoDiceContainer.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice-label', 'twoDice'));
             const firstRowCombos = ['12', '13', '14', '15', '16', '23', '24'];
             firstRowCombos.forEach(combo => {
                 const [i, j] = combo.split('').map(Number);
-                twoDiceContainer.appendChild(createCell([i, j], 'two-dice', `combo${combo}`));
+                twoDiceContainer.appendChild(createCell([i, j], 'two-dice horizontal-dice', `combo${combo}`));
             });
 
             // Second row
             const secondRowCombos = ['25', '26', '34', '35', '36', '45', '46', '56'];
             secondRowCombos.forEach(combo => {
                 const [i, j] = combo.split('').map(Number);
-                twoDiceContainer.appendChild(createCell([i, j], 'two-dice', `combo${combo}`));
+                twoDiceContainer.appendChild(createCell([i, j], 'two-dice horizontal-dice', `combo${combo}`));
             });
             
             tableGrid.appendChild(twoDiceContainer);
