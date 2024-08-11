@@ -635,6 +635,56 @@
                 min-width: 30px;
             }
         }
+		
+		.action-buttons {
+			display: flex;
+			justify-content: center;
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		.icon-button {
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 5px;
+			margin: 0 10px;
+			transition: all 0.3s ease;
+		}
+
+		.icon-button svg {
+			width: 24px;
+			height: 24px;
+			fill: none;
+			stroke: #e6ccb2;
+			stroke-width: 2;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		.icon-button:hover svg {
+			stroke: #f0e0d0;
+			transform: scale(1.1);
+		}
+
+		.icon-button:active svg {
+			transform: scale(0.9);
+		}
+
+		@media (max-width: 768px) {
+			.icon-button svg {
+				width: 20px;
+				height: 20px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.icon-button svg {
+				width: 18px;
+				height: 18px;
+			}
+		}
+		
     </style>
 </head>
 <body>
@@ -660,6 +710,23 @@
                 <div class="chip chip-100" data-value="$100"></div>
             </div>
         </div>
+		
+		<div class="action-buttons">
+			<button id="undoButton" class="icon-button" title="Undo last bet">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M3 7v6h6"></path>
+					<path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
+				</svg>
+			</button>
+			<button id="resetButton" class="icon-button" title="Reset all bets">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M21 12a9 9 0 01-9 9"></path>
+					<path d="M3 12a9 9 0 019-9"></path>
+					<path d="M12 3v8"></path>
+					<path d="M16 7l-4-4-4 4"></path>
+				</svg>
+			</button>
+		</div>
 
         <div class="history-container">
             <div class="history-title">Roll History</div>
@@ -687,6 +754,7 @@
         const diceRollEl = document.getElementById('diceRoll');
         const rollDiceBtn = document.getElementById('rollDice');
 
+		let betHistory = [];
         let balance = 1000;
         let currentBet = 0;
         let selectedBets = new Set();
@@ -786,22 +854,25 @@
             tableGrid.appendChild(singleDiceContainer);
         }
 
-        function placeBet(betId) {
-            if (currentChipValue === null) {
-                showModal('Please select a chip value first!');
-                return;
-            }
-            if (selectedBets.has(betId)) {
-                selectedBets.delete(betId);
-                document.getElementById(betId).classList.remove('selected');
-                currentBet -= currentChipValue;
-            } else {
-                selectedBets.add(betId);
-                document.getElementById(betId).classList.add('selected');
-                currentBet += currentChipValue;
-            }
-            currentBetEl.textContent = currentBet;
-        }
+		function placeBet(betId) {
+			if (currentChipValue === null) {
+				showModal('Please select a chip value first!');
+				return;
+			}
+			if (selectedBets.has(betId)) {
+				selectedBets.delete(betId);
+				document.getElementById(betId).classList.remove('selected');
+				currentBet -= currentChipValue;
+			} else {
+				selectedBets.add(betId);
+				document.getElementById(betId).classList.add('selected');
+				currentBet += currentChipValue;
+			}
+			currentBetEl.textContent = currentBet;
+			
+			// Add this bet to the history
+			betHistory.push({betId, chipValue: currentChipValue});
+		}
 
         function rollDice() {
             return [
@@ -938,6 +1009,38 @@
                 chip.classList.add('active-chip');
             });
         });
+		
+		function undoLastBet() {
+			if (betHistory.length === 0) {
+				showModal('No bets to undo!');
+				return;
+			}
+			
+			const lastBet = betHistory.pop();
+			const betId = lastBet.betId;
+			const chipValue = lastBet.chipValue;
+			
+			if (selectedBets.has(betId)) {
+				selectedBets.delete(betId);
+				document.getElementById(betId).classList.remove('selected');
+				currentBet -= chipValue;
+				currentBetEl.textContent = currentBet;
+			}
+		}
+
+		function resetAllBets() {
+			selectedBets.forEach(betId => {
+				document.getElementById(betId).classList.remove('selected');
+			});
+			selectedBets.clear();
+			betHistory = [];
+			currentBet = 0;
+			currentBetEl.textContent = currentBet;
+		}
+
+		// Add these event listeners at the end of your script
+		document.getElementById('undoButton').addEventListener('click', undoLastBet);
+		document.getElementById('resetButton').addEventListener('click', resetAllBets);
 
         // Initialize the game
         createTable();
