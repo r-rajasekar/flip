@@ -241,6 +241,7 @@
             align-items: center;
             text-align: center;
             font-weight: bold;
+			font-size: 1.2vmin;
         }
 
         .two-dice.horizontal-dice {
@@ -258,6 +259,42 @@
         .two-dice { 
             grid-column: span 1;
         }
+		
+		@media (max-width: 768px) {
+			.two-dice-container {
+				grid-template-columns: repeat(4, 1fr);
+			}
+
+			.two-dice-label {
+				grid-column: span 4;
+				font-size: 2vmin;
+				padding: 5px 0;
+			}
+
+			.two-dice.horizontal-dice .dice {
+				transform: scale(0.6);
+			}
+		}
+
+		@media (max-width: 480px) {
+			.two-dice-container {
+				grid-template-columns: repeat(4, 1fr);
+			}
+
+			.two-dice-label {
+				grid-column: span 4;
+				font-size: 3vmin;
+				padding: 3px 0;
+			}
+
+			.two-dice.horizontal-dice .dice {
+				transform: scale(0.5);
+			}
+
+			.two-dice.horizontal-dice {
+				padding: 2px;
+			}
+		}
         
         .single-dice-container {
             grid-column: 1 / -1;
