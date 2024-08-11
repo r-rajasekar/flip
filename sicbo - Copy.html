@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Refined Casino Sic Bo Game</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&family=Roboto+Mono&display=swap');
@@ -44,8 +44,7 @@
             display: flex;
             flex-direction: column;
             width: 100%;
-            height: calc(100% - 100px);
-            margin-bottom: 10px;
+            flex-grow: 1;
             overflow: hidden;
         }
 
@@ -274,6 +273,54 @@
             color: #ffd700; 
         }
 
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #e6ccb2;
+        }
+
+        .icon-button svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            margin-bottom: 5px;
+        }
+
+        .icon-button span {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .icon-button:hover {
+            color: #f0e0d0;
+        }
+
+        .icon-button:hover svg {
+            transform: scale(1.1);
+        }
+
+        .icon-button:active svg {
+            transform: scale(0.9);
+        }
+
         .history-container {
             width: 100%;
             height: 90px;
@@ -388,7 +435,7 @@
         .dice-4 .dot:nth-child(3), .dice-4 .dot:nth-child(4) { grid-area: 3 / 3; }
         .dice-5 .dot:nth-child(1), .dice-5 .dot:nth-child(2) { grid-area: 1 / 1; }
         .dice-5 .dot:nth-child(3) { grid-area: 2 / 2; }
-        .dice-5 .dot:nth-child(4), .dice-5 .dot:nth-child(5) { grid-area: 3 / 3; }
+		.dice-5 .dot:nth-child(4), .dice-5 .dot:nth-child(5) { grid-area: 3 / 3; }
         .dice-6 .dot:nth-child(1), .dice-6 .dot:nth-child(2), .dice-6 .dot:nth-child(3) { grid-area: 1 / 1; }
         .dice-6 .dot:nth-child(4), .dice-6 .dot:nth-child(5), .dice-6 .dot:nth-child(6) { grid-area: 3 / 3; }
 
@@ -397,25 +444,7 @@
             border: 1px solid #e6ccb2;
         }
 
-        .bottom-display {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px;
-            background-color: rgba(26, 0, 0, 0.7);
-            color: #e6ccb2;
-            font-size: 1.5vmin;
-            border-top: 1px solid #8b4513;
-            height: 20px;
-            margin-top: -17px;
-        }
-
-        .bottom-display span {
-            flex: 1;
-            text-align: center;
-        }
-
-		.modal {
+        .modal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -564,6 +593,11 @@
                 font-size: 12px;
             }
 
+            .chip-container {
+                gap: 10px;
+                margin-bottom: 5px;
+            }
+
             .chip {
                 width: 30px;
                 height: 30px;
@@ -571,6 +605,19 @@
 
             .chip::after {
                 font-size: 8px;
+            }
+
+            .action-buttons {
+                margin-top: 5px;
+            }
+
+            .icon-button svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .icon-button span {
+                font-size: 10px;
             }
 
             .history-container {
@@ -588,6 +635,14 @@
         }
 
         @media (max-width: 480px) {
+            .game-container {
+                padding: 5px;
+            }
+
+            .main-area {
+                justify-content: space-between;
+            }
+
             .cell {
                 font-size: 1.5vmin;
             }
@@ -613,6 +668,11 @@
                 font-size: 10px;
             }
 
+            .chip-container {
+                gap: 8px;
+                margin-bottom: 3px;
+            }
+
             .chip {
                 width: 25px;
                 height: 25px;
@@ -620,6 +680,19 @@
 
             .chip::after {
                 font-size: 7px;
+            }
+
+            .action-buttons {
+                margin-top: 3px;
+            }
+
+            .icon-button svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .icon-button span {
+                font-size: 9px;
             }
 
             .history-container {
@@ -635,75 +708,6 @@
                 min-width: 30px;
             }
         }
-		
-		.action-buttons {
-			display: flex;
-			justify-content: center;
-			margin-top: 10px;
-			margin-bottom: 10px;
-		}
-
-		.icon-button {
-			background: none;
-			border: none;
-			cursor: pointer;
-			padding: 5px;
-			margin: 0 10px;
-			transition: all 0.3s ease;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			color: #e6ccb2;
-		}
-
-		.icon-button svg {
-			width: 24px;
-			height: 24px;
-			fill: none;
-			stroke: currentColor;
-			stroke-width: 2;
-			stroke-linecap: round;
-			stroke-linejoin: round;
-			margin-bottom: 5px;
-		}
-
-		.icon-button span {
-			font-size: 12px;
-			font-weight: bold;
-		}
-
-		.icon-button:hover {
-			color: #f0e0d0;
-		}
-
-		.icon-button:hover svg {
-			transform: scale(1.1);
-		}
-
-		.icon-button:active svg {
-			transform: scale(0.9);
-		}
-
-		@media (max-width: 768px) {
-			.icon-button svg {
-				width: 20px;
-				height: 20px;
-			}
-			.icon-button span {
-				font-size: 10px;
-			}
-		}
-
-		@media (max-width: 480px) {
-			.icon-button svg {
-				width: 18px;
-				height: 18px;
-			}
-			.icon-button span {
-				font-size: 9px;
-			}
-		}
-		
     </style>
 </head>
 <body>
@@ -728,23 +732,23 @@
                 <div class="chip chip-25" data-value="$25"></div>
                 <div class="chip chip-100" data-value="$100"></div>
             </div>
+            <div class="action-buttons">
+                <button id="undoButton" class="icon-button" title="Undo last bet">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7v6h6"></path>
+                        <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
+                    </svg>
+                    <span>Undo</span>
+                </button>
+                <button id="resetButton" class="icon-button" title="Reset all bets">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    <span>Reset</span>
+                </button>
+            </div>
         </div>
-		
-		<div class="action-buttons">
-			<button id="undoButton" class="icon-button" title="Undo last bet">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M3 7v6h6"></path>
-					<path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
-				</svg>
-			</button>
-			<button id="resetButton" class="icon-button" title="Reset all bets">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M23 4v6h-6"></path>
-					<path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-				</svg>
-			</button>
-		</div>
-
         <div class="history-container">
             <div class="history-title">Roll History</div>
             <div class="history-data-container">
@@ -771,11 +775,11 @@
         const diceRollEl = document.getElementById('diceRoll');
         const rollDiceBtn = document.getElementById('rollDice');
 
-		let betHistory = [];
         let balance = 1000;
         let currentBet = 0;
         let selectedBets = new Set();
         let currentChipValue = null;
+        let betHistory = [];
 
         function createDice(number) {
             const dice = document.createElement('div');
@@ -809,14 +813,12 @@
             return cell;
         }
 
-        function createTable() {
-            // Create the small-big container
+		function createTable() {
             const smallBigContainer = document.createElement('div');
             smallBigContainer.className = 'small-big-container';
             
             smallBigContainer.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
             
-            // Add the new title element (not a cell)
             const titleElement = document.createElement('div');
             titleElement.className = 'game-title';
             titleElement.innerHTML = 'SIC BO<br>Fortune Awaits!<br>Place Your Bets';
@@ -842,7 +844,6 @@
                 tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
             }
 
-            // Create the total bets container
             const totalBetsContainer = document.createElement('div');
             totalBetsContainer.className = 'total-bets-container';
             for (let i = 4; i <= 17; i++) {
@@ -851,7 +852,6 @@
             }
             tableGrid.appendChild(totalBetsContainer);
 
-            // Create the two dice container
             const twoDiceContainer = document.createElement('div');
             twoDiceContainer.className = 'two-dice-container';
             twoDiceContainer.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice', 'twoDice'));
@@ -862,7 +862,6 @@
             }
             tableGrid.appendChild(twoDiceContainer);
 
-            // Create the single dice container
             const singleDiceContainer = document.createElement('div');
             singleDiceContainer.className = 'single-dice-container';
             ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'].forEach((text, index) => {
@@ -871,25 +870,25 @@
             tableGrid.appendChild(singleDiceContainer);
         }
 
-		function placeBet(betId) {
-			if (currentChipValue === null) {
-				showModal('Please select a chip value first!');
-				return;
-			}
-			if (selectedBets.has(betId)) {
-				selectedBets.delete(betId);
-				document.getElementById(betId).classList.remove('selected');
-				currentBet -= currentChipValue;
-			} else {
-				selectedBets.add(betId);
-				document.getElementById(betId).classList.add('selected');
-				currentBet += currentChipValue;
-			}
-			currentBetEl.textContent = currentBet;
-			
-			// Add this bet to the history
-			betHistory.push({betId, chipValue: currentChipValue});
-		}
+        function placeBet(betId) {
+            if (currentChipValue === null) {
+                showModal('Please select a chip value first!');
+                return;
+            }
+            if (selectedBets.has(betId)) {
+                selectedBets.delete(betId);
+                document.getElementById(betId).classList.remove('selected');
+                currentBet -= currentChipValue;
+            } else {
+                selectedBets.add(betId);
+                document.getElementById(betId).classList.add('selected');
+                currentBet += currentChipValue;
+            }
+            currentBetEl.textContent = currentBet;
+            
+            // Add this bet to the history
+            betHistory.push({betId, chipValue: currentChipValue});
+        }
 
         function rollDice() {
             return [
@@ -899,7 +898,7 @@
             ];
         }
 
-		function evaluateBets(diceRoll) {
+        function evaluateBets(diceRoll) {
             const sum = diceRoll.reduce((a, b) => a + b, 0);
             let winnings = 0;
             const isTriple = new Set(diceRoll).size === 1;
@@ -996,6 +995,34 @@
             }, 3000);
         }
 
+        function undoLastBet() {
+            if (betHistory.length === 0) {
+                showModal('No bets to undo!');
+                return;
+            }
+            
+            const lastBet = betHistory.pop();
+            const betId = lastBet.betId;
+            const chipValue = lastBet.chipValue;
+            
+            if (selectedBets.has(betId)) {
+                selectedBets.delete(betId);
+                document.getElementById(betId).classList.remove('selected');
+                currentBet -= chipValue;
+                currentBetEl.textContent = currentBet;
+            }
+        }
+
+        function resetAllBets() {
+            selectedBets.forEach(betId => {
+                document.getElementById(betId).classList.remove('selected');
+            });
+            selectedBets.clear();
+            betHistory = [];
+            currentBet = 0;
+            currentBetEl.textContent = currentBet;
+        }
+
         rollDiceBtn.addEventListener('click', () => {
             if (currentBet === 0) {
                 showModal('Please place a bet first!');
@@ -1026,38 +1053,9 @@
                 chip.classList.add('active-chip');
             });
         });
-		
-		function undoLastBet() {
-			if (betHistory.length === 0) {
-				showModal('No bets to undo!');
-				return;
-			}
-			
-			const lastBet = betHistory.pop();
-			const betId = lastBet.betId;
-			const chipValue = lastBet.chipValue;
-			
-			if (selectedBets.has(betId)) {
-				selectedBets.delete(betId);
-				document.getElementById(betId).classList.remove('selected');
-				currentBet -= chipValue;
-				currentBetEl.textContent = currentBet;
-			}
-		}
 
-		function resetAllBets() {
-			selectedBets.forEach(betId => {
-				document.getElementById(betId).classList.remove('selected');
-			});
-			selectedBets.clear();
-			betHistory = [];
-			currentBet = 0;
-			currentBetEl.textContent = currentBet;
-		}
-
-		// Add these event listeners at the end of your script
-		document.getElementById('undoButton').addEventListener('click', undoLastBet);
-		document.getElementById('resetButton').addEventListener('click', resetAllBets);
+        document.getElementById('undoButton').addEventListener('click', undoLastBet);
+        document.getElementById('resetButton').addEventListener('click', resetAllBets);
 
         // Initialize the game
         createTable();
