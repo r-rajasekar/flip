@@ -196,13 +196,20 @@
         }
 
         .horizontal-dice .dice {
-            margin: 0 1px;
+            margin: 0;
             transform: scale(0.7);
         }
 
+        .double-container .horizontal-dice,
+        .triple-container .horizontal-dice,
         .any-triple-container .horizontal-dice {
-            flex: 1 0 calc(50% - 4px);
-            margin: 2px;
+            margin: 0;  /* Remove margin around horizontal-dice */
+        }
+		
+		.double-container .horizontal-dice .dice,
+        .triple-container .horizontal-dice .dice,
+        .any-triple-container .horizontal-dice .dice {
+            margin: 0;  /* Ensure no margin between dice */
         }
 
         .total-bets-container {
@@ -852,13 +859,16 @@
             if (typeof content === 'string') {
                 cell.innerHTML = content;
             } else if (Array.isArray(content)) {
+                const diceContainer = document.createElement('div');
+                diceContainer.className = 'horizontal-dice';
                 content.forEach(item => {
                     if (typeof item === 'number') {
-                        cell.appendChild(createDice(item));
+                        diceContainer.appendChild(createDice(item));
                     } else {
-                        cell.appendChild(item);
+                        diceContainer.appendChild(item);
                     }
                 });
+                cell.appendChild(diceContainer);
             } else {
                 cell.appendChild(content);
             }
