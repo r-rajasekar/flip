@@ -145,15 +145,27 @@
         }
 
         .two-dice-container {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: repeat(16, 1fr);
-            gap: 1px;
-        }
+			grid-column: 1 / -1;
+			display: grid;
+			grid-template-columns: auto repeat(7, 1fr);
+			grid-template-rows: repeat(2, auto);
+			gap: 1px;
+		}
 
-        .two-dice { 
-            grid-column: span 1;
-        }
+		.two-dice-header {
+			grid-row: span 2;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.two-dice {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
         
         .single-dice-container {
             grid-column: 1 / -1;
@@ -814,61 +826,86 @@
         }
 
 		function createTable() {
-            const smallBigContainer = document.createElement('div');
-            smallBigContainer.className = 'small-big-container';
-            
-            smallBigContainer.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
-            
-            const titleElement = document.createElement('div');
-            titleElement.className = 'game-title';
-            titleElement.innerHTML = 'SIC BO<br>Fortune Awaits!<br>Place Your Bets';
-            smallBigContainer.appendChild(titleElement);
-            
-            smallBigContainer.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
-            
-            tableGrid.appendChild(smallBigContainer);
-            
-            tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
-            for (let i = 1; i <= 3; i++) {
-                tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
-            }
-            tableGrid.appendChild(createCell('Each triple 1 wins 180', 'triple'));
-            tableGrid.appendChild(createCell([1, 1, 1], 'triple', 'tripleAny'));
-            tableGrid.appendChild(createCell('1 wins 30', 'single-win'));
-            tableGrid.appendChild(createCell('ANY TRIPLE', 'triple'));
-            for (let i = 4; i <= 6; i++) {
-                tableGrid.appendChild(createCell([i, i, i], 'triple', `triple${i}`));
-            }
-            tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
-            for (let i = 4; i <= 6; i++) {
-                tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
-            }
+			const tableGrid = document.getElementById('sicBoTableGrid');
 
-            const totalBetsContainer = document.createElement('div');
-            totalBetsContainer.className = 'total-bets-container';
-            for (let i = 4; i <= 17; i++) {
-                let payout = i <= 10 ? [60, 30, 17, 12, 8, 6, 6][i - 4] : [6, 6, 6, 8, 12, 17, 30, 60][i - 11];
-                totalBetsContainer.appendChild(createCell(`${i}<br>1<br>wins ${payout}`, 'single-number', `total${i}`));
-            }
-            tableGrid.appendChild(totalBetsContainer);
+			// Small-Big container
+			const smallBigContainer = document.createElement('div');
+			smallBigContainer.className = 'small-big-container';
+			
+			smallBigContainer.appendChild(createCell('SMALL<br>Are numbers 4 to 10<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'small'));
+			
+			const titleElement = document.createElement('div');
+			titleElement.className = 'game-title';
+			titleElement.innerHTML = '<span>SIC BO</span>Fortune Awaits!<br>Place Your Bets';
+			smallBigContainer.appendChild(titleElement);
+			
+			smallBigContainer.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
+			
+			tableGrid.appendChild(smallBigContainer);
+			
+			// Doubles and Triples
+			tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
+			for (let i = 1; i <= 3; i++) {
+				tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
+			}
+			tableGrid.appendChild(createCell('Each triple 1 wins 180', 'triple'));
+			tableGrid.appendChild(createCell([1, 1, 1], 'triple', 'tripleAny'));
+			tableGrid.appendChild(createCell('1 wins 30', 'single-win'));
+			tableGrid.appendChild(createCell('ANY TRIPLE', 'triple'));
+			for (let i = 4; i <= 6; i++) {
+				tableGrid.appendChild(createCell([i, i, i], 'triple', `triple${i}`));
+			}
+			tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
+			for (let i = 4; i <= 6; i++) {
+				tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
+			}
 
-            const twoDiceContainer = document.createElement('div');
-            twoDiceContainer.className = 'two-dice-container';
-            twoDiceContainer.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice', 'twoDice'));
-            for (let i = 1; i <= 5; i++) {
-                for (let j = i + 1; j <= 6; j++) {
-                    twoDiceContainer.appendChild(createCell([i, j], 'two-dice', `combo${i}${j}`));
-                }
-            }
-            tableGrid.appendChild(twoDiceContainer);
+			// Total Bets
+			const totalBetsContainer = document.createElement('div');
+			totalBetsContainer.className = 'total-bets-container';
+			for (let i = 4; i <= 17; i++) {
+				let payout = i <= 10 ? [60, 30, 17, 12, 8, 6, 6][i - 4] : [6, 6, 6, 8, 12, 17, 30, 60][i - 11];
+				totalBetsContainer.appendChild(createCell(`${i}<br>1<br>wins ${payout}`, 'single-number', `total${i}`));
+			}
+			tableGrid.appendChild(totalBetsContainer);
 
-            const singleDiceContainer = document.createElement('div');
-            singleDiceContainer.className = 'single-dice-container';
-            ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'].forEach((text, index) => {
-                singleDiceContainer.appendChild(createCell(`${text}<br>${createDice(index + 1).outerHTML}`, 'single-dice', `single${index + 1}`));
-            });
-            tableGrid.appendChild(singleDiceContainer);
-        }
+			// Two Dice Combinations
+			const twoDiceContainer = document.createElement('div');
+			twoDiceContainer.className = 'two-dice-container';
+			
+			// Create the "TWO DICE" cell spanning two rows
+			const twoDiceCell = createCell('TWO DICE<br>1 wins 5', 'two-dice two-dice-header', 'twoDice');
+			twoDiceCell.style.gridRow = "span 2";
+			twoDiceContainer.appendChild(twoDiceCell);
+			
+			// Create two rows of combo cells
+			const combos = [];
+			for (let i = 1; i <= 5; i++) {
+				for (let j = i + 1; j <= 6; j++) {
+					combos.push(createCell([i, j], 'two-dice', `combo${i}${j}`));
+				}
+			}
+			
+			// Add first 7 combos to the first row
+			for (let i = 0; i < 7; i++) {
+				twoDiceContainer.appendChild(combos[i]);
+			}
+			
+			// Add remaining 8 combos to the second row
+			for (let i = 7; i < combos.length; i++) {
+				twoDiceContainer.appendChild(combos[i]);
+			}
+			
+			tableGrid.appendChild(twoDiceContainer);
+
+			// Single Dice Bets
+			const singleDiceContainer = document.createElement('div');
+			singleDiceContainer.className = 'single-dice-container';
+			['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'].forEach((text, index) => {
+				singleDiceContainer.appendChild(createCell(`${text}<br>${createDice(index + 1).outerHTML}`, 'single-dice', `single${index + 1}`));
+			});
+			tableGrid.appendChild(singleDiceContainer);
+		}
 
         function placeBet(betId) {
             if (currentChipValue === null) {
