@@ -636,54 +636,52 @@
             }
         }
 		
-		.action-buttons {
-			display: flex;
-			justify-content: center;
-			margin-top: 10px;
-			margin-bottom: 10px;
-		}
+	.action-buttons {
+		display: flex;
+		justify-content: center;
+	}
 
-		.icon-button {
-			background: none;
-			border: none;
-			cursor: pointer;
-			padding: 5px;
-			margin: 0 10px;
-			transition: all 0.3s ease;
-		}
+	.icon-button {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 5px;
+		margin: 0 10px;
+		transition: all 0.3s ease;
+	}
 
+	.icon-button svg {
+		width: 24px;
+		height: 24px;
+		fill: none;
+		stroke: #e6ccb2;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.icon-button:hover svg {
+		stroke: #f0e0d0;
+		transform: scale(1.1);
+	}
+
+	.icon-button:active svg {
+		transform: scale(0.9);
+	}
+
+	@media (max-width: 768px) {
 		.icon-button svg {
-			width: 24px;
-			height: 24px;
-			fill: none;
-			stroke: #e6ccb2;
-			stroke-width: 2;
-			stroke-linecap: round;
-			stroke-linejoin: round;
+			width: 20px;
+			height: 20px;
 		}
+	}
 
-		.icon-button:hover svg {
-			stroke: #f0e0d0;
-			transform: scale(1.1);
+	@media (max-width: 480px) {
+		.icon-button svg {
+			width: 18px;
+			height: 18px;
 		}
-
-		.icon-button:active svg {
-			transform: scale(0.9);
-		}
-
-		@media (max-width: 768px) {
-			.icon-button svg {
-				width: 20px;
-				height: 20px;
-			}
-		}
-
-		@media (max-width: 480px) {
-			.icon-button svg {
-				width: 18px;
-				height: 18px;
-			}
-		}
+	}
 		
     </style>
 </head>
