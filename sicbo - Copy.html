@@ -889,7 +889,9 @@
 			firstRow.className = 'special-bets-row';
 			firstRow.appendChild(createCell('Each double 1 wins 10', 'double-label'));
 			firstRow.appendChild(createCell('Each triple 1 wins 180', 'triple-label'));
-			firstRow.appendChild(createCell('1 wins 30', 'single-win'));
+			firstRow.appendChild(createCell('ANY TRIPLE \n 1 wins 30', 'single-win'));
+			firstRow.appendChild(createCell('Each triple 1 wins 180', 'triple-label'));
+			firstRow.appendChild(createCell('Each double 1 wins 10', 'double-label'));
 			specialBetsContainer.appendChild(firstRow);
 
 			// Second row
@@ -899,7 +901,7 @@
 				secondRow.appendChild(createCell([i, i], 'double', `double${i}`));
 			}
 			secondRow.appendChild(createCell([1, 1, 1], 'triple', 'tripleAny'));
-			secondRow.appendChild(createCell('ANY TRIPLE', 'triple'));
+			
 			for (let i = 4; i <= 6; i++) {
 				secondRow.appendChild(createCell([i, i, i], 'triple', `triple${i}`));
 			}
