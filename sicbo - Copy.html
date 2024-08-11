@@ -705,100 +705,60 @@
             }
         }
 
-        @media (max-width: 480px) {
-            .game-container {
-                padding: 5px;
-            }
+		@media (max-width: 480px) {
+			.game-container {
+				padding: 5px;
+			}
 
-            .main-area {
-                justify-content: space-between;
-            }
+			.main-area {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+			}
 
-            .table {
-                height: calc(100% - 110px); /* Increased height */
-                margin-bottom: 5px;
-            }
+			.table {
+				flex-grow: 1;
+				margin-bottom: 5px;
+			}
 
-            .chip-and-action-container {
-                margin-bottom: 0; /* Remove bottom margin */
-                position: absolute;
-                bottom: 50px; /* Position above the controls */
-                left: 0;
-                right: 0;
-                background-color: rgba(26, 0, 0, 0.8);
-                padding: 5px;
-                z-index: 10;
-            }
+			.chip-and-action-container {
+				position: static; /* Remove absolute positioning */
+				margin-bottom: 5px;
+				background-color: rgba(26, 0, 0, 0.8);
+				padding: 5px;
+			}
 
-            .controls {
-                margin-top: 0; /* Remove top margin */
-            }
+			.controls {
+				margin-top: 0;
+			}
 
-            .history-container {
-                height: 60px; /* Reduce height */
-            }
+			.history-container {
+				height: 60px;
+			}
 
-            .cell {
-                font-size: 1.5vmin;
-            }
+			/* Adjust chip and button sizes for better fit */
+			.chip {
+				width: 30px;
+				height: 30px;
+			}
 
-            .game-title {
-                font-size: 1.2vmin;
-            }
+			.chip::after {
+				font-size: 10px;
+			}
 
-            .game-title span {
-                font-size: 1.5vmin;
-            }
+			.action-buttons {
+				gap: 5px;
+			}
 
-            .small-big {
-                font-size: 1.5vmin;
-            }
+			.icon-button svg {
+				width: 20px;
+				height: 20px;
+			}
 
-            .controls {
-                font-size: 10px;
-                margin-bottom: 5px;
-            }
-
-            .controls button {
-                padding: 4px 8px;
-                font-size: 10px;
-            }
-
-            .chip {
-                width: 25px;
-                height: 25px;
-            }
-
-            .chip::after {
-                font-size: 8px;
-            }
-
-            .chip::before {
-                border-width: 1px;
-            }
-
-            .chip {
-                border-width: 2px;
-            }
-
-            .icon-button svg {
-                width: 16px;
-                height: 16px;
-            }
-
-            .icon-button span {
-                font-size: 8px;
-            }
-
-            .history-title {
-                font-size: 14px;
-            }
-
-            .history-item {
-                font-size: 10px;
-                min-width: 30px;
-            }
-        }
+			.icon-button span {
+				font-size: 10px;
+			}
+		}
     </style>
 </head>
 <body>
