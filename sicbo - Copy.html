@@ -37,6 +37,7 @@
             padding: 10px;
             box-shadow: 0 8px 32px 0 rgba(230, 204, 178, 0.2);
             border: 2px solid #8b4513;
+            overflow: hidden;
         }
 
         .main-area {
@@ -45,6 +46,7 @@
             width: 100%;
             height: calc(100% - 100px);
             margin-bottom: 10px;
+            overflow: hidden;
         }
 
         .table {
@@ -56,7 +58,7 @@
             display: flex;
             flex-direction: column;
             padding: 10px;
-            overflow: hidden;
+            overflow-y: auto;
             position: relative;
         }
 
@@ -66,6 +68,7 @@
             grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
             grid-auto-rows: minmax(30px, auto);
             gap: 1px;
+            min-height: min-content;
         }
 
         .cell {
@@ -200,7 +203,7 @@
             display: flex;
             justify-content: center;
             margin-top: 10px;
-            gap: 15px; /* Increased gap between chips */
+            gap: 15px;
         }
 
         .chip {
@@ -239,13 +242,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 12px; /* Reduced font size for chip value */
+            font-size: 12px;
             font-weight: bold;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
         }
 
         .chip-1 { 
@@ -371,23 +369,17 @@
                 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
-        /* Specific dot placements */
         .dice-1 .dot:nth-child(1) { grid-area: 2 / 2; }
-
         .dice-2 .dot:nth-child(1) { grid-area: 1 / 1; }
         .dice-2 .dot:nth-child(2) { grid-area: 3 / 3; }
-
         .dice-3 .dot:nth-child(1) { grid-area: 1 / 1; }
         .dice-3 .dot:nth-child(2) { grid-area: 2 / 2; }
         .dice-3 .dot:nth-child(3) { grid-area: 3 / 3; }
-
         .dice-4 .dot:nth-child(1), .dice-4 .dot:nth-child(2) { grid-area: 1 / 1; }
         .dice-4 .dot:nth-child(3), .dice-4 .dot:nth-child(4) { grid-area: 3 / 3; }
-
         .dice-5 .dot:nth-child(1), .dice-5 .dot:nth-child(2) { grid-area: 1 / 1; }
         .dice-5 .dot:nth-child(3) { grid-area: 2 / 2; }
         .dice-5 .dot:nth-child(4), .dice-5 .dot:nth-child(5) { grid-area: 3 / 3; }
-
         .dice-6 .dot:nth-child(1), .dice-6 .dot:nth-child(2), .dice-6 .dot:nth-child(3) { grid-area: 1 / 1; }
         .dice-6 .dot:nth-child(4), .dice-6 .dot:nth-child(5), .dice-6 .dot:nth-child(6) { grid-area: 3 / 3; }
 
@@ -536,103 +528,75 @@
             100% { transform: scale(1); }
         }
 
-        /* Media Queries for better responsiveness */
         @media (max-width: 768px) {
-            .history-container {
-                height: 80px;
+            .cell {
+                font-size: 1.8vmin;
+                padding: 1px;
             }
 
-            .main-area {
-                height: calc(100% - 90px);
+            .game-title {
+                font-size: 1.5vmin;
             }
 
-            .controls {
-                flex-wrap: wrap;
-            }
-
-            .controls button, .controls div {
-                margin: 5px;
-            }
-
-            .chip-container {
-                gap: 10px; /* Slightly reduced gap for smaller screens */
-            }
-
-            .chip {
-                width: 40px;
-                height: 40px;
-            }
-
-            .chip::after {
-                font-size: 10px; /* Further reduced font size for smaller screens */
-            }
-
-            .total-bets-container,
-            .two-dice-container {
-                grid-template-columns: repeat(7, 1fr);
+            .game-title span {
+                font-size: 1.8vmin;
             }
 
             .small-big {
-                font-size: 2vmin;
+                font-size: 1.8vmin;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .controls button, .controls div {
+                margin: 2px 0;
+            }
+
+            .chip {
+                width: 30px;
+                height: 30px;
+            }
+
+            .chip::after {
+                font-size: 8px;
+            }
+
+            .history-container {
+                height: 60px;
             }
         }
 
         @media (max-width: 480px) {
-            .history-container {
-                height: 70px;
-            }
-
-            .main-area {
-                height: calc(100% - 80px);
-            }
-            
-            .history-title {
-                font-size: 14px;
-            }
-
-            .history-item {
-                font-size: 10px;
-                min-width: 25px;
-            }
-
             .cell {
-                font-size: 2vmin;
+                font-size: 1.5vmin;
+            }
+
+            .game-title {
+                font-size: 1.2vmin;
+            }
+
+            .game-title span {
+                font-size: 1.5vmin;
             }
 
             .small-big {
-                font-size: 2.2vmin;
-            }
-
-            .controls button {
-                padding: 6px 12px;
-                font-size: 12px;
-            }
-
-            .chip-container {
-                gap: 8px; /* Further reduced gap for very small screens */
+                font-size: 1.5vmin;
             }
 
             .chip {
-                width: 35px;
-                height: 35px;
+                width: 25px;
+                height: 25px;
             }
 
             .chip::after {
-                font-size: 9px; /* Even smaller font size for very small screens */
+                font-size: 7px;
             }
 
-            .history-title {
-                font-size: 14px;
-            }
-
-            .history-item {
-                font-size: 10px;
-                min-width: 25px;
-            }
-
-            .total-bets-container,
-            .two-dice-container {
-                grid-template-columns: repeat(4, 1fr);
+            .history-container {
+                height: 50px;
             }
         }
     </style>
