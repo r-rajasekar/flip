@@ -144,20 +144,12 @@
             gap: 1px;
         }
 
-        .two-dice-container {
+		.two-dice-container {
 			grid-column: 1 / -1;
 			display: grid;
-			grid-template-columns: auto repeat(7, 1fr);
+			grid-template-columns: repeat(8, 1fr);
 			grid-template-rows: repeat(2, auto);
 			gap: 1px;
-		}
-
-		.two-dice-header {
-			grid-row: span 1;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
 		}
 
 		.two-dice {
@@ -873,28 +865,20 @@
 			const twoDiceContainer = document.createElement('div');
 			twoDiceContainer.className = 'two-dice-container';
 			
-			// Create the "TWO DICE" cell spanning two rows
-			const twoDiceCell = createCell('TWO DICE<br>1 wins 5', 'two-dice two-dice-header', 'twoDice');
-			twoDiceCell.style.gridRow = "span 2";
-			twoDiceContainer.appendChild(twoDiceCell);
-			
-			// Create two rows of combo cells
-			const combos = [];
-			for (let i = 1; i <= 5; i++) {
-				for (let j = i + 1; j <= 6; j++) {
-					combos.push(createCell([i, j], 'two-dice', `combo${i}${j}`));
-				}
-			}
-			
-			// Add first 7 combos to the first row
-			for (let i = 0; i < 7; i++) {
-				twoDiceContainer.appendChild(combos[i]);
-			}
-			
-			// Add remaining 8 combos to the second row
-			for (let i = 7; i < combos.length; i++) {
-				twoDiceContainer.appendChild(combos[i]);
-			}
+			// First row
+			twoDiceContainer.appendChild(createCell('TWO DICE<br>1 wins 5', 'two-dice', 'twoDice'));
+			const firstRowCombos = ['12', '13', '14', '15', '16', '23', '24'];
+			firstRowCombos.forEach(combo => {
+				const [i, j] = combo.split('').map(Number);
+				twoDiceContainer.appendChild(createCell([i, j], 'two-dice', `combo${combo}`));
+			});
+
+			// Second row
+			const secondRowCombos = ['25', '26', '34', '35', '36', '45', '46', '56'];
+			secondRowCombos.forEach(combo => {
+				const [i, j] = combo.split('').map(Number);
+				twoDiceContainer.appendChild(createCell([i, j], 'two-dice', `combo${combo}`));
+			});
 			
 			tableGrid.appendChild(twoDiceContainer);
 
