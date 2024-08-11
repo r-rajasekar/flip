@@ -178,6 +178,7 @@
             border-radius: 10px;
             margin-top: 10px;
             border: 1px solid #8b4513;
+            flex-wrap: nowrap;
         }
 
         .controls button {
@@ -191,12 +192,18 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Playfair Display', serif;
+            white-space: nowrap;
         }
 
         .controls button:hover {
             background-color: #f0e0d0;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .controls div {
+            white-space: nowrap;
+            margin: 0 5px;
         }
 
         .chip-container {
@@ -284,7 +291,7 @@
             margin-bottom: 5px;
             text-align: center;
             color: #e6ccb2;
-            line-height: 0.8;
+            line-height: 1;
         }
 
         .history-data-container {
@@ -297,7 +304,7 @@
             display: inline-flex;
             flex-direction: row;
             justify-content: flex-start;
-            align-items: flex-start;
+            align-items: center;
             height: 100%;
             padding-bottom: 5px;
         }
@@ -306,9 +313,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             margin-right: 10px;
-            font-size: 12px;
-            min-width: 30px;
+            font-size: 14px;
+            min-width: 40px;
+            height: 100%;
             font-family: 'Roboto Mono', monospace;
         }
 
@@ -547,12 +556,12 @@
             }
 
             .controls {
-                flex-direction: column;
-                align-items: stretch;
+                font-size: 12px;
             }
 
-            .controls button, .controls div {
-                margin: 2px 0;
+            .controls button {
+                padding: 6px 12px;
+                font-size: 12px;
             }
 
             .chip {
@@ -565,7 +574,16 @@
             }
 
             .history-container {
-                height: 60px;
+                height: 80px;
+            }
+
+            .history-title {
+                font-size: 16px;
+            }
+
+            .history-item {
+                font-size: 12px;
+                min-width: 35px;
             }
         }
 
@@ -586,6 +604,15 @@
                 font-size: 1.5vmin;
             }
 
+            .controls {
+                font-size: 10px;
+            }
+
+            .controls button {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+
             .chip {
                 width: 25px;
                 height: 25px;
@@ -596,7 +623,16 @@
             }
 
             .history-container {
-                height: 50px;
+                height: 70px;
+            }
+
+            .history-title {
+                font-size: 14px;
+            }
+
+            .history-item {
+                font-size: 10px;
+                min-width: 30px;
             }
         }
     </style>
@@ -613,8 +649,8 @@
             <div class="controls">
                 <button id="rollDice">Roll Dice</button>
                 <div>Balance: $<span id="balance">1000</span></div>
-                <div>Current Bet: $<span id="currentBet">0</span></div>
-                <div>Dice Roll: <span id="diceRoll"></span></div>
+                <div>Bet: $<span id="currentBet">0</span></div>
+                <div>Roll: <span id="diceRoll"></span></div>
             </div>
             <div class="chip-container">
                 <div class="chip chip-1" data-value="$1"></div>
