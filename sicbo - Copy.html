@@ -636,52 +636,73 @@
             }
         }
 		
-	.action-buttons {
-		display: flex;
-		justify-content: center;
-	}
-
-	.icon-button {
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 5px;
-		margin: 0 10px;
-		transition: all 0.3s ease;
-	}
-
-	.icon-button svg {
-		width: 24px;
-		height: 24px;
-		fill: none;
-		stroke: #e6ccb2;
-		stroke-width: 2;
-		stroke-linecap: round;
-		stroke-linejoin: round;
-	}
-
-	.icon-button:hover svg {
-		stroke: #f0e0d0;
-		transform: scale(1.1);
-	}
-
-	.icon-button:active svg {
-		transform: scale(0.9);
-	}
-
-	@media (max-width: 768px) {
-		.icon-button svg {
-			width: 20px;
-			height: 20px;
+		.action-buttons {
+			display: flex;
+			justify-content: center;
+			margin-top: 10px;
+			margin-bottom: 10px;
 		}
-	}
 
-	@media (max-width: 480px) {
-		.icon-button svg {
-			width: 18px;
-			height: 18px;
+		.icon-button {
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 5px;
+			margin: 0 10px;
+			transition: all 0.3s ease;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			color: #e6ccb2;
 		}
-	}
+
+		.icon-button svg {
+			width: 24px;
+			height: 24px;
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 2;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			margin-bottom: 5px;
+		}
+
+		.icon-button span {
+			font-size: 12px;
+			font-weight: bold;
+		}
+
+		.icon-button:hover {
+			color: #f0e0d0;
+		}
+
+		.icon-button:hover svg {
+			transform: scale(1.1);
+		}
+
+		.icon-button:active svg {
+			transform: scale(0.9);
+		}
+
+		@media (max-width: 768px) {
+			.icon-button svg {
+				width: 20px;
+				height: 20px;
+			}
+			.icon-button span {
+				font-size: 10px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.icon-button svg {
+				width: 18px;
+				height: 18px;
+			}
+			.icon-button span {
+				font-size: 9px;
+			}
+		}
 		
     </style>
 </head>
@@ -718,10 +739,8 @@
 			</button>
 			<button id="resetButton" class="icon-button" title="Reset all bets">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M21 12a9 9 0 01-9 9"></path>
-					<path d="M3 12a9 9 0 019-9"></path>
-					<path d="M12 3v8"></path>
-					<path d="M16 7l-4-4-4 4"></path>
+					<path d="M23 4v6h-6"></path>
+					<path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
 				</svg>
 			</button>
 		</div>
