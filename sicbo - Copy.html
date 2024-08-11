@@ -137,16 +137,51 @@
             font-size: 1.8vmin;
             font-weight: 700;
         }
+		
+		.special-bets-container {
+			grid-column: 1 / -1;
+			display: flex;
+			flex-direction: column;
+			border: 2px solid #8b4513;
+			padding: 5px;
+			border-radius: 10px;
+			margin-bottom: 10px;
+		}
+
+		.special-bets-row {
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+		}
+
+		.special-bets-row .cell {
+			flex: 1 0 calc(16.666% - 4px); /* Approximately 6 cells per row, adjusting for margins */
+			margin: 2px;
+			min-width: 60px; /* Adjust as needed */
+		}
+
+		.double-label, .triple-label, .single-win {
+			font-weight: bold;
+			flex-basis: calc(33.333% - 4px); /* 3 cells in the first row */
+		}
 
         .double, .triple { grid-column: span 2; }
-        .single-number { grid-column: span 1; }
+		.single-number {
+			grid-column: span 1;
+			border: 1px solid #8b4513;
+			border-radius: 5px;
+		}
 
-        .total-bets-container {
-            grid-column: 1 / -1;
-            display: grid;
-            grid-template-columns: repeat(14, 1fr);
-            gap: 1px;
-        }
+		.total-bets-container {
+			grid-column: 1 / -1;
+			display: grid;
+			grid-template-columns: repeat(14, 1fr);
+			gap: 1px;
+			border: 2px solid #8b4513;
+			padding: 5px;
+			border-radius: 10px;
+			margin-bottom: 10px;
+		}
 
         .two-dice-container {
             grid-column: 1 / -1;
@@ -844,23 +879,33 @@
 			smallBigContainer.appendChild(createCell('BIG<br>Are numbers 11 to 17<br>1 wins 1<br>Lose if any triple appears', 'small-big', 'big'));
 			
 			tableGrid.appendChild(smallBigContainer);
+
+			// Special bets container (two rows)
+			const specialBetsContainer = document.createElement('div');
+			specialBetsContainer.className = 'special-bets-container';
 			
-			// Doubles and Triples
-			tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
-			for (let i = 1; i <= 3; i++) {
-				tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
+			// First row
+			const firstRow = document.createElement('div');
+			firstRow.className = 'special-bets-row';
+			firstRow.appendChild(createCell('Each double 1 wins 10', 'double-label'));
+			firstRow.appendChild(createCell('Each triple 1 wins 180', 'triple-label'));
+			firstRow.appendChild(createCell('1 wins 30', 'single-win'));
+			specialBetsContainer.appendChild(firstRow);
+
+			// Second row
+			const secondRow = document.createElement('div');
+			secondRow.className = 'special-bets-row';
+			for (let i = 1; i <= 6; i++) {
+				secondRow.appendChild(createCell([i, i], 'double', `double${i}`));
 			}
-			tableGrid.appendChild(createCell('Each triple 1 wins 180', 'triple'));
-			tableGrid.appendChild(createCell([1, 1, 1], 'triple', 'tripleAny'));
-			tableGrid.appendChild(createCell('1 wins 30', 'single-win'));
-			tableGrid.appendChild(createCell('ANY TRIPLE', 'triple'));
+			secondRow.appendChild(createCell([1, 1, 1], 'triple', 'tripleAny'));
+			secondRow.appendChild(createCell('ANY TRIPLE', 'triple'));
 			for (let i = 4; i <= 6; i++) {
-				tableGrid.appendChild(createCell([i, i, i], 'triple', `triple${i}`));
+				secondRow.appendChild(createCell([i, i, i], 'triple', `triple${i}`));
 			}
-			tableGrid.appendChild(createCell('Each double 1 wins 10', 'double'));
-			for (let i = 4; i <= 6; i++) {
-				tableGrid.appendChild(createCell([i, i], 'double', `double${i}`));
-			}
+			specialBetsContainer.appendChild(secondRow);
+
+			tableGrid.appendChild(specialBetsContainer);
 
 			// Total Bets
 			const totalBetsContainer = document.createElement('div');
