@@ -427,14 +427,23 @@
 		function toggleRecording() {
 			const recordButton = document.getElementById('record-button');
 
-			if (mediaRecorder && mediaRecorder.state === 'inactive') {
+			// Check if the camera feed has started
+			const cameraFeed = document.getElementById('camera-feed');
+			if (!cameraFeed.srcObject) {
+				alert("Camera feed not started. Please allow camera access.");
+				return;
+			}
+
+			// Handle recording start/stop
+			if (mediaRecorder.state === 'inactive') {
 				startRecording();
 				recordButton.classList.add('recording');
-			} else if (mediaRecorder && mediaRecorder.state === 'recording') {
+			} else if (mediaRecorder.state === 'recording') {
 				stopRecording();
 				recordButton.classList.remove('recording');
 			}
 		}
+
 
 		function startRecording() {
 			if (mediaRecorder && mediaRecorder.state === 'inactive') {
