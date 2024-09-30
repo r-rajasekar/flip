@@ -379,7 +379,7 @@
 
     <script>
 	
-		let mediaRecorder;
+	let mediaRecorder;
         let recordedChunks = [];
         let startTime;
         let recordingTimer;
@@ -405,50 +405,50 @@
             }
         }
 
-		function setupRecording(stream) {
-			mediaRecorder = new MediaRecorder(stream);
+	function setupRecording(stream) {
+		mediaRecorder = new MediaRecorder(stream);
 
-			mediaRecorder.ondataavailable = function(event) {
-				if (event.data.size > 0) {
-					recordedChunks.push(event.data);
-				}
-			};
-
-			mediaRecorder.onstop = function() {
-				const blob = new Blob(recordedChunks, { type: 'video/webm' });
-				uploadVideo(blob);
-				recordedChunks = [];
-			};
-
-			const recordButton = document.getElementById('record-button');
-			recordButton.addEventListener('click', toggleRecording);
-		}
-
-		function toggleRecording() {
-			const recordButton = document.getElementById('record-button');
-
-			if (mediaRecorder.state === 'inactive') {
-				startRecording();
-				recordButton.classList.add('recording');
-			} else if (mediaRecorder.state === 'recording') {
-				stopRecording();
-				recordButton.classList.remove('recording');
+		mediaRecorder.ondataavailable = function(event) {
+			if (event.data.size > 0) {
+				recordedChunks.push(event.data);
 			}
-		}
+		};
 
-		function startRecording() {
-			if (mediaRecorder && mediaRecorder.state === 'inactive') {
-				mediaRecorder.start();
-				console.log("Recording started");
-			}
-		}
+		mediaRecorder.onstop = function() {
+			const blob = new Blob(recordedChunks, { type: 'video/webm' });
+			uploadVideo(blob);
+			recordedChunks = [];
+		};
 
-		function stopRecording() {
-			if (mediaRecorder && mediaRecorder.state === 'recording') {
-				mediaRecorder.stop();
-				console.log("Recording stopped");
-			}
+		const recordButton = document.getElementById('record-button');
+		recordButton.addEventListener('click', toggleRecording);
+	}
+
+	function toggleRecording() {
+		const recordButton = document.getElementById('record-button');
+
+		if (mediaRecorder.state === 'inactive') {
+			startRecording();
+			recordButton.classList.add('recording');
+		} else if (mediaRecorder.state === 'recording') {
+			stopRecording();
+			recordButton.classList.remove('recording');
 		}
+	}
+
+	function startRecording() {
+		if (mediaRecorder && mediaRecorder.state === 'inactive') {
+			mediaRecorder.start();
+			console.log("Recording started");
+		}
+	}
+
+	function stopRecording() {
+		if (mediaRecorder && mediaRecorder.state === 'recording') {
+			mediaRecorder.stop();
+			console.log("Recording stopped");
+		}
+	}
 
 
         function uploadVideo(blob) {
