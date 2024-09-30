@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CryptoShorts</title>
+    <title>Shorts</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         /* Reset and basic styles */
         * {
@@ -287,16 +288,16 @@
         <video class="video-player" src="placeholder-video.mp4" loop></video>
         <div class="video-controls">
             <button class="control-button" aria-label="Like" onclick="shakeButton(this)">
-                <i>👍</i>
+                <i class="fa fa-thumbs-up"></i>
             </button>
             <button class="control-button" aria-label="Dislike" onclick="shakeButton(this)">
-                <i>👎</i>
+                <i class="fa fa-thumbs-down"></i>
             </button>
             <button class="control-button" aria-label="Comments" onclick="shakeButton(this)">
-                <i>💬</i>
+                <i class="fa fa-comment"></i>
             </button>
             <button class="control-button" aria-label="Share" onclick="shakeButton(this)">
-                <i>➦</i>
+                <i class="fa fa-share-alt"></i>
             </button>
         </div>
         <div class="creator-info">
@@ -356,22 +357,22 @@
     <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
         <a href="#" class="nav-item" onclick="showPage('home-page', this)">
-            🏠
+            <i class="fa fa-home"></i>
             <span class="nav-label">Home</span>
         </a>
         <a href="#" class="nav-item">
-            🔍
+            <i class="fa fa-search"></i>
             <span class="nav-label">Discover</span>
         </a>
         <a href="#" class="nav-item upload" onclick="openCameraView(event)">
             +
         </a>
         <a href="#" class="nav-item">
-            💬
+            <i class="fa fa-inbox"></i>
             <span class="nav-label">Inbox</span>
         </a>
         <a href="#" class="nav-item" onclick="showPage('account-page', this)">
-            👤
+            <i class="fa fa-user"></i>
             <span class="nav-label">Me</span>
         </a>
     </nav>
@@ -526,12 +527,12 @@
         navItem.classList.add('active');
     }
 
-    function shakeButton(button) {
+    /* function shakeButton(button) {
         button.classList.add('shake');
         setTimeout(() => {
             button.classList.remove('shake');
         }, 300);
-    }
+    } */
 
     function uploadFromDevice() {
         var input = document.createElement('input');
