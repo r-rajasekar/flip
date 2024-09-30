@@ -519,6 +519,19 @@
         recordButton.classList.remove('recording');
         isRecording = false;
     }
+	
+	function showPage(pageId, navItem) {
+        document.getElementById('home-page').style.display = 'none';
+        document.getElementById('account-page').style.display = 'none';
+        document.getElementById(pageId).style.display = 'block';
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+
+        navItem.classList.add('active');
+    }
 
     function uploadFromDevice() {
         var input = document.createElement('input');
