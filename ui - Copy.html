@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shorts</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         /* Reset and basic styles */
         * {
@@ -255,7 +255,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-			-webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent;
         }
         #record-button {
             background-color: #FF4136;
@@ -275,17 +275,17 @@
             position: absolute;
             top: 20px;
             right: 20px;
-			width: 35px;
+            width: 35px;
             height: 35px;
             border-radius: 50%;
             border: none;
             color: white;
             font-size: 24px;
             cursor: pointer;
-			background-color: #FF4136;
-			transition: background-color 0.3s ease;
+            background-color: #FF4136;
+            transition: background-color 0.3s ease;
         }
-		.close-button {
+        .close-button {
             width: 70px;
             height: 70px;
             border-radius: 50%;
@@ -296,7 +296,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-		/* Updated styles for upload options */
+        /* Updated styles for upload options */
         .upload-options {
             display: none;
             position: fixed;
@@ -322,41 +322,103 @@
         .upload-option:hover {
             background-color: #FF4500;
         }
-		        /* New styles for video preview and metadata form */
-        .video-preview {
+        /* Updated styles for video preview and metadata form */
+        .fullscreen-page {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100vh;
-            background-color: #000;
-            z-index: 1001;
+            height: 100%;
+            background-color: #1e1e1e;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .page-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .page-title {
+            color: #f0f0f0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .close-button {
+            background: none;
+            border: none;
+            color: #f0f0f0;
+            font-size: 24px;
+            cursor: pointer;
         }
         #preview-video {
             width: 100%;
-            height: 70vh;
+            max-height: 50vh;
             object-fit: contain;
+            background-color: #000;
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .action-button {
+            width: 48%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+        #new-button {
+            background-color: #333;
+            color: #f0f0f0;
+        }
+        #next-button {
+            background-color: #FF0000;
+            color: #f0f0f0;
         }
         .metadata-form {
-            padding: 20px;
-            background-color: #222;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
         .metadata-form input, .metadata-form textarea {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
             background-color: #333;
-            border: none;
-            color: #fff;
+            border: 1px solid #444;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #f0f0f0;
         }
-        .metadata-form button {
-            background-color: #FF6347;
-            color: white;
+        .metadata-form textarea {
+            flex-grow: 1;
+            resize: none;
+            min-height: 100px;
+        }
+        .metadata-form input::placeholder, .metadata-form textarea::placeholder {
+            color: #888;
+        }
+        .upload-button {
+            background-color: #FF0000;
+            color: #f0f0f0;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 16px;
             cursor: pointer;
+            border-radius: 8px;
+            width: 100%;
         }
     </style>
 </head>
@@ -385,7 +447,7 @@
     </div>
 
     <!-- Account Page -->
-    <div id="account-page" class="account-page">
+	<div id="account-page" class="account-page">
         <div class="profile-header">
             <img src="placeholder-profile.jpg" alt="Profile Picture" class="profile-picture">
             <div class="profile-info">
@@ -424,22 +486,46 @@
             <button id="record-button" class="camera-button" onclick="toggleRecording()">
                 <i class="fa fa-circle"></i>
             </button>
-			<button id="record-button" class="camera-button" onclick="uploadFromDevice()">
-				<i class="fa fa-folder"></i>
-			</button>
+            <button id="upload-button" class="camera-button" onclick="uploadFromDevice()">
+                <i class="fa fa-folder"></i>
+            </button>
         </div>
         <button class="close-camera" onclick="closeCameraView()">
             <i class="fa fa-close"></i>
         </button>
     </div>
-	
-	<div id="video-preview" class="video-preview">
-        <video id="preview-video" controls></video>
-        <div class="metadata-form">
-            <input type="text" id="video-title" placeholder="Enter video title">
-            <textarea id="video-description" placeholder="Enter video description"></textarea>
-            <input type="text" id="video-hashtags" placeholder="Enter hashtags (comma-separated)">
-            <button onclick="uploadVideoWithMetadata()">Upload</button>
+    
+    <!-- Video Preview Section -->
+    <div id="video-preview" class="fullscreen-page">
+        <div class="page-content">
+            <div class="page-header">
+                <span class="page-title">Preview</span>
+                <button class="close-button" onclick="closePreview()">&times;</button>
+            </div>
+            <video id="preview-video" controls></video>
+            <div class="button-container">
+                <button id="new-button" class="action-button" onclick="newRecording()">New</button>
+                <button id="next-button" class="action-button" onclick="showMetadataPage()">Next</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Updated Metadata Input Section -->
+    <div id="metadata-page" class="fullscreen-page">
+        <div class="page-content">
+            <div class="page-header">
+                <span class="page-title">Add Details</span>
+                <button class="close-button" onclick="closeMetadataPage()">&times;</button>
+            </div>
+            <video id="metadata-video" controls></video>
+            <div class="metadata-form">
+                <input type="text" id="video-title" placeholder="Add a title that describes your video">
+                <textarea id="video-description" placeholder="Tell viewers about your video"></textarea>
+                <input type="text" id="video-hashtags" placeholder="Add hashtags (e.g., #fun #shortsvideo)">
+                <button class="upload-button" onclick="uploadVideoWithMetadata()">
+                    <i class="fa fa-cloud-upload"></i> Upload
+                </button>
+            </div>
         </div>
     </div>
 
@@ -465,7 +551,6 @@
             <span class="nav-label">Me</span>
         </a>
     </nav>
-
 
     <script>
     let mediaRecorder;
@@ -568,10 +653,16 @@
         if (mediaRecorder && mediaRecorder.state === 'recording') {
             mediaRecorder.stop();
             console.log("Recording stopped");
+            
+            // Stop all tracks in the stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
         }
     }
 
     function showVideoPreview(blob) {
+        recordedVideoBlob = blob;
         const videoPreview = document.getElementById('video-preview');
         const previewVideo = document.getElementById('preview-video');
         
@@ -582,6 +673,30 @@
         document.getElementById('camera-view').style.display = 'none';
     }
 
+    function closePreview() {
+        document.getElementById('video-preview').style.display = 'none';
+        showPage('home-page', document.querySelector('.nav-item'));
+    }
+
+    function newRecording() {
+        document.getElementById('video-preview').style.display = 'none';
+        openCameraView();
+    }
+
+    function showMetadataPage() {
+        document.getElementById('video-preview').style.display = 'none';
+        document.getElementById('metadata-page').style.display = 'block';
+        
+        const metadataVideo = document.getElementById('metadata-video');
+        metadataVideo.src = URL.createObjectURL(recordedVideoBlob);
+        metadataVideo.play();
+    }
+
+    function closeMetadataPage() {
+        document.getElementById('metadata-page').style.display = 'none';
+        document.getElementById('video-preview').style.display = 'block';
+    }
+
     function uploadVideoWithMetadata() {
         const title = document.getElementById('video-title').value;
         const description = document.getElementById('video-description').value;
@@ -589,13 +704,15 @@
 
         // Here you would typically send the video blob and metadata to your server
         console.log("Uploading video with metadata:", { title, description, hashtags });
-        alert("Video uploaded with metadata!");
+        alert("Video uploaded successfully!");
 
         // Reset the UI
-        document.getElementById('video-preview').style.display = 'none';
+        document.getElementById('metadata-page').style.display = 'none';
         document.getElementById('video-title').value = '';
         document.getElementById('video-description').value = '';
         document.getElementById('video-hashtags').value = '';
+        // Return to the main page
+        showPage('home-page', document.querySelector('.nav-item'));
     }
 
     function closeCameraView() {
@@ -635,6 +752,7 @@
         input.onchange = function(event) {
             var file = event.target.files[0];
             if (file) {
+                recordedVideoBlob = file;
                 showVideoPreview(file);
             }
         };
