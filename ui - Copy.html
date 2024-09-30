@@ -186,6 +186,12 @@
             font-size: 10px;
             margin-top: 2px;
         }
+
+        /* Active Navigation Item */
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1); /* Subtle highlight */
+            border-radius: 50%; /* Maintain the circular shape */
+        }
     </style>
 </head>
 <body>
@@ -247,38 +253,53 @@
 
     <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
-        <a href="#" class="nav-item" onclick="showPage('home-page')">
+        <a href="#" class="nav-item" id="nav-home" onclick="showPage('home-page', this)">
             🏠
             <span class="nav-label">Home</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="#" class="nav-item" id="nav-discover" onclick="showPage('discover-page', this)">
             🔍
             <span class="nav-label">Discover</span>
         </a>
-        <a href="#" class="nav-item upload">
+        <a href="#" class="nav-item upload" id="nav-upload" onclick="showPage('upload-page', this)">
             +
         </a>
-        <a href="#" class="nav-item">
+        <a href="#" class="nav-item" id="nav-inbox" onclick="showPage('inbox-page', this)">
             💬
             <span class="nav-label">Inbox</span>
         </a>
-        <a href="#" class="nav-item" onclick="showPage('account-page')">
+        <a href="#" class="nav-item" id="nav-account" onclick="showPage('account-page', this)">
             👤
             <span class="nav-label">Me</span>
         </a>
     </nav>
 
     <script>
-        function showPage(pageId) {
+        function showPage(pageId, navItem) {
+            // Hide all pages
             document.getElementById('home-page').style.display = 'none';
             document.getElementById('account-page').style.display = 'none';
+            // Hide other pages if added
+            // ...
+
+            // Show the selected page
             document.getElementById(pageId).style.display = 'block';
+
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to the clicked nav item
+            navItem.classList.add('active');
         }
 
-        // Add shake class on click and remove it after animation ends
         function shakeButton(button) {
             button.classList.add('shake');
-            setTimeout(() => button.classList.remove('shake'), 300); // 300ms matches the animation duration
+            setTimeout(() => {
+                button.classList.remove('shake');
+            }, 300);
         }
     </script>
 </body>
