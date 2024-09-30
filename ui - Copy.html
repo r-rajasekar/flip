@@ -405,48 +405,51 @@
             }
         }
 
-        function setupRecording(stream) {
-            mediaRecorder = new MediaRecorder(stream);
+		function setupRecording(stream) {
+			mediaRecorder = new MediaRecorder(stream);
 
-            mediaRecorder.ondataavailable = function(event) {
-                if (event.data.size > 0) {
-                    recordedChunks.push(event.data);
-                }
-            };
+			mediaRecorder.ondataavailable = function(event) {
+				if (event.data.size > 0) {
+					recordedChunks.push(event.data);
+				}
+			};
 
-            mediaRecorder.onstop = function() {
-                const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                uploadVideo(blob);
-                recordedChunks = [];
-            };
+			mediaRecorder.onstop = function() {
+				const blob = new Blob(recordedChunks, { type: 'video/webm' });
+				uploadVideo(blob);
+				recordedChunks = [];
+			};
 
-            const recordButton = document.getElementById('record-button');
-            recordButton.addEventListener('mousedown', startRecording);
-            recordButton.addEventListener('mouseup', stopRecording);
-            recordButton.addEventListener('mouseleave', stopRecording);
-            recordButton.addEventListener('touchstart', startRecording);
-            recordButton.addEventListener('touchend', stopRecording);
-        }
+			const recordButton = document.getElementById('record-button');
+			recordButton.addEventListener('click', toggleRecording);
+		}
 
-        function startRecording() {
-            if (mediaRecorder && mediaRecorder.state === 'inactive') {
-                mediaRecorder.start();
-                startTime = Date.now();
-                recordingTimer = setTimeout(stopRecording, 15000); // Stop after 15 seconds
-                document.getElementById('record-button').classList.add('recording');
-            }
-        }
+		function toggleRecording() {
+			const recordButton = document.getElementById('record-button');
 
-        function stopRecording() {
-            if (mediaRecorder && mediaRecorder.state === 'recording') {
-                mediaRecorder.stop();
-                clearTimeout(recordingTimer);
-                document.getElementById('record-button').classList.remove('recording');
+			if (mediaRecorder.state === 'inactive') {
+				startRecording();
+				recordButton.classList.add('recording');
+			} else if (mediaRecorder.state === 'recording') {
+				stopRecording();
+				recordButton.classList.remove('recording');
+			}
+		}
 
-                const duration = (Date.now() - startTime) / 1000;
-                console.log(`Recording stopped after ${duration} seconds`);
-            }
-        }
+		function startRecording() {
+			if (mediaRecorder && mediaRecorder.state === 'inactive') {
+				mediaRecorder.start();
+				console.log("Recording started");
+			}
+		}
+
+		function stopRecording() {
+			if (mediaRecorder && mediaRecorder.state === 'recording') {
+				mediaRecorder.stop();
+				console.log("Recording stopped");
+			}
+		}
+
 
         function uploadVideo(blob) {
             // Here you would typically upload the blob to your server
