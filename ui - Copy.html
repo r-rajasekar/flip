@@ -219,6 +219,67 @@
         .upload-option:hover {
             background-color: #FF4500;
         }
+		        /* New styles for camera view and controls */
+        .camera-view {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 60px);
+            background-color: #000;
+            z-index: 1000;
+        }
+        #camera-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .camera-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .camera-button {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #record-button {
+            background-color: #FF4136;
+        }
+        #record-button.recording {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        #media-button {
+            background-color: #0074D9;
+        }
+        .close-camera {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -283,6 +344,15 @@
         <button class="upload-option" onclick="openCamera()">Open Camera</button>
         <button class="upload-option" onclick="uploadFromDevice()">Upload from Device</button>
     </div>
+	
+	<div id="camera-view" class="camera-view">
+        <video id="camera-feed" autoplay playsinline></video>
+        <div class="camera-controls">
+            <button id="record-button" class="camera-button">Record</button>
+            <button id="media-button" class="camera-button">Media</button>
+        </div>
+        <button class="close-camera" onclick="closeCameraView()">×</button>
+    </div>
 
     <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
@@ -294,7 +364,7 @@
             🔍
             <span class="nav-label">Discover</span>
         </a>
-        <a href="#" class="nav-item upload" onclick="toggleUploadPopup(event)">
+        <a href="#" class="nav-item upload" onclick="openCameraView(event)">
             +
         </a>
         <a href="#" class="nav-item">
@@ -308,6 +378,110 @@
     </nav>
 
     <script>
+	
+		let mediaRecorder;
+        let recordedChunks = [];
+        let startTime;
+        let recordingTimer;
+
+        function openCameraView(event) {
+            event.preventDefault();
+            const cameraView = document.getElementById('camera-view');
+            const cameraFeed = document.getElementById('camera-feed');
+
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                    .then(function(stream) {
+                        cameraFeed.srcObject = stream;
+                        cameraView.style.display = 'block';
+                        setupRecording(stream);
+                    })
+                    .catch(function(error) {
+                        console.error("Error accessing the camera:", error);
+                        alert("Error opening camera. Please check your permissions.");
+                    });
+            } else {
+                alert("Your browser doesn't support camera access.");
+            }
+        }
+
+        function setupRecording(stream) {
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = function(event) {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = function() {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                uploadVideo(blob);
+                recordedChunks = [];
+            };
+
+            const recordButton = document.getElementById('record-button');
+            recordButton.addEventListener('mousedown', startRecording);
+            recordButton.addEventListener('mouseup', stopRecording);
+            recordButton.addEventListener('mouseleave', stopRecording);
+            recordButton.addEventListener('touchstart', startRecording);
+            recordButton.addEventListener('touchend', stopRecording);
+        }
+
+        function startRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'inactive') {
+                mediaRecorder.start();
+                startTime = Date.now();
+                recordingTimer = setTimeout(stopRecording, 15000); // Stop after 15 seconds
+                document.getElementById('record-button').classList.add('recording');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                clearTimeout(recordingTimer);
+                document.getElementById('record-button').classList.remove('recording');
+
+                const duration = (Date.now() - startTime) / 1000;
+                console.log(`Recording stopped after ${duration} seconds`);
+            }
+        }
+
+        function uploadVideo(blob) {
+            // Here you would typically upload the blob to your server
+            // For this example, we'll just log it to the console
+            console.log("Video recorded:", blob);
+            alert("Video recorded and ready for upload!");
+            // Add your upload logic here
+        }
+
+        function closeCameraView() {
+            const cameraView = document.getElementById('camera-view');
+            const cameraFeed = document.getElementById('camera-feed');
+            
+            if (cameraFeed.srcObject) {
+                cameraFeed.srcObject.getTracks().forEach(track => track.stop());
+            }
+            cameraView.style.display = 'none';
+        }
+
+        document.getElementById('media-button').addEventListener('click', function() {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'video/*';
+            
+            input.onchange = function(event) {
+                var file = event.target.files[0];
+                if (file) {
+                    console.log("Selected file:", file);
+                    alert("Selected file: " + file.name);
+                    // Add your upload logic here
+                }
+            };
+
+            input.click();
+        });
         function showPage(pageId, navItem) {
             document.getElementById('home-page').style.display = 'none';
             document.getElementById('account-page').style.display = 'none';
