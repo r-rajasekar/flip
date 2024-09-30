@@ -322,6 +322,42 @@
         .upload-option:hover {
             background-color: #FF4500;
         }
+		        /* New styles for video preview and metadata form */
+        .video-preview {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #000;
+            z-index: 1001;
+        }
+        #preview-video {
+            width: 100%;
+            height: 70vh;
+            object-fit: contain;
+        }
+        .metadata-form {
+            padding: 20px;
+            background-color: #222;
+        }
+        .metadata-form input, .metadata-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #333;
+            border: none;
+            color: #fff;
+        }
+        .metadata-form button {
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -396,6 +432,16 @@
             <i class="fa fa-close"></i>
         </button>
     </div>
+	
+	<div id="video-preview" class="video-preview">
+        <video id="preview-video" controls></video>
+        <div class="metadata-form">
+            <input type="text" id="video-title" placeholder="Enter video title">
+            <textarea id="video-description" placeholder="Enter video description"></textarea>
+            <input type="text" id="video-hashtags" placeholder="Enter hashtags (comma-separated)">
+            <button onclick="uploadVideoWithMetadata()">Upload</button>
+        </div>
+    </div>
 
     <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
@@ -420,36 +466,35 @@
         </a>
     </nav>
 
-	<script>
+
+    <script>
     let mediaRecorder;
     let recordedChunks = [];
     let stream;
     let isRecording = false;
+    let recordedVideoBlob;
 
     function openCameraView() {
         const cameraView = document.getElementById('camera-view');
         const cameraFeed = document.getElementById('camera-feed');
 
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             .then(function(mediaStream) {
                 handleSuccess(mediaStream, cameraFeed, cameraView);
-				
-            // Check if the front camera is being used and flip the video if necessary
-				const videoTracks = mediaStream.getVideoTracks();
-				const trackSettings = videoTracks[0].getSettings();
-				if (trackSettings.facingMode === 'user') {
-					cameraFeed.style.transform = 'scaleX(-1)';  // Flip the front camera video
-				} else {
-					cameraFeed.style.transform = 'scaleX(1)';   // No flip for rear camera
-				}
-			})
-
+                
+                // Check if the front camera is being used and flip the video if necessary
+                const videoTracks = mediaStream.getVideoTracks();
+                const trackSettings = videoTracks[0].getSettings();
+                if (trackSettings.facingMode === 'user') {
+                    cameraFeed.style.transform = 'scaleX(-1)';  // Flip the front camera video
+                } else {
+                    cameraFeed.style.transform = 'scaleX(1)';   // No flip for rear camera
+                }
+            })
             .catch(function(error) {
                 console.error("Error accessing the camera:", error);
                 alert("Error opening camera. Please check your permissions and try again.");
             });
-
-        document.getElementById('upload-options').style.display = 'none';
     }
 
     function handleSuccess(mediaStream, cameraFeed, cameraView) {
@@ -487,8 +532,8 @@
         };
 
         mediaRecorder.onstop = function() {
-            const blob = new Blob(recordedChunks, { type: 'video/webm' });
-            uploadVideo(blob);
+            recordedVideoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+            showVideoPreview(recordedVideoBlob);
             recordedChunks = [];
         };
     }
@@ -526,10 +571,31 @@
         }
     }
 
-    function uploadVideo(blob) {
-        console.log("Video recorded:", blob);
-        alert("Video recorded and ready for upload!");
-        // Add your upload logic here
+    function showVideoPreview(blob) {
+        const videoPreview = document.getElementById('video-preview');
+        const previewVideo = document.getElementById('preview-video');
+        
+        previewVideo.src = URL.createObjectURL(blob);
+        videoPreview.style.display = 'block';
+        
+        // Hide the camera view
+        document.getElementById('camera-view').style.display = 'none';
+    }
+
+    function uploadVideoWithMetadata() {
+        const title = document.getElementById('video-title').value;
+        const description = document.getElementById('video-description').value;
+        const hashtags = document.getElementById('video-hashtags').value;
+
+        // Here you would typically send the video blob and metadata to your server
+        console.log("Uploading video with metadata:", { title, description, hashtags });
+        alert("Video uploaded with metadata!");
+
+        // Reset the UI
+        document.getElementById('video-preview').style.display = 'none';
+        document.getElementById('video-title').value = '';
+        document.getElementById('video-description').value = '';
+        document.getElementById('video-hashtags').value = '';
     }
 
     function closeCameraView() {
@@ -545,8 +611,8 @@
         recordButton.classList.remove('recording');
         isRecording = false;
     }
-	
-	function showPage(pageId, navItem) {
+
+    function showPage(pageId, navItem) {
         document.getElementById('home-page').style.display = 'none';
         document.getElementById('account-page').style.display = 'none';
         document.getElementById(pageId).style.display = 'block';
@@ -569,11 +635,9 @@
         input.onchange = function(event) {
             var file = event.target.files[0];
             if (file) {
-                alert("Selected file: " + file.name);
-                // Add your upload logic here
+                showVideoPreview(file);
             }
         };
-        document.getElementById('upload-options').style.display = 'none';
     }
 
     // Initialize by showing the home page
