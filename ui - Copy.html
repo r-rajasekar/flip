@@ -503,21 +503,6 @@
                 <button class="close-button" onclick="closePreview()">&times;</button>
             </div>
             <video id="preview-video" controls></video>
-            <div class="button-container">
-                <button id="new-button" class="action-button" onclick="newRecording()">New</button>
-                <button id="next-button" class="action-button" onclick="showMetadataPage()">Next</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Updated Metadata Input Section -->
-    <div id="metadata-page" class="fullscreen-page">
-        <div class="page-content">
-            <div class="page-header">
-                <span class="page-title">Add Details</span>
-                <button class="close-button" onclick="closeMetadataPage()">&times;</button>
-            </div>
-            <video id="metadata-video" controls></video>
             <div class="metadata-form">
                 <input type="text" id="video-title" placeholder="Add a title that describes your video">
                 <textarea id="video-description" placeholder="Tell viewers about your video"></textarea>
@@ -528,7 +513,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
         <a href="#" class="nav-item" onclick="showPage('home-page', this)">
