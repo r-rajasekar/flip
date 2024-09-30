@@ -432,7 +432,17 @@
         navigator.mediaDevices.getUserMedia({ video: true, audio: false })
             .then(function(mediaStream) {
                 handleSuccess(mediaStream, cameraFeed, cameraView);
-            })
+				
+            // Check if the front camera is being used and flip the video if necessary
+				const videoTracks = mediaStream.getVideoTracks();
+				const trackSettings = videoTracks[0].getSettings();
+				if (trackSettings.facingMode === 'user') {
+					cameraFeed.style.transform = 'scaleX(-1)';  // Flip the front camera video
+				} else {
+					cameraFeed.style.transform = 'scaleX(1)';   // No flip for rear camera
+				}
+			})
+
             .catch(function(error) {
                 console.error("Error accessing the camera:", error);
                 alert("Error opening camera. Please check your permissions and try again.");
