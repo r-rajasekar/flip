@@ -280,6 +280,32 @@
             font-size: 24px;
             cursor: pointer;
         }
+		/* Updated styles for upload options */
+        .upload-options {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .upload-option {
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .upload-option:hover {
+            background-color: #FF4500;
+        }
     </style>
 </head>
 <body>
@@ -338,20 +364,21 @@
             <div class="video-thumbnail"></div>
         </div>
     </div>
-    
-    <!-- Upload Popup -->
-    <div id="upload-popup" class="upload-popup">
-        <button class="upload-option" onclick="openCameraView()">Open Camera</button>
-        <button class="upload-option" onclick="uploadFromDevice()">Upload from Device</button>
-    </div>
-    
+
+    <!-- Updated Camera View -->
     <div id="camera-view" class="camera-view">
         <video id="camera-feed" autoplay playsinline></video>
         <div class="camera-controls">
-            <button id="record-button" class="camera-button">Record</button>
-            <button id="media-button" class="camera-button">Media</button>
+            <button id="record-button" class="camera-button" onclick="toggleRecording()">
+                <i class="fa fa-circle"></i>
+            </button>
+			<button id="record-button" class="camera-button" onclick="uploadFromDevice()">
+				<i class="fa fa-folder"></i>
+			</button>
         </div>
-        <button class="close-camera" onclick="closeCameraView()">×</button>
+        <button class="close-camera" onclick="closeCameraView()">
+            <i class="fa fa-close"></i>
+        </button>
     </div>
 
     <!-- Bottom Navigation Bar -->
@@ -377,41 +404,17 @@
         </a>
     </nav>
 
-    <script>
+	<script>
     let mediaRecorder;
     let recordedChunks = [];
     let stream;
+    let isRecording = false;
 
-    function openCameraView(event) {
-        if (event) event.preventDefault();
+    function openCameraView() {
         const cameraView = document.getElementById('camera-view');
         const cameraFeed = document.getElementById('camera-feed');
 
-        // First, try to get only video without any constraints
         navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-            .then(function(mediaStream) {
-                handleSuccess(mediaStream, cameraFeed, cameraView);
-            })
-            .catch(function(error) {
-                console.log("Simple video failed, trying enumerated devices:", error);
-                tryEnumeratedDevices(cameraFeed, cameraView);
-            });
-    }
-
-    function tryEnumeratedDevices(cameraFeed, cameraView) {
-        navigator.mediaDevices.enumerateDevices()
-            .then(function(devices) {
-                const videoDevices = devices.filter(device => device.kind === 'videoinput');
-                if (videoDevices.length === 0) {
-                    throw new Error('No video input devices found');
-                }
-                // Try to use the last device (often the back camera on mobile)
-                const constraints = {
-                    video: { deviceId: { exact: videoDevices[videoDevices.length - 1].deviceId } },
-                    audio: false
-                };
-                return navigator.mediaDevices.getUserMedia(constraints);
-            })
             .then(function(mediaStream) {
                 handleSuccess(mediaStream, cameraFeed, cameraView);
             })
@@ -419,6 +422,8 @@
                 console.error("Error accessing the camera:", error);
                 alert("Error opening camera. Please check your permissions and try again.");
             });
+
+        document.getElementById('upload-options').style.display = 'none';
     }
 
     function handleSuccess(mediaStream, cameraFeed, cameraView) {
@@ -427,20 +432,16 @@
         cameraView.style.display = 'block';
         setupRecording(stream);
 
-        // Ensure video is playing
         cameraFeed.play().catch(e => console.error("Error playing video:", e));
     }
 
     function setupRecording(stream) {
         let options = { mimeType: 'video/webm;codecs=vp9,opus' };
         if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-            console.error(`${options.mimeType} is not supported`);
             options = { mimeType: 'video/webm;codecs=vp8,opus' };
             if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                console.error(`${options.mimeType} is not supported`);
                 options = { mimeType: 'video/webm' };
                 if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                    console.error(`${options.mimeType} is not supported`);
                     options = { mimeType: '' };
                 }
             }
@@ -464,23 +465,25 @@
             uploadVideo(blob);
             recordedChunks = [];
         };
-
-        const recordButton = document.getElementById('record-button');
-        recordButton.addEventListener('click', toggleRecording);
     }
 
     function toggleRecording() {
         const recordButton = document.getElementById('record-button');
+        const recordIcon = recordButton.querySelector('i');
 
-        if (mediaRecorder && mediaRecorder.state === 'inactive') {
+        if (!isRecording) {
             startRecording();
-            recordButton.textContent = 'Stop';
+            recordIcon.classList.remove('fa-circle');
+            recordIcon.classList.add('fa-stop');
             recordButton.classList.add('recording');
-        } else if (mediaRecorder && mediaRecorder.state === 'recording') {
+        } else {
             stopRecording();
-            recordButton.textContent = 'Record';
+            recordIcon.classList.remove('fa-stop');
+            recordIcon.classList.add('fa-circle');
             recordButton.classList.remove('recording');
         }
+
+        isRecording = !isRecording;
     }
 
     function startRecording() {
@@ -510,29 +513,12 @@
         }
         cameraView.style.display = 'none';
         const recordButton = document.getElementById('record-button');
-        recordButton.textContent = 'Record';
+        const recordIcon = recordButton.querySelector('i');
+        recordIcon.classList.remove('fa-stop');
+        recordIcon.classList.add('fa-circle');
         recordButton.classList.remove('recording');
+        isRecording = false;
     }
-
-    function showPage(pageId, navItem) {
-        document.getElementById('home-page').style.display = 'none';
-        document.getElementById('account-page').style.display = 'none';
-        document.getElementById(pageId).style.display = 'block';
-        
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.classList.remove('active');
-        });
-
-        navItem.classList.add('active');
-    }
-
-    /* function shakeButton(button) {
-        button.classList.add('shake');
-        setTimeout(() => {
-            button.classList.remove('shake');
-        }, 300);
-    } */
 
     function uploadFromDevice() {
         var input = document.createElement('input');
@@ -548,7 +534,7 @@
                 // Add your upload logic here
             }
         };
-        document.getElementById('upload-popup').style.display = 'none';
+        document.getElementById('upload-options').style.display = 'none';
     }
 
     // Initialize by showing the home page
