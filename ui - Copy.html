@@ -6,13 +6,6 @@
     <title>CryptoShorts</title>
     <style>
         /* Reset and basic styles */
-		
-		-webkit-tap-highlight-color: transparent;
-		
-		:focus {
-			outline: none !important;
-		}
-		
         * {
             margin: 0;
             padding: 0;
@@ -42,17 +35,27 @@
             right: 20px;
             display: flex;
             flex-direction: column;
+            gap: 15px;
         }
         .control-button {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.15);
             border: none;
             color: #fff;
             font-size: 24px;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .control-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .control-button i {
+            font-size: 22px;
         }
         .creator-info {
             position: absolute;
@@ -166,9 +169,18 @@
     <div id="home-page" class="video-container">
         <video class="video-player" src="placeholder-video.mp4" loop></video>
         <div class="video-controls">
-            <button class="control-button">♥</button>
-            <button class="control-button">💬</button>
-            <button class="control-button">➦</button>
+            <button class="control-button" aria-label="Like">
+                <i>👍</i>
+            </button>
+            <button class="control-button" aria-label="Dislike">
+                <i>👎</i>
+            </button>
+            <button class="control-button" aria-label="Comments">
+                <i>💬</i>
+            </button>
+            <button class="control-button" aria-label="Share">
+                <i>➦</i>
+            </button>
         </div>
         <div class="creator-info">
             <h2>@username</h2>
