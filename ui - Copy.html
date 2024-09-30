@@ -57,6 +57,20 @@
         .control-button i {
             font-size: 22px;
         }
+
+        /* Shake animation */
+        .shake {
+            animation: shake 0.3s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
         .creator-info {
             position: absolute;
             bottom: 20px;
@@ -169,16 +183,16 @@
     <div id="home-page" class="video-container">
         <video class="video-player" src="placeholder-video.mp4" loop></video>
         <div class="video-controls">
-            <button class="control-button" aria-label="Like">
+            <button class="control-button" aria-label="Like" onclick="shakeButton(this)">
                 <i>👍</i>
             </button>
-            <button class="control-button" aria-label="Dislike">
+            <button class="control-button" aria-label="Dislike" onclick="shakeButton(this)">
                 <i>👎</i>
             </button>
-            <button class="control-button" aria-label="Comments">
+            <button class="control-button" aria-label="Comments" onclick="shakeButton(this)">
                 <i>💬</i>
             </button>
-            <button class="control-button" aria-label="Share">
+            <button class="control-button" aria-label="Share" onclick="shakeButton(this)">
                 <i>➦</i>
             </button>
         </div>
@@ -249,6 +263,12 @@
             document.getElementById('home-page').style.display = 'none';
             document.getElementById('account-page').style.display = 'none';
             document.getElementById(pageId).style.display = 'block';
+        }
+
+        // Add shake class on click and remove it after animation ends
+        function shakeButton(button) {
+            button.classList.add('shake');
+            setTimeout(() => button.classList.remove('shake'), 300); // 300ms matches the animation duration
         }
     </script>
 </body>
