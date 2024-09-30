@@ -193,6 +193,32 @@
             margin-top: 2px;
             opacity: 0.8; /* Slight transparency */
         }
+        /* New styles for upload popup */
+        .upload-popup {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .upload-option {
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .upload-option:hover {
+            background-color: #FF4500;
+        }
     </style>
 </head>
 <body>
@@ -251,6 +277,12 @@
             <div class="video-thumbnail"></div>
         </div>
     </div>
+	
+	<!-- Upload Popup -->
+    <div id="upload-popup" class="upload-popup">
+        <button class="upload-option" onclick="openCamera()">Open Camera</button>
+        <button class="upload-option" onclick="uploadFromDevice()">Upload from Device</button>
+    </div>
 
     <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
@@ -262,7 +294,7 @@
             🔍
             <span class="nav-label">Discover</span>
         </a>
-        <a href="#" class="nav-item upload" onclick="showPage('upload-page', this)">
+        <a href="#" class="nav-item upload" onclick="toggleUploadPopup(event)">
             +
         </a>
         <a href="#" class="nav-item">
@@ -281,25 +313,59 @@
             document.getElementById('account-page').style.display = 'none';
             document.getElementById(pageId).style.display = 'block';
             
-            // Remove active class from
-
-            
-            // Remove active class from all nav items
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => {
                 item.classList.remove('active');
             });
 
-            // Add active class to the clicked nav item
             navItem.classList.add('active');
         }
 
-        // Function for the shake animation
         function shakeButton(button) {
             button.classList.add('shake');
             setTimeout(() => {
                 button.classList.remove('shake');
             }, 300);
+        }
+
+        function toggleUploadPopup(event) {
+            event.preventDefault();
+            const popup = document.getElementById('upload-popup');
+            popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+        }
+		
+		function openCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        alert("Camera opened successfully!");
+                        stream.getTracks().forEach(track => track.stop());
+                    })
+                    .catch(function(error) {
+                        console.error("Error accessing the camera:", error);
+                        alert("Error opening camera. Please check your permissions.");
+                    });
+            } else {
+                alert("Your browser doesn't support camera access.");
+            }
+            document.getElementById('upload-popup').style.display = 'none';
+        }
+		
+		function uploadFromDevice() {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'video/*';
+            
+            input.click();
+            
+            input.onchange = function(event) {
+                var file = event.target.files[0];
+                if (file) {
+                    alert("Selected file: " + file.name);
+                    // Add your upload logic here
+                }
+            };
+            document.getElementById('upload-popup').style.display = 'none';
         }
 
         // Initialize by showing the home page
