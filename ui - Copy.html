@@ -378,27 +378,37 @@
     </nav>
 
     <script>
-	
+		
 		let mediaRecorder;
-        let recordedChunks = [];
-        let startTime;
-        let recordingTimer;
+		let recordedChunks = [];
+		let stream;
 
 		function openCameraView(event) {
 			event.preventDefault();
 			const cameraView = document.getElementById('camera-view');
 			const cameraFeed = document.getElementById('camera-feed');
 
+			// Use constraints suitable for mobile devices
+			const constraints = {
+				video: {
+					facingMode: 'environment', // Use the back camera on mobile devices
+					width: { ideal: 1280 },
+					height: { ideal: 720 }
+				},
+				audio: true
+			};
+
 			if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-				navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-					.then(function(stream) {
+				navigator.mediaDevices.getUserMedia(constraints)
+					.then(function(mediaStream) {
+						stream = mediaStream;
 						cameraFeed.srcObject = stream;
 						cameraView.style.display = 'block';
-						setupRecording(stream); // Setup recording when the camera view opens
+						setupRecording(stream);
 					})
 					.catch(function(error) {
 						console.error("Error accessing the camera:", error);
-						alert("Error opening camera. Please check your permissions.");
+						alert("Error opening camera. Please check your permissions and try again.");
 					});
 			} else {
 				alert("Your browser doesn't support camera access.");
@@ -427,23 +437,16 @@
 		function toggleRecording() {
 			const recordButton = document.getElementById('record-button');
 
-			// Check if the camera feed has started
-			const cameraFeed = document.getElementById('camera-feed');
-			if (!cameraFeed.srcObject) {
-				alert("Camera feed not started. Please allow camera access.");
-				return;
-			}
-
-			// Handle recording start/stop
-			if (mediaRecorder.state === 'inactive') {
+			if (mediaRecorder && mediaRecorder.state === 'inactive') {
 				startRecording();
+				recordButton.textContent = 'Stop';
 				recordButton.classList.add('recording');
-			} else if (mediaRecorder.state === 'recording') {
+			} else if (mediaRecorder && mediaRecorder.state === 'recording') {
 				stopRecording();
+				recordButton.textContent = 'Record';
 				recordButton.classList.remove('recording');
 			}
 		}
-
 
 		function startRecording() {
 			if (mediaRecorder && mediaRecorder.state === 'inactive') {
@@ -459,25 +462,22 @@
 			}
 		}
 
+		function uploadVideo(blob) {
+			console.log("Video recorded:", blob);
+			alert("Video recorded and ready for upload!");
+			// Add your upload logic here
+		}
 
-
-        function uploadVideo(blob) {
-            // Here you would typically upload the blob to your server
-            // For this example, we'll just log it to the console
-            console.log("Video recorded:", blob);
-            alert("Video recorded and ready for upload!");
-            // Add your upload logic here
-        }
-
-        function closeCameraView() {
-            const cameraView = document.getElementById('camera-view');
-            const cameraFeed = document.getElementById('camera-feed');
-            
-            if (cameraFeed.srcObject) {
-                cameraFeed.srcObject.getTracks().forEach(track => track.stop());
-            }
-            cameraView.style.display = 'none';
-        }
+		function closeCameraView() {
+			const cameraView = document.getElementById('camera-view');
+			if (stream) {
+				stream.getTracks().forEach(track => track.stop());
+			}
+			cameraView.style.display = 'none';
+			const recordButton = document.getElementById('record-button');
+			recordButton.textContent = 'Record';
+			recordButton.classList.remove('recording');
+		}
 
         document.getElementById('media-button').addEventListener('click', function() {
             var input = document.createElement('input');
