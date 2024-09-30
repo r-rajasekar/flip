@@ -13,8 +13,8 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
+            background-color: #1e1e1e; /* Dark background */
+            color: #f0f0f0; /* Light text color */
         }
         
         /* Main feed styles */
@@ -28,6 +28,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            filter: brightness(70%); /* Darken the video for better text contrast */
         }
         .video-controls {
             position: absolute;
@@ -38,7 +39,7 @@
             gap: 15px;
         }
         .control-button {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.2);
             border: none;
             color: #fff;
             font-size: 24px;
@@ -50,14 +51,10 @@
             align-items: center;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            outline: none; /* Remove blue highlight on desktop */
-            -webkit-tap-highlight-color: transparent; /* Remove blue highlight on mobile */
-        }
-        .control-button:focus {
-            outline: none; /* Prevent focus outline */
+            outline: none;
         }
         .control-button:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.4);
         }
         .control-button i {
             font-size: 22px;
@@ -78,16 +75,16 @@
 
         .creator-info {
             position: absolute;
-            bottom: 20px;
+            bottom: 100px; /* Position above controls */
             left: 20px;
         }
         .creator-info h2 {
-            font-size: 18px;
+            font-size: 22px;
             margin-bottom: 5px;
         }
         .creator-info p {
             font-size: 14px;
-            opacity: 0.8;
+            opacity: 0.9;
         }
         
         /* Account page styles */
@@ -109,7 +106,7 @@
             margin-right: 20px;
         }
         .profile-info h1 {
-            font-size: 24px;
+            font-size: 26px;
             margin-bottom: 5px;
         }
         .profile-info p {
@@ -125,7 +122,7 @@
             text-align: center;
         }
         .stat-value {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
         }
         .stat-label {
@@ -151,28 +148,30 @@
             left: 0;
             right: 0;
             height: 60px;
-            background-color: #000;
+            background-color: #222; /* Darker background */
             display: flex;
             justify-content: space-around;
             align-items: center;
             padding: 0 20px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
         }
         .nav-item {
-            color: #fff;
+            color: #b0b0b0; /* Lighter color for inactive */
             font-size: 24px;
             text-decoration: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            outline: none; /* Remove desktop focus outline */
-            -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
+            transition: color 0.3s ease;
+        }
+        .nav-item.active {
+            color: #FF6347; /* Highlight color for active */
         }
         .nav-item:focus {
-            outline: none; /* Prevent focus outline */
+            outline: none;
         }
         .nav-item.upload {
-            background-color: #FF0000;
+            background-color: #FF6347; /* Highlighted background for upload */
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -181,16 +180,12 @@
             align-items: center;
             font-size: 30px;
             margin-top: -25px;
+            box-shadow: 0 0 10px rgba(255, 99, 71, 0.5); /* Subtle shadow */
         }
         .nav-label {
             font-size: 10px;
             margin-top: 2px;
-        }
-
-        /* Active Navigation Item */
-        .nav-item.active {
-            background-color: rgba(255, 255, 255, 0.1); /* Subtle highlight */
-            border-radius: 50%; /* Maintain the circular shape */
+            opacity: 0.8; /* Slight transparency */
         }
     </style>
 </head>
@@ -253,22 +248,22 @@
 
     <!-- Bottom Navigation Bar -->
     <nav class="bottom-nav">
-        <a href="#" class="nav-item" id="nav-home" onclick="showPage('home-page', this)">
+        <a href="#" class="nav-item" onclick="showPage('home-page', this)">
             🏠
             <span class="nav-label">Home</span>
         </a>
-        <a href="#" class="nav-item" id="nav-discover" onclick="showPage('discover-page', this)">
+        <a href="#" class="nav-item">
             🔍
             <span class="nav-label">Discover</span>
         </a>
-        <a href="#" class="nav-item upload" id="nav-upload" onclick="showPage('upload-page', this)">
+        <a href="#" class="nav-item upload" onclick="showPage('upload-page', this)">
             +
         </a>
-        <a href="#" class="nav-item" id="nav-inbox" onclick="showPage('inbox-page', this)">
+        <a href="#" class="nav-item">
             💬
             <span class="nav-label">Inbox</span>
         </a>
-        <a href="#" class="nav-item" id="nav-account" onclick="showPage('account-page', this)">
+        <a href="#" class="nav-item" onclick="showPage('account-page', this)">
             👤
             <span class="nav-label">Me</span>
         </a>
@@ -276,15 +271,13 @@
 
     <script>
         function showPage(pageId, navItem) {
-            // Hide all pages
             document.getElementById('home-page').style.display = 'none';
             document.getElementById('account-page').style.display = 'none';
-            // Hide other pages if added
-            // ...
-
-            // Show the selected page
             document.getElementById(pageId).style.display = 'block';
+            
+            // Remove active class from
 
+            
             // Remove active class from all nav items
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => {
@@ -295,12 +288,16 @@
             navItem.classList.add('active');
         }
 
+        // Function for the shake animation
         function shakeButton(button) {
             button.classList.add('shake');
             setTimeout(() => {
                 button.classList.remove('shake');
             }, 300);
         }
+
+        // Initialize by showing the home page
+        showPage('home-page', document.querySelector('.nav-item'));
     </script>
 </body>
 </html>
