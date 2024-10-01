@@ -338,14 +338,15 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            padding: 20px;
             box-sizing: border-box;
         }
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            padding: 10px 20px;
+            background-color: #2e2e2e;
+            height: 55px;
         }
         .page-title {
             color: #f0f0f0;
@@ -358,6 +359,13 @@
             color: #f0f0f0;
             font-size: 24px;
             cursor: pointer;
+        }
+        .preview-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
         }
         #preview-video {
             width: 100%;
@@ -404,7 +412,7 @@
         
         /* Media query for larger screens */
         @media (min-width: 768px) {
-            .page-content {
+            .preview-content {
                 flex-direction: row;
                 align-items: stretch;
             }
@@ -494,22 +502,24 @@
     </div>
     
     <!-- Video Preview Section -->
-    <div id="video-preview" class="fullscreen-page">
+	<div id="video-preview" class="fullscreen-page">
         <div class="page-content">
-            <video id="preview-video" controls></video>
-            <div class="metadata-form">
-                <div>
-                    <div class="page-header">
-                        <span class="page-title">Preview</span>
-                        <button class="close-button" onclick="closePreview()">&times;</button>
+            <div class="page-header">
+                <span class="page-title">Create Your Video</span>
+                <button class="close-button" onclick="closePreview()">&times;</button>
+            </div>
+            <div class="preview-content">
+                <video id="preview-video" controls></video>
+                <div class="metadata-form">
+                    <div>
+                        <input type="text" id="video-title" placeholder="Add a title that describes your video">
+                        <textarea id="video-description" placeholder="Tell viewers about your video"></textarea>
+                        <input type="text" id="video-hashtags" placeholder="Add hashtags (e.g., #fun #shortsvideo)">
                     </div>
-                    <input type="text" id="video-title" placeholder="Add a title that describes your video">
-                    <textarea id="video-description" placeholder="Tell viewers about your video"></textarea>
-                    <input type="text" id="video-hashtags" placeholder="Add hashtags (e.g., #fun #shortsvideo)">
+                    <button class="upload-button" onclick="uploadVideoWithMetadata()">
+                        <i class="fa fa-cloud-upload"></i> Upload
+                    </button>
                 </div>
-                <button class="upload-button" onclick="uploadVideoWithMetadata()">
-                    <i class="fa fa-cloud-upload"></i> Upload
-                </button>
             </div>
         </div>
     </div>
