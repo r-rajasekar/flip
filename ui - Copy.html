@@ -714,44 +714,18 @@
         isRecording = false;
     }
 
-	function showPage(pageId, navItem) {
-		const pages = ['home-page', 'account-page'];
-		pages.forEach(id => {
-			const page = document.getElementById(id);
-			if (id === pageId) {
-				page.style.display = 'flex';
-				page.style.flexDirection = 'column';
-				page.style.height = 'calc(100% - 60px)'; // Subtract bottom nav height
-			} else {
-				page.style.display = 'none';
-			}
-		});
-		
-		const navItems = document.querySelectorAll('.nav-item');
-		navItems.forEach(item => {
-			item.classList.remove('active');
-		});
+    function showPage(pageId, navItem) {
+        document.getElementById('home-page').style.display = 'none';
+        document.getElementById('account-page').style.display = 'none';
+        document.getElementById(pageId).style.display = 'block';
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.classList.remove('active');
+        });
 
-		navItem.classList.add('active');
-
-		// Force layout recalculation
-		window.requestAnimationFrame(() => {
-			window.scrollTo(0, 0);
-		});
-	}
-
-	// Add this function to handle orientation changes
-	function handleOrientationChange() {
-		const currentPage = document.querySelector('.video-container:not([style*="display: none"]), .account-page:not([style*="display: none"])');
-		if (currentPage) {
-			currentPage.style.height = `calc(100% - 60px)`;
-		}
-	}
-
-	// Call this function when the page loads and on orientation change
-	window.addEventListener('load', handleOrientationChange);
-	window.addEventListener('orientationchange', handleOrientationChange);
-
+        navItem.classList.add('active');
+    }
 
     function uploadFromDevice() {
         var input = document.createElement('input');
