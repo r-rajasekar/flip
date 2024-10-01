@@ -538,6 +538,12 @@
     </nav>
 
     <script>
+	document.addEventListener('DOMContentLoaded', function() {
+		if (window.Telegram && window.Telegram.WebApp) {
+			Telegram.WebApp.expand();
+		}
+	});
+
     let mediaRecorder;
     let recordedChunks = [];
     let stream;
